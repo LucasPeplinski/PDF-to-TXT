@@ -1,41 +1,53 @@
-# Readme du code de conversion PDF vers texte avec informations supplémentaires
+# ReadMe
 
-Ce script Python vise à convertir des fichiers PDF en fichiers texte tout en ajoutant des informations supplémentaires extraites des fichiers PDF d'origine. Il est conçu pour traiter un dossier contenant des fichiers PDF et produire des fichiers texte en sortie. Voici une vue d'ensemble de son fonctionnement et des outils nécessaires pour son exécution :
+## Introduction rapide
 
-## Fonctionnalités du script
+Ce jeu de scripts Python est conçu pour convertir des fichiers PDF en texte brut (`.txt`) ou en format XML (`.xml`). Il offre deux scripts principaux, `script_txt.py` et `script_xml.py`, chacun avec des fonctionnalités spécifiques. Le script `main.py` sert de point d'entrée pour l'exécution des scripts en fonction des options choisies.
 
-Le script effectue les opérations suivantes :
+## Fonctionnalités de chaque script
 
-1. **Extraction de l'abstract et du titre** : Le script recherche des informations dans le fichier PDF d'origine, telles que l'abstract et le titre. Si ces informations sont présentes, elles sont extraites et utilisées ultérieurement.
+### script_txt.py
 
-2. **Conversion PDF en texte** : Le script utilise l'outil `pdftotext` pour convertir le contenu du fichier PDF en texte brut. Le texte résultant est sauvegardé dans un fichier texte distinct.
+Ce script prend en entrée un répertoire contenant des fichiers PDF et les convertit en fichiers texte brut (`.txt`). Il extrait également les résumés des articles, s'il y en a, et les ajoute au début de chaque fichier texte. Les étapes comprennent :
 
-3. **Enrichissement du fichier texte** : Les informations extraites de l'étape 1 (titre et abstract) sont ajoutées en haut du fichier texte résultant.
+1. **Extraction du texte brut du PDF** : Utilisation de la commande `pdftotext` pour extraire le texte brut du PDF.
+2. **Récupération de l'abstract** : Recherche du terme "abstract" dans le texte pour extraire la section abstract.
+3. **Création du fichier final** : Ajout des informations extraites au début du fichier texte.
 
-4. **Structure du dossier de sortie** : Les fichiers texte sont sauvegardés dans un dossier de sortie spécifié.
+### script_xml.py
+
+Ce script réalise une tâche similaire à `script_txt.py`, mais génère des fichiers au format XML (`.xml`). Les principales étapes incluent :
+
+1. **Extraction du texte brut du PDF** : Utilisation de la commande `pdftotext` pour extraire le texte brut du PDF.
+2. **Récupération de l'abstract** : Recherche du terme "abstract" dans le texte pour extraire la section abstract.
+3. **Création du fichier XML** : Création d'un fichier XML avec des balises telles que `<article>`, `<preamble>`, et `<abstract>`. Les informations extraites sont insérées dans ces balises.
+
+### main.py
+
+Ce script est un point d'entrée permettant à l'utilisateur de choisir entre la conversion en texte brut (`-t` ou `--text`) ou en XML (`-x` ou `--xml`). Il utilise les arguments de ligne de commande pour appeler le script approprié avec le répertoire en tant qu'argument.
 
 ## Outils nécessaires
 
-Pour que ce script fonctionne correctement, vous devez disposer des outils suivants :
-
-1. **Python** : Le script est écrit en Python, vous devez donc avoir Python installé sur votre système.
-
-2. **pdftotext** : Le script utilise l'outil `pdftotext` pour convertir les fichiers PDF en texte brut. Assurez-vous d'avoir installé cet outil sur votre système.
+- Python 3
+- `pdftotext` (un outil en ligne de commande pour extraire du texte à partir de fichiers PDF)
+- Les bibliothèques Python standard (`os`, `shutil`, `sys`, `argparse`)
 
 ## Comment exécuter le script
 
-Pour exécuter le script, suivez ces étapes :
+1. Assurez-vous que Python 3 est installé sur votre système.
+2. Installez l'outil `pdftotext` en suivant les instructions spécifiques à votre système d'exploitation.
+3. Exécutez le script principal `main.py` avec le répertoire contenant les fichiers PDF en tant qu'argument. Utilisez les options `-t` ou `-x` pour spécifier le type de conversion.
 
-1. Assurez-vous d'avoir Python installé.
+   Exemple :
 
-2. Assurez-vous que l'outil `pdftotext` est installé et accessible depuis la ligne de commande.
+## Conversion en text
 
-3. Placez tous les fichiers PDF que vous souhaitez convertir dans un dossier.
+   ```bash
+   python3 main.py -t repertoire
+   ```
 
-4. Exécutez le script Python en ligne de commande en spécifiant le chemin du dossier contenant les fichiers PDF comme argument. Par exemple : `python script.py chemin_vers_dossier_PDF`
+## Conversion en xml
 
-5. Le script créera un dossier de sortie (nommé "PlainText") contenant les fichiers texte résultants avec les informations supplémentaires.
-
-Assurez-vous que le script Python est placé dans le même répertoire que les fichiers PDF que vous souhaitez convertir, ou spécifiez le chemin complet vers le script lorsque vous l'exécutez.
-
-**Note :** Assurez-vous d'avoir une connaissance préalable de l'installation et de l'utilisation de Python et de l'outil `pdftotext` pour exécuter ce script avec succès.
+```bash
+   python3 main.py -x repertoire
+   ```
