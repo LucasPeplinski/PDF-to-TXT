@@ -1,0 +1,585 @@
+<article>
+	<preamble>Partitioning_large_signed_two-mode_networks__Problems_and_prospects</preamble>
+    <titre>partitioning large signed two-mode networks: problems and prospects</titre>
+    <auteur>Patrick Doreian pitpat@pitt.edu </auteur>
+	<abstract></abstract>
+	<introduction> while a substantial amount of attention within social network analysis (sna) has been given to the study of one-mode networks, there is an increasing consideration of two-mode networks. it is now recognized that such data are particularly important (see borgatti and everett, 1992, 1997; doreian et al., 2004; latapy et al., 2008). here we focus our attention on signed two-mode networks. while our primary focus here is methodological, we stress that the technical issues are driven by substantive concerns. the substantive problem described in section 2.5 implies a need for tools designed to partition large1 two-mode signed networks. one source for such a partitioning tool is found in the work of heider (1946, 1958). he focused on two types of triples involving signed relations: those involving three individuals and those of two individuals and a social object such as a belief. his work was foun- dational for structural balance theory. a central assumption of this  corresponding author at: department of sociology, 260wwph, university of pittsburgh, pittsburgh, pa 16260, usa. e-mail address: pitpat@pitt.edu (p. doreian). 1 large is an inherently ambiguous term because it is a function of the size of the network, the algorithm used, the speed of a machine, and its memory. intuitively, we think a network is `large' when, for running a program, it ushers in significant compu- tational burdens. direct blockmodeling is a computationally burdensome approach and we restrict the term `large' for networks that greatly lengthen the running time of the relocation algorithm we use. operationally, this can be specified as sizes above n1 > 100, n> 100 (using the notation introduced below) for two-mode networks. the islands technique (zaversnik and batagelj, 2004) that we use in section 6.3 can easily handle networks with millions of vertices because it is a linear-in-time algorithm. theory is that there is a tendency towards balance in these triples of relations. the outcomes of these tendencies for triples involv- ing three actors are expressed in four folk aphorisms: "a friend of a friend is a friend"; "a friend of an enemy is an enemy"; "an enemy of a friend is an enemy"; and "an enemy of an enemy is a friend". such outcomes and the dynamics leading to network struc- tures consistent with balance are for one-mode signed relations. noting that many, if not most, signed networks do not have this exact form, doreian and mrvar (1996) proposed an algorithm for partitioning signed one-mode networks to obtain partition struc- tures that were as close as possible to those predicted by structural balance theory. recognizing that multiple processes can operate to generate signed structures, doreian and mrvar (2009) general- ized structural balance to relaxed structural balance for one-mode networks to accommodate more complex signed block structures. similar dynamics hold for networks involving social actors and social objects like beliefs or statements. these involve two-mode relations and, arguably, were more important in heider's formula- tion using unit formation relations (between social actors and social objects). this led to an expansion of the notion of relaxed struc- tural balance (mrvar and doreian, 2009) through the development of a method for delineating the partition structure of two-mode signed networks. this paper extends that approach to address prob- lems that may be encountered when partitioning signed two-mode data. we illustrate our approach with a recently collected dataset of united nations general assembly (unga) roll call votes, as they provide a natural example of this signed data type with states (as social actors) voting for or against resolutions (as social objects). in addition, the diversity among states and resolutions means coun- tries are likely to have overlapping and even conflicting loyalties 0378-8733/$ -- see front matter  201elsevier b.v. all rights reserved. doi:10.1016/j.socnet.2012.01.002 p. doreian et al. / social networks 35 (2013) 178--203 179 that lead to more complex processes and outcomes--items that tend not to be considered within structural balance approaches. typically, unga voting data have been analyzed using methods that locate primary divisions among states in an attempt to iden- tify potential fault lines for conflict. our approach to these data is unique in that we exploit their structural characteristics to further explore structural balance theory and the tools needed to partition large signed two-mode networks. the rest of this paper is organized as follows: section elab- orates relaxed structural balance theory, its natural application to international relations data, and explores its complementarity with balance of power ideas. we describe the data in section 3, elaborate our primary methodological approach in section 4, and we provide the results from this approach in section 5. we then explore the data using other partitioning approaches and compare the results with our own in section 6. in section 7 we discuss some of the methodological problems with using a blockmodeling approach to partition large signed two-mode data, as well as the potential for its use in exploring soft balancing of power processes. we conclude with recommendations for further methodological development of blockmodeling approaches to signed data. applying structural balance theory to international relations data we couple relaxed structural balance to balance of power ideas to provide a substantive foundation for the partitioning methods we consider here. 2.1. relaxed structural balance heider (1946, 1958) provided the foundational statements for a major approach to signed networks known as structural balance theory. he focused on signed relations between people, signed rela- tions between people and social objects, and the implications of social structures involving these signed relations. these structures of relations are in the form of particular triples. triples involving three social actors (p, o, and q) are poq-triples and triples involving two social actors, p and o, and a social object, x, are pox-triples. beliefs and ideas as examples of social objects are particularly salient for our consideration--and extension--of structural balance. relations between actors are social relations and heider labeled the ties between actors and social objects as unit formation rela- tions. examples of signed social relations between social actors are like/dislike, love/hate and respect/disrespect. for the unit for- mation relations, examples include accepting/rejecting beliefs and supporting/opposing ideas. there are 8 types of triples for a set of three relations between three actors (each tie can be positive or negative). heider divided these triples into two types: balanced and unbalanced. denoting positive ties by 1 and negative ties by -1, the sign of a triple is the product of the signs of the ties in the triple. a triple is defined as balanced if the product of the signs in the triple is 1 and imbal- anced if this product is -1. according to heider, imbalanced triples are a source of strain for the individuals in them and the individu- als will attempt to move from having imbalanced triples to having balanced triples through changes in the sign(s) of relations. for p in a poq-triple, if p has positive ties to o and q but knows that there is a negative tie between o and q, the sign of the triple is -1 and is imbalanced. according to heider, p will attempt to balance the triple by changing the sign of a tie. however, if there are imbalanced triples in sets of either poq-triples or pox-triples then there will be many attempts, by different actors, to achieve balance. this makes achieving balance over a whole network of social actors a difficult and error prone process (hummon and doreian, 2003). cartwright and harary (1956) formalized heider's theory and focusedon signed ties between social actors and, in effect, discarded unit formation relations. a binary signed network is an ordered pair (g, ), where: 1. g = (u, a) is a digraph, without loops, having a set of vertices, u, and a set of arcs, a, where a is a subset of u  u; and  : a  {+1, -1} is a sign function where positive arcs have the sign +1 and negative arcs have the sign -1. if a network has multiple weak components, these components can be considered separately as distinct networks. here, we assume that the digraph is weakly connected.cartwright and harary (1956) proved the following: theorem 1. for a balanced signed network, (g, ), the vertices in u can be partitioned into two subsets3 such that each positive arc joins vertices in the same subset and each negative arc joins vertices in different subsets. harary et al. (1965, pp. 342--3) prove that for all pairs of vertices in a balanced network, all semi-paths joining them have the same sign. davis (1967) observed that, despite the appeal of theorem 1, there are social groups where there are more than two subsets of mutually hostile groups of social actors. he proposed that the all negative triple (with the sign of -1) not be classified as imbalanced. consistent with this, he defined a signed network as clusterable if it contains no semi-cycle with exactly one negative tie. he then proved: theorem for a clusterable signed network,4 the set of vertices, u, can be partitioned into two or more subsets such that every positive arc joins vertices in the same subset and every negative arc joins vertices in different subsets. the network structure implied by the above (structure) theo- rems can be described also in terms of blockmodeling (see doreian et al., 2005: chapter 10). we use the term position for a cluster of vertices (representing actors) and, given a set of positions, a block is a set of ties between positions. the diagonal blocks are positive (with only positive ties between vertices within subsets) and the off-diagonal blocks will be negative (with the negative ties between vertices in different subsets). a positive block is one that has only positive or null ties and a negative block has only negative or null ties. rather than use both balanced and clusterable as terms, we use k-balance to cover both of them.5 however, most empirical signed networks do not have a struc- ture consistent with either of these two theorems. put differently, most empirical signed networks are not k-balanced.6 yet, if there are balance processes that are operative, they ought to leave 2 the presence of multiple weak components requires some mild restatement of the results but do not alter their intrinsic content. 3 if every tie in the network is positive then one of the two subsets is empty. 4 by definition, a signed network must contain at least one negative tie: if a net- work contains no negative ties it is an unsigned network. none of the balance theoretic processes involving both positive and negative ties have relevance for unsigned networks. by the same token, attempts to assess structural balance theory using unsigned data cannot provide a useful assessment. the only occasion when an unsigned network is relevant with regard to structural balance is when it is the outcome of balancing processes. 5 if there are only two subsets then we are dealing with balance (k-balance, k = 2) and if there are more than two subsets then we are dealing with clusterability (k- balance, k > 2). 6 this calls into question the validity of a general claim of a tendency towards balance. doreian and krackhardt (2001) examined the trajectories of the eight types of triples over time in the newcomb data (newcomb, 1961, nordlie, 1958). two of the balanced triples increased in number of time, consistent with heider's theory, but the other two balanced triples decreased in frequency over time. two types of imbalanced triples decreased in frequency over time, also consistent with heider, 180 p. doreian et al. / social networks 35 (2013) 178--203 some structural traces. instead of asking if signed networks are k- balanced or not, it is more fruitful, empirically, to seek partitions of signed networks that are as close to being k-balanced as possible. if an empirical network is k-balanced then there will be no inconsistent ties within either type of block. but if the network is not k-balanced then there will be some positive ties in negative blocks, or some negative ties in positive blocks, or both. we denote the number of negative inconsistencies by n and the number of positive inconsis- tencies by p. to locate partitions as close as possible to a perfect balanced partition, it is necessary to measure the extent to which a partition departs from zero inconsistencies. a simple and direct measure of this is (n + (1 - )p) with 0 <  < 1 (varying  permits a differential weighting of n and p). all that is needed is an algo- rithm to locate a partition(s) that minimizes this measure. doreian and mrvar (1996) proposed a partitioning algorithm--described in section 4.1--that does exactly this. doreian and mrvar (2009) reconsidered the problem that most empirical signed networks are not exactly balanced. while bal- ance theoretic mechanisms may be operative, they need not be the only mechanisms in play. some members of a signed net- work may be universally regarded in positive terms even though they may belong to different positions with negative ties between the positions. if present, such actors imply positive blocks off the main diagonal. expressed differently, differential popularity (feld and elmore, 1982) implies positive blocks off the main diagonal. actors who play a mediating role between mutually hostile sub- sets also imply off-diagonal positive blocks and sets of mutually hostile actors (not blocks) imply negative blocks on the diagonal. in response to these considerations, doreian and mrvar (2009) pro- posed the notion of relaxed structural balance (rsb). this idea has three components: (i) the idea of positive and negative blocks is retained; (ii) these blocks can appear anywhere in the blockmodel; and (iii) the measure of inconsistency is retained. for such a block- model, then if (n + (1 - )p) = 0 for a signed network then the network is a relaxed structurally balanced network. they show that rsb is a formal generalization of structural balance where the block structures anticipated by theorems 1 and are special cases. on fit- ting the rsb model to some of the classical signed networks in the literature, they obtained better fitting models that permitted more nuanced interpretations of the prior partitions of these signed net- works. more importantly, thinking of positive and negative block types being located anywhere in a blockmodel opens the way to partitioning signed two-mode networks. 2.relaxed structural balance for signed two-mode networks for two-mode networks (also called affiliation networks), there are two sets of social actors. typical examples include peo- ple attending events, individuals sitting on organizational boards of directors, and people belonging to multiple social or recre- ational organizations. mrvar and doreian (2009) extended relaxed structural balance to signed two-mode networks to consider us supreme court justices (as social actors) supporting or dissenting from supreme court decisions (as social objects). in doing so, they returned to heider's unit formation relations and used signed two- mode networks to formalize that aspect of heider's theory. the general formalism extends straightforwardly. let u = (u1, u2, . . . , un1 ) denotes the set of social actors (repre- sented as vertices) and v = (v1, v2, . . . , vn2 ) denotes the set of social objects (represented as vertices). the number of vertices in u, is denoted by n1 and the number of vertices in v, is denoted by n2. but the other two types of imbalanced triples increased and became more frequent over time. an undirected binary signed two-mode network is an ordered pair, (g, ), where: 1. g = (u, v, e) is a bipartite network having two sets of vertices, u and v, and a set of edges,7 e, where e  u  v (where u  v is empty); and  : e  {+1, -1} is a sign function where positive edges have the sign +1 and negative edges have the sign -1. clearly, with two-mode networks, the idea of diagonal and off- diagonal blocks does not apply and having positive and negative blocks appearing anywhere follows naturally. all of the formal development for one-mode networks extends straightforwardly to two-mode networks. instead of partitioning a one-mode network into k clusters, a two-mode network is partitioned into k1 clusters of rows (social actors) and kclusters of columns (social objects). we define a (k1, k2) partition of (g, ) as one where there are k1 clusters in the partition of u and kclusters in the partitions of v. let c = (c1, c2) denote a (k1, k2) partition of (g, ) where c1 is a par- tition of v and cis a partition of v. the measure of inconsistency for the (k1, k2) partition of (g, ) remains (n + (1 - )p). mrvar and doreian (2009) adapted their one-mode algorithm to identify par- titions of two-mode signed networks that minimize this measure of inconsistency. 2.3. coupling relaxed structural balance with balance of power processes heider's (1946) approach to structural balance theory is social psychological which, at face value, is quite different from the ideas in social network analysis. yet, they can be coupled in fruitful ways (robins and kashima, 2008). there are micro-level processes operating at the social actor (vertex) level--what an actor does in specific situations--and macro-level structural processes affect- ing the structure as a whole. the two processes act to constrain each other: while actors are free to do whatever they want to do (given their interests), they need to be mindful of what oth- ers are doing and the nature of the social relations within which they are located.8 robins and kashima point out that accepting this approach is to accept also a dynamic view of these structural processes. we note that heider's theory about empirical triples embraces a very dynamic approach featuring change as an essential part of generating structural outcomes. we explore the macro-level implications of heider's structural balance theory in two ways. first, we extend heider's assumption of a tendency towards balance among multiple actors to balance among state actors in the international system of states. balance of power theories in international relations research share assump- tions of balancing processes among states, and alliance formation implied by balancing processes evokes the same four folk apho- risms (e.g., "a friend of an enemy is an enemy". . .). in the post-cold war period of unipolar military power, international relations the- orists have proposed the idea of "soft power" balancing through 7 our choice of using edges rather than arcs is driven primarily by the empirical example. with resolutions and states, there is no obvious way of determining the arcs linking them. if (the representatives of) states cast their votes about the resolu- tion the arcs could go from states to resolutions. but if resolutions prompt the states to vote in certain ways the arcs go from resolutions to states. it is simpler to couple states and resolutions by edges where the signs indicating how they voted. there are no edges between states and none between resolutions. the formalization goes through with little change if arcs are used instead of edges. 8 as individuals, romeo and juliet were free to fall in love with each other despite belonging to two different mutually hostile families. this macro-feature was a pow- erful constraint on their choices through the actions of others with whom they were linked. the imbalance implied by their love drives the drama of shakespeare's romeo and juliet. p. doreian et al. / social networks 35 (2013) 178--203 181 norms. we explore this idea using un general assembly (unga) military resolutions as they contain evidence of both hard (deci- sions to go to war) and soft (norms and laws to constrain military power) balancing of power processes. second, we show how the relaxed structural balance approach can be used to explore balancing of power processes. we do this in the course of developing the methodological contribution of this paper, namely, identification of and solutions for problems with applying the relaxed structural balance approach to large signed two-mode data. 2.4. balance of power and international relations balance of power is an international relations (ir) theory that addresses the process of building coalitions among states to prevent one state from becoming too powerful. there are two variants of this theory--`hard' and `soft'. hard balance of power theory is rooted in military alliances and arms build-ups associated with them. soft balancing behavior, in contrast, is considered a state strategy, or foreign policy conduct, to prevent a rising power from assuming hegemony but without a primary emphasis on force. some bal- ance of power is the outcome at the systemic or sub-systemic levels that result in power equilibria among key states. indeed, recent debates in the ir literature question whether in an age of a unipolar (u.s. hegemonic) power, states are currently engaging in traditional hard balancing behavior. instead, some have argued that diplomatic coalitions and norms building (as soft balancing) define much of state behavior.9 soft balancing strategies can include infor- mal alliances, collaboration in regional or international institutions, or voting and veto power in international organizations such as the united nations (un) (art, 2005/2006; brooks and wohlforth, 2005/2006; paul, 2004). hard balancing for social relations in one- mode networks leads to states within an alliance having positive ties to other states in the alliance and negative ties to states in other alliances. the core idea is consistency in the relations formed. soft balancing also involves consistency in the sense of states in blocs voting in the same way on resolutions of central concern to bloc members and voting against resolutions supported by (some) other blocs of states. it is generally accepted that the un is both the pre-eminent international organization (io), and that it plays a central role in the maintenance of international security. although the un secu- rity council (unsc) is the un organ most associated with the use of, or constraints on, the exercise of military power, the unga has also played an important, if less publicly visible, role. the first com- mittee, one of the six permanent committees of the unga, has worked to develop international norms and laws aimed at restrict- ing the exercise of military power. although its resolutions are non-binding, many have crystallized into customary law while oth- ers have become the basis for treaties that limit military power either by prohibiting the use of some weapons (e.g., anti-personnel mines, chemical or biological weapons) to efforts to create zones of peace that prohibit nuclear weapons altogether. voting analyses on military resolutions typically reveal voting similarity across key issues by states who share alliances or key attributes and affiliations. consequently, these data lend them- selves to an exploration of the relaxed structural balance approach, and provide an opportunity to explore the relationship of heider's structural balance theory with primarily soft balancing of power processes theorized in ir theory. we compare two time periods 9 see for example, world politics 61 (1), january 2009, and international security 30 (1), summer 2005; both are special issues devoted to examining the continual utility of the balance of power concept in international relations given the charac- teristics of current world politics. in order to delineate the structure of the voting array at each time point and to assess change between them. the first is in the late cold war period characterized by ideologically and militarily opposed groups of states. the second time period examines the 5--10 years after the end of the cold war. this period includes the dissolution of the warsaw pact and the re-alignment of many for- mer soviet bloc countries with nato and european union member states. we expect empirically to find similar clustering of states as prior studies as far as the large clusters of states (often seen as voting blocs) are concerned,10 but also evidence of additional sub-clustering within the major blocs that can be exploited for our theoretical purposes. part of this further exploration concerns the clusters of resolutions in relation to the voting blocs. to the extent that hard balancing involves military issues with a real possibility of warfare, states `choosing' sides face huge consequences for their choices. voting on military resolutions before unga, in terms of committed resources, is less consequential but far more subtle in its implications. the notion of being consistent for states within voting blocs remains in place but permits greater flexibility when there are cross-cutting issues. 2.5. empirical implications balance of power arguments are made in terms of blocs (clusters as positions) of states allied with each other and mobilized against blocs of other states. with alliance-based sets of interests, members of an alliance are expected to act together in opposition to mem- bers of other alliances. members of the other alliances also act in concert. if the interests of alliance members are activated by reso- lutions before the unga, then these members are expected to vote similarly to other members on these resolutions. this can take the form of all voting in support of some resolutions and voting against other resolutions. during the era of the cold war this idealized vot- ing pattern could be illustrated by nato states voting together and members of the warsaw pact voting together and in opposition to nato. however, members of one alliance can have interests beyond those implied by membership in a particular military or political alliance--or in an international organization. some specific issues could divide alliance members so that members of an alliance do not vote in the same fashion across all issues. generally, we expect patterns in voting behavior to reveal long-standing coalitions of states that are similar on attributes or affiliations, but we also expect a certain amount of self-interest, logrolling, and bargain- ing to result in other temporary coalitions. our aim is to show how the rsb approach can be used to locate balancing of power pro- cesses. specifically, we expect that simultaneously partitioning of both states and resolutions will highlight broad patterns of joint voting and also lesser patterns of temporary coalition formation. we illustrate our approach in fig. 1. fig. 1 shows 1states and 13 resolutions in a hypothetical vot- ing array. the top panel shows a two-mode network composed of states, s1 through s12, that are represented by circles, and resolu- tions, r1 through r13, represented by squares. solid lines between states and resolutions represent votes in favor of resolutions. in contrast, the dashed lines represent votes against resolutions. the states have been placed into three subsets that can be labeled as s1, sand s3. the states in s1 are s1 through s7; the states in sare s6 though s9; and s3 is composed of s10 through s1the resolutions have also been placed in three subsets: r1 contains r1 through r7; rcontains r8 through r10; and r3 contains r11 through r13. the structure of this network can be described simply. states in s1 tend 10 see kim and russett (1996) and voeten (2000) for example. 18p. doreian et al. / social networks 35 (2013) 178--203 fig. 1. illustrative network and formatted array for states and voting on resolutions. to vote in support of all resolutions; states in svote in support of resolutions in r1 and rbut tend to vote against resolutions in r3; and states in s3 tend support only resolutions in r1 and tend to oppose resolutions in both rand r3. there are also some votes not fitting with this general description. the lower panel of fig. 1 contains an alternative representation of exactly the same information but in a formatted array. black squares represent votes in support of resolutions and red diamonds represent votes against resolutions. the array has been formatted to that members of the above clusters of states and resolutions are placed together. solid lines mark the boundaries between the clusters. the names of the resolutions are written across the top and the names of states are on the right side of the array. the signed block structure for this hypothetical example, using the labeling of p. doreian et al. / social networks 35 (2013) 178--203 183 p for positive blocks and n for negative blocks, is as follows: in the top row, the blocks are ppp; the blocks in the second row are ppn; and the blocks in the bottom row are pnn. when the two-mode networks are large, the network diagrams get to be unwieldy and difficult to read. for large datasets, the formatted arrays are simpler to read and form a more compact representation. the real data for the unga voting are more complex in two ways: (i) trivially, they are much larger and (ii) exceptions are far more likely to occur than revealed in the hypothetical motivating example. in short, the real data are messy but, we expect block- modeling to reveal distinct patterns in the form of positive and negative blocks, despite expected exceptions. a disadvantage is that the exceptions will make the network diagrams challenging to read in the standard blockmodeling format; therefore we will report the majority of our graphical results using the formatted (blockmodeling) arrays. 3. data we use a dataset of roll call votes for the united nations gen- eral assembly (unga) covering the decades before and after the end of the cold war and the dissolution of the warsaw pact.11 the data were divided into four time periods: 1981--1985, late cold war; 1986--1990, a first transition period; 1991--1995, a second transition period; and 1996--2001, a "settled" period, albeit at the juncture of 9/11. as noted above, we select the first and last periods which we label as time 1 and time 2, respectively. we focus on military resolutions because this subset of res- olutions is the most substantively appropriate for testing our coupling of balance of power ideas with relaxed structural balance theory.1given the type of data--international voting data--where states have overlapping and even conflicting loyalties (turkey with nato and the organization of islamic conference (oic) for example)--voting blocs are likely to shift by issue areas. the poten- tial advantage of blockmodeling is that it can identify and define blocs by the resolutions favored by the states in those blocs. other methods can also accomplish this but blockmodeling has a direct way of grouping these together for further exploration by repre- senting the underlying network structure in image matrices using rows of block types (ppp, ppn, etc.). the time 1 data set has 141 states and 276 resolutions. while there were 159 un member states during this time period, we deleted 18 states because they were absent for 25% or more of the votes during this time period. our second time period (time 2) had 153 states and 150 resolutions.13 there were 189 un member states 11 the data were collected by the second author from 2000 to 200roll call votes from 1983 to 2001 had been digitized. a summary of all resolutions on roll call votes is found at http://www.un.org/documents/resga.htm and specifics on roll call votes are found at: http://unbisnet.un.org/. roll call votes from 1981 to 1983 were found in hard copy at yale university social science library, 140 prospect street, government documents collection, united nations collection; the government librarian was very helpful. assistance was also provided by the united nations dag hammarskjold library. un librarians and personnel in the department of public information (un headquarters, 1st avenue between 45th and 46th street, new york city) were very helpful in obtaining and verifying information. 12 see http://www.un.org/en/ga/maincommittees/index.shtml (accessed 7/4/11) for information on the main committees and http://www.un.org/documents/ resga.htm to access the resolutions. most years contain a summary of the reso- lutions deliberated upon that year, including information on where the resolution was debated, e.g., one of the permanent committees or the plenary; information on the voting; draft documents that includes sponsorship information and the general topic of the resolution. 13 there were 129 military resolutions for the period 1996--2000 and 150 if we included the 21 resolutions for 2001. we experimented with both in case there were 9/11 effects but found the output to be substantially similar. we report the 129 resolutions for the blockmodeling results because we matched 5 year periods for both time points. as of 2001; we removed 34 states that were absent for 25% or more of the votes during this time period. a full list of the names is pro- vided in appendix a and a summary of the resolutions is provided in appendix b. the continual process of decolonization and increase in membership of newly independent states, including those resulting from the dissolution of the soviet union resulted in an increase of roughly 30 new member states for our second time period. because our focus is on balancing processes and changing alliances, we think it is important to include all of the new states rather than focus on the same subset of states for both time periods. this is particularly important given the enlargement of nato and the eu with former soviet bloc states. the number of resolutions decreased because of a deliberate effort by the unga to reach consensus on resolutions once the cold war impediment to international policy-making had ended. this results in a significant reduction in roll call votes. there were a total of 725 roll call votes during our first time period and 406 in our second. of these, military resolutions were the most numerous (38% and 37% respectively), highlighting the importance of these issues to the un mandate to promote international peace and security. coding the votes cast on military (and other types of) resolutions is not straightforward. ideally, there are only votes for a resolu- tion and votes against a resolution. however, states can abstain from voting on certain resolutions and their representatives may choose to be absent when a vote is taken on other resolutions. these absences could be coded as 0, but this decision would obscure delib- erate absences. interviews with un delegates and permanent unga personnel14 indicate that frequently absences can be grouped with abstentions as a "weak no" vote. therefore we made the choice of first removing all countries that were absent 25% or more of the time for a given subset of roll call votes. we then recoded the few remaining absences as a "-1". we coded votes in support of a res- olution as "+1". we believe this coding accurately captures state voting patterns. 4. methods 4.1. direct signed blockmodeling signed blockmodeling is a label for the partitioning of signed net- works and direct signed blockmodeling is the approach based on the ideas described in sections 2.1--2.4 and used here. the doreian and mrvar algorithm for doing this has the following features: 1. the measure of inconsistency described earlier can be used as a criterion function (doreian et al., 2005) measuring departures from exact balance. departures from exact balance take only two forms: positive ties in negative blocks and negative ties in posi- tive blocks. as before, n denotes the number of negative ties in positive blocks and p denote the number of positive ties in nega- tive blocks. let c denote a clustering of the vertices into mutually exclusive subsets and let p(c) denote the value of the criterion function for that clustering, c, then, p(c) = n + (1 - )p where 0 <  < 1. two ranges and one value for  can be distinguished: (i) 0 <  < 0.5 (where positive inconsistencies are weighted more 14 the second author interviewed a number of un delegates and permanent per- sonnel when she collected her voting data during the 2001 unga session. without exception, interviewees noted that both an "abstain" and frequently an absence was a "weak no" vote. similarly, voeten (2000, p. 193) argues that there is little practical difference between a "no" vote and an abstention. what matters is the willingness of a state to go on record for supporting a resolution. to separate out a situation of high absenteeism from a voting choice, we omitted all states absent for 25% of the time. this took care of the vast majority of absences that would be coded as a "no" vote. 184 p. doreian et al. / social networks 35 (2013) 178--203 heavily); (ii)  = 0.5 (where positive and negative inconsisten- cies are weighted equally); and iii) 0.5 <  < 1 (where negative inconsistencies are weighted more heavily). 3. there is a relocation algorithm that is based on a neighborhood of a clustering, c, defined by two transformations: (i) the movement of one vertex from one plus-set to another plus-set in c; and (ii) the interchange of two vertices between two plus sets in c. given a partition, c, this leads to a local optimization procedure where these two types of transformations are the only ones considered. 4. given a partition, c, the effect of these local transformations is examined in terms of their impact on p(c). if a transformation leads to another clustering, c , such that p(c) > p(c ) for c in the neighborhood of c, then c replaces c as the active clustering. this is continued until no further drop in the value of criterion function is possible. 5. the whole procedure is repeated many times15 (because it is a local optimization procedure) until no further improvement is possible. the final partition(s) is (are) the optimal16 partition(s) where optimal means only that the partition the minimal value of the criterion function. for structural balance, the existence of a globally minimized par- tition is guaranteed, regardless of the size of the network. we use k to denote the number of subsets in a partition (clustering) c where 1  k  n and n denotes the number of vertices in the network. a partition with (k + 1) clusters is an adjacent partition. doreian et al. (2005, p. 305) provide: theorem 3. for any signed network (g, ), there will be a unique lowest value of the criterion function, denoted by p(cmin ), that occurs for partitions with k subsets or adjacent partitions.17 note that a unique minimum value, p(cmin ), does not imply that there is one unique partition with this optimal value. theorems 1 and formed a major development for the formulation of struc- tural balance and theorem 3 provides a clear statement about the behavior of the criterion function. brusco et al. (2011) showed that, for networks where n  40, the local optimization proce- dure locates the optimal partition(s) of signed one-mode networks. however, for relaxed structural balance, while the criterion func- tion is defined in the same fashion, its behavior as the number of clusters, k, is increased is different. denoting the value of the opti- mal value of the criterion function for partitions with k clusters by p(ck), doreian and mrvar (2009) prove: theorem 4. for establishing optimal partitions using the relaxed structural balance blockmodel, the values of p(ck) decline monotoni- cally as k increases. the nice behavior of the criterion function for structural balance (theorem 3) is lost when relaxed structural balance is considered (unless an empirical network conforms to, or closely approximates, structural balance).18 the declining monotonic property of the 15 at a minimum, we recommend using many thousands of repetitions. 16 there are two meanings for this term. one is the best that was found by using the local optimization method (thus far). a more general meaning for optimal partition is for the globally optimal partition(s)--which might not be obtained in a specific analysis. all theorems regarding optimal partitions apply for the latter meaning of this term. 17 the result is intuitively reasonable. if k = 1, then every negative tie is an inconsis- tency and, at the other extreme, if k = n, then every positive tie is an inconsistency. as k increases from 1, in general, p(c) decreases monotonically until (p(cmin )) is reached and as k is increased further then the value of p(c) increases. however, it is possible that for adjacent partitions the value of p(c) remains at the optimal value and the plot of p(c) against k is flat for these values before increasing as k is increased. 18 given a partition whose criterion function is optimal value is 0 under structural balance; increases in the value of k, under relaxed structural balance will produce more fine grained partitions with the same value of the criterion function. if the criterion function for relaxed structural balance for signed one- mode networks holds also for signed two-mode networks. mrvar and doreian (2009) prove: theorem 5. given a signed two-mode network g = (u, v, e) and a set of optimal partitions for the (k1, k2)-partitions of g, with 1  k1  n1 and with 1  k n2, the optimal values of p(c) decline monotonically with k1 for each value of kand monotonically with kfor each value of k1. while relaxed structural balance, as a generalization of struc- tural balance, has useful properties that include being the foundation of a method for partitioning signed two-mode net- works, the behavior of the criterion function in relation to k1 and k2, as described in theorem 5, ushers in some serious problems. these problems are the methodological focus of this paper. to state the first problem, we define the grain of a partition in terms of the number of clusters in a partition (for both one-mode and two-mode networks). loosely, partitions having many clusters are fine-grained and partitions with few clusters are coarse-grained. the minimum value of the criterion function for relaxed structural balance is 0 and this value must occur when every vertex is a singleton in a cluster. this is the most fine-grained partition possible but is use- less as a blockmodel. empirically, it is possible that this value is reached for extremely fine grained partitions that also have little utility for blockmodeling. this implies that to establish a reason- able coarse-grained partition, some judgment is required.19 when the implicit 3d plot (of the criterion function against k1 and k2) becomes flatter it suggests that the coarsest-grained partition for this flattened curve is an appropriate partition. second, for signed networks that have the size of the unga voting arrays considered here, the guarantee offered by the results of brusco et al. (2011) no longer holds.20 it follows that the resulting partitions be subject to additional scrutiny in an effort to ensure a useful partition. in gen- eral, this involves some consideration of alternative partitions near a candidate partition. finally, using the local optimization algo- rithm includes some searching over different values of k1 and kis computationally demanding when k1 and kare large.21 it follows that partitioning over large ranges of k1 and kwould be extremely time consuming. indirect blockmodeling may be a way of seeking guidance as to where to focus attention in terms of k1 and k2. 4.indirect signed blockmodeling doreian et al. (2005) distinguish direct blockmodeling, as described above, from indirect blockmodeling where summaries of the data, in the form of (dis)similarity measures constructed from a network, are used to partition the network data with some standard clustering method (doreian et al., 2005, pp. 177--84). optimized value of the criterion function under structural balance is not 0 then, under relaxed structural balance, the value of p(c) will decline monotonically, con- sistent with theorem 4. 19 the same property holds for structural equivalence although this is seldom recognized. 20 for the smaller networks that brusco et al. (2011) considered, the results of using the local optimization algorithm were compared with those obtained from an exact (branch-and-bound) algorithm guaranteed to identify the optimal par- titions. in all of the networks they considered, the returned partitions from both algorithms were identical. alas, the exact algorithm is completely impractical for large networks and such comparisons cannot be made. while this suggests another definition of `large'--a signed network is large (n > 40 for one-mode networks) when this guarantee is no longer available--we think that this is overly conservative with `large' being used for rather small networks. 21 for the p4 data with k1 = 7 and k= 7 100,000 repetitions, using an hp hdx18 notebook pc with an intel core cpu q9000 running at 2.00 ghz and with installed memory of 4.96 gb, a single run took about 4 h and 40 min. seeking more efficient methods seems merited provided that the resulting partitions are the best possible partitions. p. doreian et al. / social networks 35 (2013) 178--203 185 doreian et al. (1994) compared the direct and indirect approaches for some well known small networks. they report that, most of the time, the direct approach produced better fitting partitions, in terms of the values of the criterion function reported for each method, than those obtained by the indirect approach. further, the indirect approach never outperformed the direct approach for these small networks. however, the direct blockmodeling approach can be extremely burdensome computationally and this problem becomes acute as network sizes increases. given that the signed unga voting data set that we use is much larger than the signed networks considered hitherto, it seems prudent to consider indirect signed blockmodeling--blockmodeling signed data using indirect methods--as well. the data described in section 3 are very close to being complete (having zero or near-zero null ties). one faster indirect way of par- titioning the rows and columns is to partition them separately and then fuse the two partitions to form a joint partition of the two- mode signed network. for the rows, we computed the euclidean distance2for the vectors of each row. letting gik denote the (i, k) element of g, the euclidean distance between ui and uj, d(ui, uj), is obtained from d2(ui, uj) =  (gik -- gjk)and the euclidean distance between vi and vj, d(vi, vj), is obtained from d2(vi, uj) =  (gki -- gkj)2 in separate computations. these were used as input for a standard hierarchical clustering program where we used the ward clustering method (ward, 1963). the two hierarchical clustering algorithms each produce a dendrogram that can be visually inspected to deter- mine the number of clusters (k1 for rows and kfor columns). of course, there is flexibility here and this introduces another element of judgment. 4.3. comparing partitions our primary goal is to establish blockmodels of signed two- mode data that are meaningful and well defined. this implies that comparisons of partitions have to be made. these comparisons arise in three ways. first, given the establishment of a blockmodeling partition, it is necessary to establish that it is better than a ran- dom partition with the same numbers of clusters. second, given the result of theorem 5, and the implication that an element of judg- ment is needed to choose from among fitted blockmodels (with different values of k1 and k2). given a move from a coarse-grained partition to a more fine-grained partition--where theorem 5 points to a smaller value of the criterion function for the finer-grained partition--it is necessary to check that the difference is large enough to justify the move. third, as we do use other partitioning meth- ods, we need a way of comparing partitions obtained from using different methods. direct blockmodeling has a trio of criteria for evaluating parti- tions: (i) the form of the blockmodel in terms of its block structure; (ii) the agreement (or not) of the composition of the clusters; and (iii) the value of the criterion function implied by each partition. the blockmodeling approach is designed to use all of the signed two-mode data directly and does not use a low(er) dimensional representation. the expectation is that blockmodeling will pro- duce better partitions in the sense of: (i) having a lower value of the criterion function, p(c); (ii) will have a cleaner block struc- ture (more blocks in their correct location); and (iii) will have more coherent--internally, more consistent--blocks in the returned blockmodel. however, given the problems outlined in section 4.1, there is no guarantee that this will be the case. the size of the data sets and the computational burden that they imply for the block- modeling approach can mean that the optimal partition(s) are not 22 because the data are so close to being complete, euclidean distance can be used even though for most incomplete signed data sets it cannot be used fruitfully. reached. the value of p(c) for all of the partitions that we report is one criterion for evaluating the reported partitions. the smaller the value of p(c), the better is the partition with that value. a second criterion measures the consistency of the composition of the clus- ters in a partition. the gold standard for this is the adjusted rand index (ari): see hubert and arabie, 1985; saporta and youness, 2002; warrens, 2008; and santos and embrechts, 2009. here we use the ari to measure the correspondence of two partitions of the rows and columns of a partition of a two-mode structure. steinley (2004), based on an extended simulation study, has pro- vided a set of guidelines for assessing the correspondence (or not) of two partitions of a set of vertices. for ari  0.9, the correspon- dence between partitions is deemed excellent. when 0.9 > ari > 0.8, the correspondence is said to be acceptable. for this range of the val- ues of ari, the memberships of the two partitions are deemed to be close enough to be considered the same. for lower values of ari (ari  0.8) the correspondence of the two partitions is unacceptable. the blockmodeling approach starts with a random partition of the vertices in a two-mode network and proceeds from there. an obvious question for any established partition is simple to state: does it differ from a random partition of the vertices? in pajek, a random partition of the vertices into k1 clusters of rows and k2 clusters of columns produces k1 clusters of about the same size (n1/k1) of the rows and kclusters of columns of about the same size (n2/k2) of the columns. the ari can be used to measure the difference in the composition of the (starting) clusters and the ones established by blockmodeling. in general, the sizes of row clusters for the optimal partitions differ from the sizes of the random row clusters, as is the case for columns. another measure of departures from randomness is to use randomly generated clusters having the same sizes as were established for the optimal partition.23 in the blockmodeling procedure, a value of the criterion func- tion for the initial random partition is computed. we denote this value by p(cr) and the value of the optimal criterion function by p(co). a simple measure of the difference between these two val- ues of the criterion function is a proportional reduction of error measure: pre = (p(cr) - p(co))/p(cr). following experiments with random networks, values of pre  0.indicate departures from ran- domness and are therefore noteworthy. when viable partitions were obtained using other methods either ari or p(cr) are used as evaluative criteria. 5. results here, we present our blockmodeling results and stress two fea- tures of this approach. one is that blockmodeling is a full information approach in the sense that all of the data are analyzed all of the time. no data reduction occurs when partitioning because the method uses no summaries of the data. second, as used here, the focus is placed on the data being two-mode data. both clusters of states and clusters of resolutions are important: the two partitions (of states and resolutions) get their full coherence when they are considered together. 5.1. time 1: late cold war period 5.1.1. partitioning the full array of states and resolutions fitting blockmodels to a network array can be done within two distinct strategies. one is purely inductive and the other uses pre-specification. an inductive specification for signed two-mode 23 for example, if there are 100 vertices and a random partition is created, the sizes of the clusters are 34, 33 and 33. but if the blockmodeling partition returned clusters of sizes 60, 30 and 10, this alternative value of ari is computed with a randomly created partition into clusters with sizes of 60, 30 and 10. 186 p. doreian et al. / social networks 35 (2013) 178--203 networks states only that there will be positive or negative blocks. in contrast, pre-specification can be used when analysts pos- sess substantive or empirical knowledge (doreian et al., 2005, pp. 233--5) regarding the network to which blockmodels can be fitted. using pre-specification requires, ahead of analysis, the state- ment of a partial or complete blockmodel. a complete blockmodel gives the distribution of all block types in their locations within the blockmodel. although the term model based is often used to describe only statistical modeling where one or more equations or some probability structure are used, blockmodeling is model based when a complete blockmodel is pre-specified. the nature of unga voting dictates that some form of pre-specification be used. the reason is simple. for time 1 there are 30,468 positive votes and 8,448 negative votes implying that the proportion of positive votes is 0.783. the inductive use of blockmodeling (with only p and n blocks specified) leads to a blockmodel with only p blocks. of course, the form of the actual blockmodel becomes impor- tant and formulating one ahead of time is difficult. we know that some states tend to vote in support of the majority of resolutions while no states vote against all resolutions. other states vote in ways that span a range between these extremes. this leads to a simple specification that takes the following form when expressed in block types: r1 rr3 r4 r5 r6 r7 s1 p p p p p p p sp p p p p p n s3 p p p p p n n s4 p p p p n n n s5 p p p n n n n s6 p p n n n n n s7 p n n n n n n we call this a generic blockmodel form regardless of the number of clusters. to simplify notation, we write k = k1 = kin the above illustration, k = 7. the first row of positive (p) blocks is for states in cluster s1 that tended to support all resolutions. in contrast, the row corresponding to cluster s7 is for states voting against all resolutions except those in cluster r1. the remaining rows have sys- tematic differences regarding the number of resolutions that are supported and opposed by the states in each of the row clusters. similarly, resolutions differ systematically in the ways that states support or oppose them. the results from using the generic pre-specified blockmodel are shown in table 1a. six variants of the generic pre-specification are shown. the number of partitions, the values of the criterion func- tion, and the values of the fit indices (pre and ari) are shown. the decline in the values of the criterion function is consistent with theorem 5 and the declines show diminishing returns from increas- ing the number of clusters.24 also, the behavior of pre and ari make it clear that the obtained partitions are far from random partitions. all looks good with this information until we compare the values of the criterion function for the indirect approach using euclidean distance whose implied criterion function values are shown in the last column. in the main, the performance using euclidean distance is poor. not only are the implied values of the criterion function higher,theblockmodelstructureshaveduplicaterowsandcolumns of block types which imply that there are many other partitions with equally well fitting blockmodels. the surprise comes with the (7, 7) partition where the criterion function is lower than for using the generic blockmodel. table 1b shows the implied blockmodel for the euclidean (7, 7) partition where, in contrast to the generic blockmodel, there are some p blocks among the n blocks in the lower right of the array 24 the values of the criterion function for the (8, 8), (9, 9) and (10, 10) partitions are 2148, 2137.5 and 2124 respectively. of blocks. the generic blockmodel was quite good but not good enough for the time 1 voting array. as a result, we used it as an empirically based pre-specified blockmodel and fitted that to the data. the results are shown in table 1c. the partition is unique and the criterion function has dropped even further to 1881.5 and, again, the pre and ari indices conform that the partition is far from random. further, the value of the ari when this partition is compared with the partition from the generic blockmodel is 0.552 indicating that the two are different partitions. we show the partition of the full set of states and military reso- lutions for time 1 in appendix c (fig. c1) to demonstrate how the empirically informed pre-specification in table 1 is used. it shows the nature of the partition even though the labels for states and reso- lutions cannot be read. the black squares represent positive votes and the red diamonds represent negative votes. there is a clear patterning where there are concentrations of ties of a type within blocks. table gives the partition of the states25 and table c1 gives the partition of resolutions. in short, this gives the `big picture' of key voting clusters. this overall partition provides the departure point for focusing on parts within the big picture. we note that the clusters of states labeled s5 and s6 feature primarily the industrialized (and mainly western) states. most members of nato are in s6 including the us. the cluster labeled s7 has the (former) soviet union, members of the warsaw pact and other leftist/communist states. the remaining clusters have the rest of the world's states that are in the dataset. the clusters of resolu- tions reported in table 3 are labeled r1 through r7. the states in s6 solidly oppose the resolutions in r3, r4, r6, and r7. the four states in s5 have the same pattern except for tending to support the res- olutions in r3. the states in s7 and s6 tend to vote in support of resolutions in r1--as do all states--and against those in r6 but for resolutions on all of the other five clusters of resolutions their vot- ing is diametrically opposed. the states in s4 tend to support all resolutions except those in r5 (although the resolutions in rdraw a mixed response from this set of states). states in stend to oppose resolutions in r7 and support those in the remaining clusters while states in s1 tend to support all resolutions. in addition to obtaining clusters of states as potential blocs (not blocks), and the clusters of the resolutions, this two-mode par- tition opens the way to examining simultaneously the states and resolutions to facilitate the exploration of the exact nature of the resolutions that distinguished the states that oppose or support them.26 we noted earlier that 78% of the votes cast at time 1 were pos- itive. blocks of a signed blockmodel are distinguished as positive or null blocks. well fitting blockmodels ought to have blocks that are filled with ties having the same sign: positive blocks have pri- marily positive ties and negative blocks primarily have negative ties. table 3 presents the block densities of the ties consistent with the block type for each block together with a label for its sign. the higher the density of the correctly signed ties in a block, the fewer inconsistencies this block contributes to the criterion function. for a well fitting blockmodel, positive blocks must have densities well above 0.78 and negative blocks must have densities well above 0.22. there are 28 (bolded) blocks having densities above 0.9. of these, 20 of them are positive blocks and 8 are negative blocks. they pro- vide evidence that the blockmodel partition in fig. c1 has created many blocks with ties largely of the same sign. the 20 p blocks have 25 the partitioning returned papua new guinea as a singleton in a cluster. we do not take this seriously as a real cluster and treat it as not belonging to any potential voting bloc. however, we take some comfort in noting that the methods we use did distinguish it from all of the identified voting blocs. 26 this is done elsewhere because the focus here is on the methods that facilitate such comparisons. p. doreian et al. / social networks 35 (2013) 178--203 187 table 1 summary of the blockmodeling partitioning for time 1. partition number of partitions value of criterion function fit indices euclidean criterion function values pre ari (a) summary output and fit indices for time 1 (2, 2) 1 2743.5 0.611 0.344 2934.0 (3, 3) 1 2452.0 0.686 0.204 2648.0 (4, 4) 1 2353.0 0.717 0.734 2353.0 (5, 5) 4 2262.5 0.734 0.111 2284.0 (6, 6) 4 2197.5 0.760.096 2284.0 (7, 7) 2164.0 0.753 0.080 2117.5 r1 rr3 r4 r5 r6 r7 (b) inductively established blockmodel s1 p p p p p p p sp p p p p p n s3 p p p p p n n s4 p p p p n p p s5 p p p n p n n s6 p p n n p n n s7 p n p p n n p partition number of partitions value of criterion function fit indices pre ari (c) the final fitted blockmodel for time 1 (7, 7) 1 1881.5 0.748 0.456 densities well above the overall density of 0.78 for positive ties and the 8 n blocks are well above the overall density of 0.2for nega- tive ties. the concentration of negative ties primarily into only 8 n blocks is the most interesting because they show joint opposition to resolutions supported by most other states. while fig. presents the big picture of alliances, blockmod- eling also permits "drilling down" to examine what issues cause particular states to depart from the voting patterns of other bloc members. this examination could be driven by an interest in partic- ular blocs, interest in specific states, or voting cohesion of regional, international, or cross-regional organizations such as the eu, nato, or the oic. 5.1.some detailed further partitions one notable feature of table 3 is that six of the blocks for the leftist or communist states of the era (in the cluster labeled s7 in table 3) have block densities above 0.9 (and the seventh has a density of 0.869) showing highly consistent bloc voting. indeed, these densities point to this bloc has having the most con- sistently coherent voting pattern illustrative of cold war power table 2 seven clusters of states from fig. 2. s1 ss4 s5 s6 s7 bahrain malta bahamas algeria austria australia afghanistan bangladesh mauritania burmamyanmar angola finland belgium bulgaria barbados mauritius chile argentina greece canada byelobelarus bolivia morocco china benin ireland denmark cuba botswana niger colombia bhutan sweden france czech burundi nigeria costarica brazil gerfedrep demyemen cameroon oman cotedivoire capeverde iceland gerdemrep cenafrrep pakistan dkcambodia congo israel hungary chad panama dominicanrep cyprus italy india djibouti peru elsalvador ethiopia japan laos ecuador qatar fiji guineabissau luxembourg mongolia egypt romania guatemala indonesia netherlands mozambique gabon rwanda haiti libyanaj newzealand poland ghana saudiarabia honduras madagascar norway ussrussianfe guinea senegal jamaica mexico portugal ukraine guyana sierraleone liberia nicaragua spain vietnam iran somalia malawi saotomeprinc turkey iraq srilanka nepal syrianarabre uk jordan sudan paraguay uvburkinofas us kenya thailand philippines uganda kuwait togo singapore yemen lebanon trinidadtobago stlucia yugoslavia lesotho tunisia suriname malaysia uae uruguay maldives urtanzania zairedrc mali venezuela zambia note: a singleton cluster s3 (with papua new guinea) was identified but excluded from this and subsequent tables. 188 p. doreian et al. / social networks 35 (2013) 178--203 table 3 block densities for the 4blocks in fig. 2. r1 rr3 r4 r5 r6 r7 s1 p p p p p p p 0.958 0.929 0.961 0.930.838 0.947 0.769 sp p p p p p n 0.898 0.918 0.845 0.789 0.863 0.836 0.761 s4 p p p p n p p 0.931 0.778 0.966 0.954 0.770 0.914 0.868 s5 p p p n p n n 0.983 0.990.904 0.833 0.789 0.680 0.790 s6 p p n n p n n 0.848 0.905 0.856 0.950.889 0.950.955 s7 p n p p n n p 0.951 0.913 0.986 0.990.977 0.869 0.982 the singleton cluster (s3) was removed but the labels for clusters s4, s5, s6 and s7 were retained. bolded densities are all above 0.9. fig. negative blocks for communist and leftist states voting against resolutions for time 1. p. doreian et al. / social networks 35 (2013) 178--203 189 fig. 3. details fig. 4 negative voting blocks for the western and industrial states for time 1. struggles. although the western and/or industrial states generally vote against military resolutions, particularly those that impact their military power, there are resolutions that the communist bloc also votes against in consistent fashion. this is shown in fig. 3 for the three negative blocks for these states. the first two blocks in fig. are reproduced as is from fig. c1, but the third has been refined slightly (via blockmodeling) to show that both india and the democratic republic of the yemen are slightly dif- ferent in their detailed voting patterns. the resolutions identifying this block define the issues where these two states depart from the other members of the larger bloc. these two states tended to support issues related to disarmament and development and complete disarmament. we include this to show that, if needed and relevant, more detailed selective partitioning is possible to identify both the clusters of states and resolutions for further study, including any implications for balancing processes involv- ing military resolutions as the soft balancing counterpart to hard balancing. 190 p. doreian et al. / social networks 35 (2013) 178--203 fig. 4. partition of one bloc of states from the non-western states and resolutions in r7. fig. 3 presents some corresponding formatted arrays for the western, nato and/or industrial states for three of the clusters of resolutions that they vote against as a voting bloc. in the big picture of fig. c1, these are simply negative blocks of votes illus- trating voting patterns typical of cold war voting where alliances oppose one another on military policy issues. as noted above, the majority of western states oppose the majority of military resolu- tions (particularly those on disarmament--a direct threat to their military power). yet the western bloc--including nato member- states--are divided on several resolutions, illustrating that states voted for other reasons than standing solidly with alliance mem- bers. for example, the block of resolutions defined by the cluster r3 shows a subset of 23 resolutions for which 5 states (australia, denmark, iceland, norway and spain--all but australia are nato member states) tend to support. in the second panel of fig. 3, there are 7 resolutions supported by portugal, spain and turkey that p. doreian et al. / social networks 35 (2013) 178--203 191 other members of the eu and nato vote against. and in the final panel of fig. 4, there are 17 resolutions where turkey votes in oppo- sition to the majority of western states. the resolutions involving these positive votes by turkey reflect a conflict between nato and oic interests. in each of these three examples, the joint partition of states and resolutions provide important information on voting (dis)similarity. we expected on the whole during this period to find voting defined largely by the two cold war military alliances--and this was confirmed. we also found that some issues divided alliance members and the full information provided by our approach allows the interested researcher to explore the factors that lead to this divide. examining the top row of table 3, for a cluster of non-aligned member states suggests that the block defined by s1 and r7 (with a positive tie density of 0.769) has enough negative ties (467 of them) that merit further attention. the blockmodel in fig. 4 shows that there is some pattern to these ties (pre = 0.626 and ari = 0.162) in the sense of there being clear n blocks in an otherwise large p block for a coarser-grained partition. again, the clusters of resolutions and states can be examined further to determine what links these states to oppose resolutions together that are supported by most other non-aligned member states. 5.1.3. balancing of power revealed as we noted earlier, the blockmodeling provides full informa- tion (on states and resolutions) which provides a basis for further exploration, including locating clear balancing processes among rival alliances. fig. 6 provides an example of doing this. we look more closely at the following clusters: s6 (the primary western bloc con- taining most of the nato members) and s7 (contains warsaw pact soviet bloc members and allies) from table and r7 (the resolu- tions that the western bloc opposes and the soviet bloc supports) from table 3. these are highlighted in the lower right part of the overall partitioned array in fig. c1. denoting this two-mode sub- network by g, we multiply it by its transpose to obtain ggt which we depict as a valued and signed one-mode network27 for states. this is drawn in the top panel of fig. 5 with the s6 (western, largely nato member) states depicted by circles on the right and s7 (soviet bloc and allied) states depicted as squares in the left--a clear reflec- tion of the cold war political divide that was present at time 1. all but one of the positive ties are within these two clusters of states. the only exception is a positive tie between india and turkey. the lower panel of fig. 6 shows how this positive tie was generated (e.g., the pattern of agreement on some resolutions). turkey votes with the `nato bloc' on most issues (25 of 39 res- olutions); but diverges on a number of others for this subset of resolutions.28 similarly, india votes largely in alignment with soviet bloc and allied states (29 of 39 resolutions).29 india and turkey vote identically on the 24 (14 for turkey and 10 for india) resolutions for which they vote differently than their respective bloc members. an advantage of blockmodeling is the ability to identify specific reso- lutions which both identify bloc voting and the issues that divide bloc members. once identified, the content of the resolutions and the temporary coalitions supporting them can be explored to pin- point the reasons for the divergence and to identify issues that can potentially fracture alliances. 27 we do not use the values in drawing fig. 6 but they are useful for subsequent analyses. 28 turkey votes differently from its nato and western allies on the following 14 resolutions: 40/6, 40/93, 40/96d, 40/168a, 40/168b, 39/14, 38/69, 38/180a, 38/180d, 38/180e, 37/82, 36/27, 36/98 and 36/226a. 29 india votes differently from soviet and allied states on the following 10 resolu- tions: 40/18, 40/85, 40/92a, 40/94i, 39/57, 39/65b, 39/151i, 38/187a, 38/188f and 36/92j. 5.time 2: post cold war period fig. 6 contains the detailed unique (7, 7) partition for time 2 that was obtained using the generic pre-specified blockmodel, and table 4 lists the seven clusters of states. the pattern is similar to that of the cold war period in identifying clear blocks of states that voted highly similar (as well as the divergences from bloc vot- ing). it is also similar in that the western or developed states are more likely to vote against military resolutions in the unga and to vote as a block. there are a number of important differences, how- ever. first, s6 is now composed of both western european states and newly independent eastern and central european states that formed after the dissolution of the soviet union and yugoslavia. many of these states have now been incorporated into both the eu and nato. interestingly, we also see a distinct voting pattern of the us, which votes more independently from the rest of the developed and western states and quite similarly with israel (in s7). in some ways, the blocks reflect huntington's "clash of civilizations" thesis in that there is a clearly expanded group of largely western states that vote quite distinctly from "the rest" on these military issues. blockmodeling allows further drilling down to identify the dis- tinct cluster of resolutions that divide these western/developed states from each other and from the rest of un member-states. this feature is useful for identifying the issues for which nato members are united and those which may suggest some balancing between the us (as the sole military hegemon) and eu-members states. a more in-depth exploration of this balancing process is beyond the scope of this paper but we have provided the tools by which this can be pursued. table 5 contains the summary of fitting this pre-specified block- model. as was the case for time 1, the criterion function drops in a fashion consistent with theorem 5. the fit statistics show that each obtained partition for the grains shown in the table is far from being random: these blocks of voting ties represent real differences in the patterns of voting by states within clusters. again, there are dimin- ishing returns for increasing the number of clusters and further partitioning of selected blocks is a better strategy than increasing the number of clusters for the full partitioning. in contrast to time 1, the indirect blockmodels perform poorly for all grains ( k  7). the values of the criterion function are higher and there are iden- tical rows and columns of block types.30 the computed value for the second ari is 0.118 for the two (7, 7) partitions, an extremely low value indicating that the indirect and direct (7, 7) partitions are very different. 5.3. partial summary a theoretical goal of our paper was to demonstrate the utility of the relaxed structural balance approach to the analysis of unga roll call votes, in potentially coupling balance of power theory in international relations with heider's structural balance theory. both theories share an assumption of a tendency towards balance among multiple actors resulting in an alliance formation. interna- tional relations scholars have proposed the idea of "soft power" balancing through norms, and adopted resolutions represent a con- sensus on norms underlying particular policy recommendations regarding issues of interest to the international community. voting on these military resolutions provide information on the coalitions that support or oppose particular norms about the use of military power by un member-states. examining the roll call votes on mil- itary issues at two time points spanning the cold war political 30 this helps account for the criterion function being unchanged for the (3, 3), (4, 4), and (5, 5) partitions because splitting a block into blocks with the same sign will not change the value of the criterion function. 19p. doreian et al. / social networks 35 (2013) 178--203 fig. 5. the one-mode network for s6 and s7 based on r7 and the two-mode network for s6, s7 and r7. ideological divide illustrated changing coalitions after a major shock to the international system. the overall structure of state relations impacted the relations among coalition members and the balance of power among them. as might be expected, the us and eu member states vote more similarly than other un-member states overall, but also less similarly than they did during the cold war when they shared a common enemy. we argue that our technique and results provide an important first step in exploring the coupling of these two important theories, and encourage other scholars to continue in this direction. we also progressed in our methodological goals, namely, iden- tification of and solutions for problems with applying the relaxed structural balance approach to large signed two-mode data. we demonstrated that direct signed blockmodeling is very useful for p. doreian et al. / social networks 35 (2013) 178--203 193 fig. 6. a partition of the full set of military resolutions for time 2. partitioning larger signed two-mode networks, but we also iden- tified several methodological issues that must be resolved. we suggested several solutions, and found that despite the prob- lems highlighted, the results produced are coherent, and reflect divisions located in prior unga voting analyses for both time peri- ods examined. however, despite having provided a substantively driven method that produces coherent and useful partitions of signed two-mode data, and illustrating how blockmodeling can identify smaller clusters that may be fruitful for examining the implications of temporary or more permanent coalitions, sev- eral problems remain. first, when the data arrays are large, the partitions obtained by using direct blockmodeling methods required long computational times, which is problematic in two ways: the length of time involved, and the difficulty with obtaining optimal partitions if either the time for the partitioning is reduced or the size of the two-mode array is raised too much. second, we were surprised to find that the result for the (indirect) euclidean distance (7, 7) partition was superior to the direct partition for the time 1. this was a salutary reminder that the direct blockmodeling method need not always locate the best partition. in this instance, using indirect blockmodeling had great value in not only provid- ing a better fitting partition but also in providing a pre-specified 194 p. doreian et al. / social networks 35 (2013) 178--203 table 4 seven clusters of states corresponding to fig. 6. s1 (n = 35) s(n = 28) s3 (n = 29) algeria lebanon antiguabarbuda mongolia bahamas nigeria angola libyanaj bangladesh mozambique bahrain panama barbados malaysia belize senegal chile peru benin mexico botswana singapore costarica philippines bhutan namibia uvburkinofaso srilanka djibouti qatar bolivia nepal cameroon thailand dominicanrep saudiarabia bruneidar oman colombia togo elsalvador sierraleone burmamyanmar pakistan cotedivoire uganda eritrea trinidadtobago capeverde papuanewguinea ecuador urtanzania ghana tunisia china stlucia ethiopia zambia guatemala uae cuba sudan gabon honduras venezuela egypt suriname grenada jordan equatorialguinea swaziland guyana kuwait fiji syrianarabrep india maldives guinea vietnam jamaica mali haiti yemen kenya mauritius indonesia zimbabwe laos morocco iran madagascar nicaragua s4 (n = 6) s5 (n = 9) s6 (n = 44) s7 (n = 2) brazil australia albania france norway uk israel paraguay azerbaijan andorra gerfedrep poland uzbekistan us samoa byelobelarus argentina greece portugal solomonislands georgia armenia hungary repkorea southafrica japan austria iceland repmoldova uruguay kazakhstan belgium ireland romania newzealand bulgaria italy ussrussianfed tajikistan canada latvia sanmarino ukraine croatia liechtenstein slovakia cyprus lithuania slovenia czech luxembourg spain denmark malta sweden estonia monaco tfyrm finland netherlands turkey blockmodel as the start point for getting an even better fitting partitions. it is possible that using methods having a very different rationale could be useful. alternative methods also may provide different but complementary information to help understand bloc voting in the unga. for these reasons, we make a preliminary exploration of several alternative approaches. we do not claim to take a complete survey of alternative methods because they are too numerous and a single paper could not do justice to what they have to offer. never- theless, we think it instructional to compare our results with that of some alternative popular approaches. not all of these will advance directly our theoretical interest but they may have the potential to do so. 6. alternative clustering approaches we consider briefly alternative tools for analyzing these data that have been used in unga voting studies or were developed as different ways of partitioning or representing two-mode data. however, this not intended as a complete survey. 6.1. geometric data analysis spatial models of multivariate data produce graphical geomet- ric displays that facilitate the exploration of multivariate structure. for example, principal component analysis (pca) produces a low- dimensional summary of a high-dimensional euclidean space, multidimensional scaling (mds) constructs a low-dimensional euclidean representation of dissimilarity data, and multiple corre- spondence analysis (mca) constructs a low-dimensional euclidean representation of categorical data. gower and hand (1995) and gower et al. (2011) provide a unified treatment of these techniques within the rubric of geometric data analysis. spatial models of voting data were introduced and popularized by downs (1957) who applied hotelling's (1929) model of spa- tial competition. such spatial models represent both voters and candidates as ideal points in a low-dimensional euclidean space and posit that voters tend to prefer candidates who are closer over candidates who are further away. mapping the ideal points exemplifies an approach called "unfolding" in the mds literature. see groenen (2005: part iii) for an </introduction>
+    <corps></corps>
+    <conclusion></conclusion>
+	<discussion>during the analyses that led to the results shown here, a num-
+ber of difficult issues emerged. key to fitting blockmodels is the
+distinction between inductive and deductive blockmodeling. the
+former forms a strategy that can be construed as based on ignorance
+p. doreian et al. / social networks 35 (2013) 178--203 199
+because all that is expressed is that certain blocks could be present.
+of course, there is a role for inductive blockmodeling, especially
+when it is applied in new empirical contexts. yet, we often know
+more about empirical phenomena than the relevance of particu-
+lar block types. this knowledge can be expressed in a pre-specified
+blockmodel. our experience with the generic blockmodel described
+in section 4 is a sobering reminder that a prespecified model, while
+immensely plausible, can never be the end of a structural story.
+the use of what we thought would be an inferior indirect approach
+using euclidean distance, while much inferior most of the time, did
+surprise us once in time 1. it suggested an alternative, and better,
+pre-specified blockmodel that we were compelled to use. this sug-
+gests that if there are multiple approaches to obtaining a partition
+of two-mode signed (or any) structural data, there is a benefit to
+moving between the different methods rather than sticking to one
+preferred approach.38
+one little explored feature of the blockmodeling of signed data,
+regardless of whether they are one-mode or two-mode, is found
+in the criterion function, n + (1 - )p that we have used. nearly
+all empirical applications have featured partitioning with  = 0.5
+because it is safe and there is no obvious reason for weighting n
+and p differently. yet, when there is a large imbalance between the
+number of positive and negative ties in a signed data set, it seems
+reasonable to explore different values for . indeed, some of the
+refined partitions that we reported for partitioning within previ-
+ously established blocks were done with varying . there are at
+least two compelling reasons for doing this. one is pragmatic in
+that values of  that depart from 0.5 are much more likely to pro-
+duce unique partitions. more importantly, when seeking `minority'
+patterns within large blocks, it is important to make sure that the
+sub-blocks are really homogeneous. so, when the minority differ-
+ent blocks are expected to be n blocks then positive inconsistencies
+were weighted more heavily and, when the minority blocks were
+expected to be p blocks, the negative inconsistencies were weighted
+more heavily. the detailed impact of differing values of  is an issue
+that merits exploration.
+as data sets considered by network analysts expand in size,
+and blockmodeling two-mode data structures is seen as having
+value, there is a need for faster algorithms. in terms of speed, the
+approaches considered here range from the blazingly fast islands
+algorithm to the heavy computational demands of direct block-
+modeling. choosing a preferred method(s) will be the decision of
+individual researchers according to their overall objectives. block-
+modeling locates the same general clustering and also provides
+the means for drilling down into fine-grained details with greater
+ease or clarity than some other approaches. on the other hand,
+blockmodeling may lead to extremely fine-grained partitions with
+the potential to overwhelm the researcher with this detail. still,
+this detail may be of value for those interested in the position of
+particular states or groups of states on particular policies.
+we emphasize that our comparisons with other methods are
+far from complete. space constraints prevented us from fully com-
+paring alternative approaches. the fact that these methods did not
+work as well in the data considered here, in terms of poor ari scores
+or not providing partitions has no implications for their general util-
+ity. in the rsb approach to partitioning 2-mode networks, the pri-
+mary evaluative emphasis is on the value of the criterion functions
+for established partitions, something that is absent from the other
+approaches that we have considered. we acknowledge that given
+the presence of many other algorithms, such as used in the com-
+munity detection approach, there may be more efficient methods
+38
+it raises also the daunting problem of specifying the form of two-mode data
+structures where an indirect approach, such as the one using euclidean distance,
+performs very well rather than very poorly.
+to identify clusters in large datasets. but our motivation for writing
+this paper was twofold: to explore solutions for problems that occur
+when applying the relaxed structural balance approach to large
+signed two-mode data, and to contribute to recent applications of
+social network analysis to ir research by highlighting its potential
+to uncover soft balancing of power processes. soft balancing implies
+alliances with consistency with regard to joint voting behavior and,
+to capture this, the signed blockmodeling of two-mode data has
+been operationalized in a specific and substantive driven way.
+appendix a. countries included in the analyses
+t1 countries, n = 141
+afghanistan dkcambodia kenya portugal
+algeria demyemen kuwait qatar
+angola denmark laos romania
+argentina djibouti lebanon ussr
+australia dominicanrep lesotho rwanda
+austria ecuador liberia stlucia
+bahamas egypt libya saotomeprincipe
+bahrain elsalvador luxembourg saudiarabia
+bangladesh ethiopia madagascar senegal
+barbados fiji malawi sierraleone
+byelorussia finland malaysia singapore
+belgium france maldives somalia
+benin gabon mali spain
+bhutan gerdemrep malta srilanka
+bolivia gerfedrep mauritania sudan
+botswana ghana mauritius suriname
+brazil greece mexico sweden
+bulgaria guatemala mongolia syrianarabrep
+uvburkinofaso guinea morocco thailand
+burmamyanmar guineabissau mozambique togo
+burundi guyana nepal trinidadtobago
+cameroon haiti netherlands tunisia
+canada honduras newzealand turkey
+capeverde hungary nicaragua uganda
+cenafrrep iceland niger ukraine
+chad india nigeria uae
+chile indonesia norway uk
+china iran oman urtanzania
+colombia iraq pakistan us
+congo ireland panama uruguay
+costarica israel papuanewguinea venezuela
+cotedivoire italy paraguay vietnam
+cuba jamaica peru yemen
+cyprus japan philippines yugoslavia
+czechoslovakia jordan poland zairedrc
+zambia
+t2 countries, n = 153
+albania djibouti lebanon stlucia
+algeria dominicanrep libyanaj samoa
+andorra ecuador liechtenstein sanmarino
+angola egypt lithuania saudiarabia
+antiguabarbuda elsalvador luxembourg senegal
+argentina equatorialguinea madagascar sierraleone
+armenia eritrea malaysia singapore
+australia estonia maldives slovakia
+austria ethiopia mali slovenia
+azerbaijan fiji malta solomonislands
+bahamas finland mauritius southafrica
+bahrain france mexico spain
+bangladesh gabon monaco srilanka
+barbados georgia mongolia sudan
+belarus gerfedrep morocco suriname
+belgium ghana mozambique swaziland
+belize greece namibia sweden
+benin grenada nepal syrianarabrep
+bhutan guatemala netherlands tajikistan
+bolivia guinea newzealand thailand
+botswana guyana nicaragua tfyrm
+brazil haiti nigeria togo
+bruneidar honduras norway trinidadtobago
+bulgaria hungary oman tunisia
+uvburkinofaso iceland pakistan turkey
+200 p. doreian et al. / social networks 35 (2013) 178--203
+appendix a (continued )
+burmamyanmar india panama uganda
+cameroon indonesia papuanewguinea ukraine
+canada iran paraguay uae
+capeverde ireland peru uk
+chile israel philippines urtanzania
+china italy poland us
+colombia jamaica portugal uruguay
+costarica japan qatar uzbekistan
+cotedivoire jordan repkorea venezuela
+croatia kazakhstan repmoldova vietnam
+cuba kenya romania yemen
+cyprus kuwait russianfed zambia
+czechrep laos monaco zimbabwe
+denmark latvia mongolia
+appendix b. unga military resolutions for each time period
+time 1: 1981--1985, n = 276 resolutions
+(1) national and regional concerns: a number of resolutions
+addressed apartheid. south africa was under apartheid from
+1948 to early 1994 and it was sanctioned from voting in the un
+from september 1974 until june 1994. the issue of apartheid
+was raised in the first unga session in 1946 but it was seen as
+an internal issue until the 1960 sharpeville massacre brought
+greater international attention to the issue. it was not until
+1974, that the unga voted to expel south africa from the un.
+the unsc 418 in 1977 created a mandatory arms embargo.
+the following resolutions focused on national and regional con-
+cerns: south africa apartheid regime against angola and other
+independent african states (36/172c, 1981); arms embargo
+against south africa (36/172e; 40/6, 1985); condemnation of
+military and nuclear collaboration with south africa (37/69d);
+armed conflict between iran and iraq (37/3); israeli aggres-
+sion against iraqi nuclear installations (36/27, 1981; 38/9,
+1983; 39/14, 1984); israeli nuclear armament (36/98, 1981;
+37/82, 1982; 38/69, 1983; 39/147, 1984; 40/93, 1985); using
+antarctica for peaceful purposes (3 in 1985); falkland islands
+(37/9, 1982; 38/12, 1983; 39/6, 1984; 40/21, 1985); 13 address-
+ing palestine; 13 addressing the middle east situation; 3 on
+afghanistan (very divisive (38/29, 1983; 39/13, 1984; 40/12,
+1985); 2 to establish nuclear-weapon-free-zone in the middle
+east; 4 to establish a nuclear-weapon-free-zone in south asia.
+(2) resolutions related to conventions: chemical and biological
+weapons (the following resolutions revealed a strong division
+in voting: 36/96 a, b, c; 37/98 a, c, d, e; 38/187 a, c; 36/65 a, b,
+e; 40/92 a, c). the convention on biological weapons opened
+for signature april 1972; entered into force march 1975; 171
+signatories and 155 ratifications; israel is one of the states that
+have not ratified or signed; 4 resolutions address the "urgent
+need" for a comprehensive nuclear-test-ban treaty, 1982--1985
+(a convention was opened for signature in 1996 but is not yet
+in force; the us signed it but did has not ratified it as of yet;
+see http://www.ctbto.org/faqs/?uid=3&chash=11241d850); 10
+resolutions call for the creation of an international convention
+to assure non-nuclear weapon states against the use or threat
+of use of nuclear weapons; 1 resolutions calls for a treaty to
+prohibit stationing weapons of any kind in outer space.
+(3) resolutions addressing particular security issues and policies:
+36 resolutions focus on general and complete disarmament
+with multiple related issues; 4 on removing landmines as
+remnants of war; 4 on reducing military budgets; 2 reviewing
+multilateral treaty-making process; 6 prohibiting the devel-
+opment and manufacture of new types of weapons of mass
+destruction; 4 on preventing an arms race in outer space; 1
+on nuclear weapon freeze; 3 calling for an immediate end
+to testing nuclear weapons; 4 calling for implementation of
+resolutions concerning ratification of additional protocol i
+of the treaty for the prohibition of nuclear weapons in latin
+america; 1 on declaration to prevent nuclear catastrophe; 1 on
+comprehensive review of all peacekeeping operations.
+(4) resolutions from the 10th and 12th special session on disar-
+mament: 55 and 23 resolutions, respectively; these address
+multiple issues from general disarmament to chemical, biolog-
+ical and small arm weapons, and the need for conventions.
+(5) special reports on disarmament and security: 5 (one a year) on
+enhancing the effectiveness of the principle of non-use of force
+in international relations.
+(6) un conferences: 1 on promotion of international cooperation
+in peaceful uses of nuclear energy.
+(7) normative and rights issues: 2 relating disarmament and
+development; 2 on right of people to peace.
+time 2: 1996--2001, n = 150 resolutions
+(1) national and regional concerns: 2 resolutions focus on financ-
+ing of a un interim force in lebanon; 1 on the me peace
+process; 6 on the risk of nuclear proliferation in the me; 1
+on establishing nuclear-weapon-free-zone in the me region;
+1 on maintenance of international security in the develop-
+ment of south-eastern europe; 1 on bosnia and herzegovina;
+6 to establish a nuclear-weapon-free-zone in south atlantic;
+1 to establish a nuclear-weapon-free-zone in south asia; 4 on
+implementing declaration of indian ocean as a zone of peace.
+(2) resolutions related to conventions: these are all addressed under
+the general and complete disarmament resolutions detailed in
+#4 below. the convention on chemical weapons opened for
+signature january 1993; entered into force april 1997; as of may
+2009, 188 signatures and 186 ratifications; israel and myanmar
+have not signed; angola, n korea, egypt, somalia, syria have not
+signed or ratified it.
+(3) resolutions addressing particular security issues and policies: 82
+resolutions focused on general and complete disarmament
+with multiple issues. notably, this is a 4-fold increase; several
+resolutions addressed the icj advisory opinion on the legal-
+ity of the threat or use of nuclear weapons and reveal very
+divisive voting; other issues covered a wide range of disar-
+mament issues including the nuclear non-proliferation treaty;
+conventional arms control at the regional level; transparency
+in armaments; environmental norms in disarmaments; small
+arms; nuclear testing; 1 on arms race prevention in outer
+space; 1 on comprehensive review of peacekeeping operations;
+1 on maintenance of international security; 7 on scientific and
+technological developments and their impact on international
+security; 5 on preventing an arms race in outer space; pre-
+vent violent disintegration of states; 1 on measures to eliminate
+international terrorism.
+(4) resolutions from the 10th and 12th special session on disarma-
+ment: 2 and 6 resolutions respectively (continual reduction);
+5 from the 12th session is on a nuclear weapons convention;
+other issues discuss disarmament generally.
+(5) special reports on disarmament and security: 4 on the interna-
+tional atomic energy agency (iaea); 1 on the report of the
+security council.
+(6) cooperation with other agencies: 6 on cooperation between the
+un and the organization for security and cooperation in europe
+(osce); 1 on cooperation between the un and the prepara-
+tory commission for the comprehensive nuclear test ban treaty
+organization.
+p. doreian et al. / social networks 35 (2013) 178--203 201
+fig. c1. a partition of the full set of states and military resolutions for time 1.
+appendix c. ancillary figures and tables
+fig. c1 and table c1.
+table c1
+seven clusters of resolutions from fig. c1.
+r1 r2 r3 r4 r5 r6 r7
+36/104 36/112 36/102 38/73e 36/172e 40/11 36/88 37/167 36/100
+36/172c 36/97a 36/106 38/73h 36/188 40/151a 36/96c 37/78a 36/226a
+36/172f 36/97c 36/84 38/76 36/226b 40/151d 37/76 38/183a 36/27
+36/25 36/97g 36/86a 38/80 36/31 40/151f 37/95b 38/188g 36/92j
+36/92c 36/97j 36/86b 39/148a 36/87b 40/152i 37/98d 38/191 36/92k
+36/92f 37/100e 36/92e 39/148c 36/89 40/158 37/98e 39/158 36/97e
+36/95 37/73 36/92h 39/148f 36/92d 40/197 38/187c 40/156a 36/98
+36/96a 37/78k 36/97k 39/148g 36/92i 40/70 38/29 40/156b 37/78e
+37/3 37/84 36/99 39/148j 36/94 40/80b 38/65 40/156c 37/82
+37/71 37/98c 37/100a 39/148k 36/96b 40/96a 39/13 40/159 37/98a
+37/81 37/99d 37/100b 39/148l 37/100c 39/148b 37/99a
+37/83 37/99e 37/102 39/148n 37/100h 39/55 38/180a
+37/99f 37/99g 37/118 39/148o 37/105 39/65a 38/180d
+37/99i 38/183p 37/72 39/148p 37/215 39/65e 38/180e
+37/99j 38/184 37/74a 39/155 37/69d 40/12 38/183c
+38/180c 38/188c 37/74b 39/49c 37/77a 40/152b 38/187a
+38/181a 38/188e 37/77b 39/49d 37/78b 40/83 38/188f
+38/188a 38/63 37/78c 39/52 37/80 40/92c 38/69
+38/188i 38/71a 37/78f 39/60 37/9 40/94n 38/75
+38/58d 38/81 37/78g 39/61b 38/12 39/
+38/61 39/53 37/78i 39/63c 38/133 39/6a
+38/68 39/64b 37/78j 39/63d 38/162 39/6b
+38/70 39/90 37/85 39/63g 38/180b 39/7
+38/74 40/81 38/132 39/80 38/182 39/8d
+38/9 40/91b 38/181b 40/151b 38/183f 39/8e
+39/146c 38/183b 40/151c 38/188j 39/151d
+39/148h 38/183d 40/151e 38/58a 39/151i
+39/151a 38/183g 40/152a 38/58b 39/57
+202 p. doreian et al. / social networks 35 (2013) 178--203
+table c1 (continued)
+r1 r2 r3 r4 r5 r6 r7
+39/151b 38/183h 40/152e 38/67 39/65b
+39/151f 38/183i 40/152g 38/73f 40/152h
+39/151h 38/183j 40/152m 38/73g 40/168a
+39/51 38/183l 40/152n 39/11 40/168b
+39/58 38/183m 40/152p 39/148m 40/18
+39/59 38/183n 40/21 39/151e 40/6
+39/61a 38/188h 40/80a 39/157 40/85
+40/150 38/190 40/88 39/167 40/92a
+40/151h 38/58c 40/89b 39/49a 40/93
+40/152j 38/58e 40/90 39/49b 40/94i
+40/168c 38/62 40/94h 39/6 40/96d
+40/79 38/72 40/96c 39/62
+40/86 38/73b 39/63a
+40/87 39/63h
+40/89a 39/63k
+40/94a 39/81
+40/94f
+40/94g
+40/94m
+references
+art, r.j., 2005/2006. correspondence: striking the balance. international security 30
+(winter (3)), 177--196.
+batagelj, v., mrvar, a., 1998. pajek--program for large network analysis. connections
+21, 47--57.
+bonacich, p., lloyd, p., 2004. calculating status with negative relations. social net-
+works 26 (4), 331--339.
+borg, i., groenen, p.j.f., 2005. modern multidimensional scaling: theory and appli-
+cations, second ed. springer, new york.
+borgatti, s.p., everett, m.j., 1992. regular blockmodels of multiway, multimode
+matrices. social networks 14, 91--120.
+borgatti, s.p., everett, m.g., 1997. network analysis of 2-mode data. social networks
+19, 243--269.
+borgatti, s.p., everett, m.g., freeman, l., 2002. ucinet for windows: software for
+social network analysis. analytic technologies, harvard, ma.
+brooks, s.g., wohlforth, w.c., 2005/2006. correspondence: striking the balance.
+international security 30 (winter (3)), 177--196.
+brusco, m., doreian, p., mrvar, a., steinley, d., 2011. two algorithms for relaxed
+structural balance partitioning: linking theory, models, and data to understand
+social network phenomena. sociological methods and research 40, 57--87.
+cahoon, l.j. 1975. locating a set of points using range information only. unpublished
+phd dissertation in statistics. carnegie mellon university, pittsburgh.
+cartwright, d., harary, f., 1956. structural balance: a generalization of heider's the-
+ory. psychological review 63, 277--293.
+davis, j.a., 1967. clustering and structural balance in graphs. human relations 20,
+181--187.
+de leeuw, j., 2005. principal component analysis of senate voting patterns. in: saw-
+ilowski, s. (ed.), real data analysis. information age publishing, north carolina,
+pp. 405--411.
+de leeuw, j., mair, p., 2007. homogeneity analysis. in: r: the package homals.
+preprint 525, department of statistics, ucla.
+de leeuw, j., mair, p., 2009. gifi methods for optimal scaling in r: the package homals.
+journal of statistical software 31 (4), 1--20, http://www.jstatsoft.org/v31/i04/.
+de nooy, wouter, andrej, mrvar, vladimir, batagelj, 2011. exploratory social net-
+work analysis with pajek: revised and expanded, 2nd ed. cambridge university
+press, new york.
+doreian, p., batagelj, v., ferligoj, a., 1994. partitioning networks based on generalized
+concepts of equivalence. journal of mathematical sociology 19, 1--27.
+doreian, p., batagelj, v., ferligoj, a., 2004. generalized blockmodeling of two-mode
+network data. social networks 26, 29--53.
+doreian, p., batagelj, v., ferligoj, a., 2005. generalized blockmodeling. cambridge
+university press, cambridge, england.
+doreian, p., krackhardt, d., 2001. pre-transitive balance mechanisms for signed net-
+works. journal of mathematical sociology 25, 43--67.
+doreian, p., mrvar, a., 1996. a partitioning approach to structural balance. social
+networks 18, 149--168.
+doreian, p., mrvar, a., 2009. partitioning signed social networks. social networks 31,
+1--11.
+desposato, s.w., 1997. party switching and democratization in brazil. in:
+presented at the 1997 meeting of the latin american studies asso-
+ciation in guadalajara, mexico, april 17--20, 1997. available from:
+http://lasa.international.pitt.edu/lasa97/desposato.pdf.
+downs, a., 1957. an economic theory of democracy. harper, new york.
+feld, s., elmore, r., 1982. patterns of sociometric choices: patterns of transitivity
+reconsidered. social psychology quarterly 45 (2), 77--85.
+fortunado, s., 2009. community detection in graphs. physics reports 486, 75--174.
+gifi, a., 1990. nonlinear multivariate analysis. john wiley & sons, new york.
+girvan, m., newman, m.e.j., 2002. community structure in social and bio-
+logical networks. proceedings of the national academy of sciences 99,
+7821--7826.
+gower, j.c., hand, d.j., 1995. biplots. chapman & hall/crc, boca raton, fl.
+gower, j.c., lubbe, s.g., le roux, n., 2011. understanding biplots. john wiley & sons,
+new york.
+harary, f., norman, r.z., cartwright, d., 1965. structural models: an introduction to
+the theory of directed graphs. john wiley, new york.
+heider, f., 1946. attitudes and cognitive organization. journal of psychology 21,
+107--112.
+heider, f., 1958. the psychology of interpersonal relations. john wiley and sons,
+new york.
+hotelling, h., 1929. stability and competition. economic journal 39 (1), 41--57.
+hubert, l., arabie, p., 1985. comparing partitions. journal of classification 2,
+193--218.
+hummon, n.p., doreian, p., 2003. some dynamics of social balance processes: bring-
+ing heider back into balance theory. social networks 25, 17--49.
+huntington, samuel p., 1996. the clash of civilizations and the remaking of world
+order. simon and schuster, new york.
+kim, s.y., russett, b., 1996. the new politics of voting alignments in the
+united nations general assembly. international organization 50 (4), 629--
+652.
+latapy, m., magnien, c., vecchio, n.d., 2008. basic notions for the analysis of large
+two-mode networks. social networks 30, 31--48.
+lloyd, paulette, 2007. mapping the world order. unpublished manuscript.
+michailidis, g., de leeuw, j., 1998. the gifi system of descriptive multivariate anal-
+ysis. statistical science 13, 307--336.
+mrvar, a., doreian, p., 2009. partitioning signed two-mode networks. journal of
+mathematical sociology 33, 196--221.
+newcomb, t.n., 1961. the acquaintance process. holt rinehart and winston, new
+york.
+newman, m.e.j., 2006. finding community structure in networks using the eigen-
+vectors of matrices. physical review e 74, 036104.
+nordlie, p.h., 1958. a longitudinal study of interpersonal attraction in a natural
+setting, unpublished ph.d. thesis, university of michigan.
+paul, t.v., 2004. the enduring axioms of balance of power theory. in: paul, t.v.,
+wirtz, j.j., fortman, m. (eds.), balance of power: theory and practice in the 21st
+century. stanford university press, stanford, pp. 1--25.
+poole, k.t., 2005. spatial models of parliamentary voting. cambridge university
+press, cambridge, uk.
+poole, k.t., lewis, j., lo, j., carroll, r., 2011. scaling roll call votes with nominate.
+journal of statistical software 42 (14), 1--21, http://www.jstatsoft.org/v42/i14/.
+robins, g., kashima, y., 2008. social psychology and social networks: individuals
+and social systems. asian journal of social psychology 11, 1--12.
+santos, j.m., embrechts, m.,2009. on the use of the adjusted rand index as a metric
+for evaluating supervised classification. in: icann `09: proceedings of the 19th
+international conference on artificial neural networks. springer-verlag, berlin,
+heidelberg, pp. 175--184.
+saporta, g., youness, g., 2002. comparing two partitions: some proposals and exper-
+iments. in: hardle, w., ronz, b. (eds.), proceedings in computational statistics.
+physica verlag, berlin, pp. 243--248.
+snyder, d., kick, e.l., 1979. structural position in the world system and economic
+growth, 1955--1970: a multiple-network analysis of transnational interactions.
+american journal of sociology 84 (5), 1096--1126.
+steinley, d., 2004. properties of the hubert--arabie adjusted rand index. psycholog-
+ical methods 9 (3), 386--396.
+p. doreian et al. / social networks 35 (2013) 178--203 203
+tragg, v.a., bruggeman, j., 2009. community detection in networks with positive
+and negative links. physical review e (statistical, nonlinear, and soft matter
+physics) 80 (3), 036115.
+voeten, e., 2000. clashes in the assembly. international organization 54 (2),
+185--217.
+warrens, m., 2008. on the equivalence of cohen's kappa and the hubert--arabie
+adjusted rand index. journal of classification 25, 177--183.
+ward, j.h., 1963. hierarchical grouping to optimize an objective function. journal of
+the american statistical association 58, 236--244.
+zaversnik, m., batagelj, v., 2004. islands, xxiv international sunbelt social net-
+work conference, portoroz, slovenia, may 12--16, 2004. available from:
+http://vlado.fmf.uni-lj.si/pub/networks/doc/sunbelt/islands.pdf.</discussion>
+	<biblio>art, r.j., 2005/2006. correspondence: striking the balance. international security 30
+(winter (3)), 177--196.
+batagelj, v., mrvar, a., 1998. pajek--program for large network analysis. connections
+21, 47--57.
+bonacich, p., lloyd, p., 2004. calculating status with negative relations. social net-
+works 26 (4), 331--339.
+borg, i., groenen, p.j.f., 2005. modern multidimensional scaling: theory and appli-
+cations, second ed. springer, new york.
+borgatti, s.p., everett, m.j., 1992. regular blockmodels of multiway, multimode
+matrices. social networks 14, 91--120.
+borgatti, s.p., everett, m.g., 1997. network analysis of 2-mode data. social networks
+19, 243--269.
+borgatti, s.p., everett, m.g., freeman, l., 2002. ucinet for windows: software for
+social network analysis. analytic technologies, harvard, ma.
+brooks, s.g., wohlforth, w.c., 2005/2006. correspondence: striking the balance.
+international security 30 (winter (3)), 177--196.
+brusco, m., doreian, p., mrvar, a., steinley, d., 2011. two algorithms for relaxed
+structural balance partitioning: linking theory, models, and data to understand
+social network phenomena. sociological methods and research 40, 57--87.
+cahoon, l.j. 1975. locating a set of points using range information only. unpublished
+phd dissertation in statistics. carnegie mellon university, pittsburgh.
+cartwright, d., harary, f., 1956. structural balance: a generalization of heider's the-
+ory. psychological review 63, 277--293.
+davis, j.a., 1967. clustering and structural balance in graphs. human relations 20,
+181--187.
+de leeuw, j., 2005. principal component analysis of senate voting patterns. in: saw-
+ilowski, s. (ed.), real data analysis. information age publishing, north carolina,
+pp. 405--411.
+de leeuw, j., mair, p., 2007. homogeneity analysis. in: r: the package homals.
+preprint 525, department of statistics, ucla.
+de leeuw, j., mair, p., 2009. gifi methods for optimal scaling in r: the package homals.
+journal of statistical software 31 (4), 1--20, http://www.jstatsoft.org/v31/i04/.
+de nooy, wouter, andrej, mrvar, vladimir, batagelj, 2011. exploratory social net-
+work analysis with pajek: revised and expanded, 2nd ed. cambridge university
+press, new york.
+doreian, p., batagelj, v., ferligoj, a., 1994. partitioning networks based on generalized
+concepts of equivalence. journal of mathematical sociology 19, 1--27.
+doreian, p., batagelj, v., ferligoj, a., 2004. generalized blockmodeling of two-mode
+network data. social networks 26, 29--53.
+doreian, p., batagelj, v., ferligoj, a., 2005. generalized blockmodeling. cambridge
+university press, cambridge, england.
+doreian, p., krackhardt, d., 2001. pre-transitive balance mechanisms for signed net-
+works. journal of mathematical sociology 25, 43--67.
+doreian, p., mrvar, a., 1996. a partitioning approach to structural balance. social
+networks 18, 149--168.
+doreian, p., mrvar, a., 2009. partitioning signed social networks. social networks 31,
+1--11.
+desposato, s.w., 1997. party switching and democratization in brazil. in:
+presented at the 1997 meeting of the latin american studies asso-
+ciation in guadalajara, mexico, april 17--20, 1997. available from:
+http://lasa.international.pitt.edu/lasa97/desposato.pdf.
+downs, a., 1957. an economic theory of democracy. harper, new york.
+feld, s., elmore, r., 1982. patterns of sociometric choices: patterns of transitivity
+reconsidered. social psychology quarterly 45 (2), 77--85.
+fortunado, s., 2009. community detection in graphs. physics reports 486, 75--174.
+gifi, a., 1990. nonlinear multivariate analysis. john wiley & sons, new york.
+girvan, m., newman, m.e.j., 2002. community structure in social and bio-
+logical networks. proceedings of the national academy of sciences 99,
+7821--7826.
+gower, j.c., hand, d.j., 1995. biplots. chapman & hall/crc, boca raton, fl.
+gower, j.c., lubbe, s.g., le roux, n., 2011. understanding biplots. john wiley & sons,
+new york.
+harary, f., norman, r.z., cartwright, d., 1965. structural models: an introduction to
+the theory of directed graphs. john wiley, new york.
+heider, f., 1946. attitudes and cognitive organization. journal of psychology 21,
+107--112.
+heider, f., 1958. the psychology of interpersonal relations. john wiley and sons,
+new york.
+hotelling, h., 1929. stability and competition. economic journal 39 (1), 41--57.
+hubert, l., arabie, p., 1985. comparing partitions. journal of classification 2,
+193--218.
+hummon, n.p., doreian, p., 2003. some dynamics of social balance processes: bring-
+ing heider back into balance theory. social networks 25, 17--49.
+huntington, samuel p., 1996. the clash of civilizations and the remaking of world
+order. simon and schuster, new york.
+kim, s.y., russett, b., 1996. the new politics of voting alignments in the
+united nations general assembly. international organization 50 (4), 629--
+652.
+latapy, m., magnien, c., vecchio, n.d., 2008. basic notions for the analysis of large
+two-mode networks. social networks 30, 31--48.
+lloyd, paulette, 2007. mapping the world order. unpublished manuscript.
+michailidis, g., de leeuw, j., 1998. the gifi system of descriptive multivariate anal-
+ysis. statistical science 13, 307--336.
+mrvar, a., doreian, p., 2009. partitioning signed two-mode networks. journal of
+mathematical sociology 33, 196--221.
+newcomb, t.n., 1961. the acquaintance process. holt rinehart and winston, new
+york.
+newman, m.e.j., 2006. finding community structure in networks using the eigen-
+vectors of matrices. physical review e 74, 036104.
+nordlie, p.h., 1958. a longitudinal study of interpersonal attraction in a natural
+setting, unpublished ph.d. thesis, university of michigan.
+paul, t.v., 2004. the enduring axioms of balance of power theory. in: paul, t.v.,
+wirtz, j.j., fortman, m. (eds.), balance of power: theory and practice in the 21st
+century. stanford university press, stanford, pp. 1--25.
+poole, k.t., 2005. spatial models of parliamentary voting. cambridge university
+press, cambridge, uk.
+poole, k.t., lewis, j., lo, j., carroll, r., 2011. scaling roll call votes with nominate.
+journal of statistical software 42 (14), 1--21, http://www.jstatsoft.org/v42/i14/.
+robins, g., kashima, y., 2008. social psychology and social networks: individuals
+and social systems. asian journal of social psychology 11, 1--12.
+santos, j.m., embrechts, m.,2009. on the use of the adjusted rand index as a metric
+for evaluating supervised classification. in: icann `09: proceedings of the 19th
+international conference on artificial neural networks. springer-verlag, berlin,
+heidelberg, pp. 175--184.
+saporta, g., youness, g., 2002. comparing two partitions: some proposals and exper-
+iments. in: hardle, w., ronz, b. (eds.), proceedings in computational statistics.
+physica verlag, berlin, pp. 243--248.
+snyder, d., kick, e.l., 1979. structural position in the world system and economic
+growth, 1955--1970: a multiple-network analysis of transnational interactions.
+american journal of sociology 84 (5), 1096--1126.
+steinley, d., 2004. properties of the hubert--arabie adjusted rand index. psycholog-
+ical methods 9 (3), 386--396.
+p. doreian et al. / social networks 35 (2013) 178--203 203
+tragg, v.a., bruggeman, j., 2009. community detection in networks with positive
+and negative links. physical review e (statistical, nonlinear, and soft matter
+physics) 80 (3), 036115.
+voeten, e., 2000. clashes in the assembly. international organization 54 (2),
+185--217.
+warrens, m., 2008. on the equivalence of cohen's kappa and the hubert--arabie
+adjusted rand index. journal of classification 25, 177--183.
+ward, j.h., 1963. hierarchical grouping to optimize an objective function. journal of
+the american statistical association 58, 236--244.
+zaversnik, m., batagelj, v., 2004. islands, xxiv international sunbelt social net-
+work conference, portoroz, slovenia, may 12--16, 2004. available from:</biblio>
+</article>

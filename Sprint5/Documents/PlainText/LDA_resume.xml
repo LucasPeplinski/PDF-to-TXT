@@ -1,0 +1,91 @@
+<article>
+	<preamble>LDA_resume</preamble>
+    <titre></titre>
+    <auteur> jararo@azc.uam.mx </auteur>
+	<abstract>. the number of documents available into internet moves each day up. for this reason, processing this amount of information effectively and expressibly becomes a major concern for companies and scientists. methods that represent a textual document by a topic representation are widely used in information retrieval (ir) to process big data such as wikipedia articles. one of the main difficulty in using topic model on huge data collection is related to the material resources (cpu time and memory) required for model estimate. to deal with this issue, we pro- pose to build topic spaces from summarized documents. in this paper, we present a study of topic space representation in the context of big data. the topic space representation behavior is analyzed on different lan- guages. experiments show that topic spaces estimated from summaries are as relevant as those estimated from the complete documents. the real advantage of such an approach is the processing time gain: we showed that the processing time can be drastically reduced using summarized documents (more than 60% in general). this study finally points out the differences between thematic representations of documents depending on the targeted languages such as english or latin languages. </abstract>
+	<introduction> the number of documents available into internet moves each day up in an ex- ponential way. for this reason, processing this amount of information effectively and expressibly becomes a major concern for companies and scientists. an im- portant part of the information is conveyed through textual documents such as blogs or micro-blogs, general or advertise websites, and encyclopedic documents. this last type of textual data increases each day with new articles, which con- vey large and heterogenous information. the most famous and used collaborative internet encyclopedia is wikipedia, enriched by worldwide volunteers. it is the 12th most visited website in the usa, with around 10.65 million users visiting the site daily, and a total reaching 39 millions of the estimated 173.3 million internet users in the usa1 2 . the massive number of documents provided by wikipedia is mainly exploited by natural language processing (nlp) scientists in various tasks such as key- word extraction, document clustering, automatic text summarization, etc. dif- ferent classical representations of a document, such as term-frequency based representation [1], have been proposed to extract word-level information from this large amount of data in a limited time. nonetheless, these straightforward representations obtain poor results in many nlp tasks with respect to more abstract and complex representations. indeed, the classical term-frequency rep- resentation reveals little in way of intra- or inter-document statistical structure, and does not allow us to capture possible and unpredictable context dependen- cies. for these reasons, more abstract representations based on latent topics have been proposed. the most known and used one is the latent dirichlet allocation (lda) [2] approach which outperforms classical methods in many nlp tasks. the main drawback of this topic-based representation is the time needed to learn lda latent variables. this massive waste of time that occurs during the lda learning process, is mainly due to the documents size along with the number of documents, which is highly visible in the context of big data such as wikipedia. the solution proposed in this article is to summarize text documents con- tained into a big data corpus (here wikipedia) and then, learn a lda topic space. this should answer the these three raised difficulties: * reducing the processing time during the lda learning process, * retaining the intelligibility of documents, * maintaining the quality of lda models. with this text summarization approach, the size of documents will be dras- tically reduced, the intelligibility of documents will be preserved, and we make the assumption that the lda model quality will be conserved. moreover, for all these reasons, the classical term-frequency document reduction is not consid- ered in this paper. indeed, this extraction of a subset of words to represent the document content allows us to reduce the document size, but does not keep the document structure and then, the intelligibility of each document. the main objective of the paper is to compare topic space representations using complete documents and summarized ones. the idea behind is to show the effectiveness of this document representation, in terms of performance and time- processing reduction, when summarized documents are used. the topic space representation behavior is analyzed on different languages (english, french and spanish). in the series of proposed experiments, the topic models built from complete and summarized documents are evaluated using the jensen-shannon (j s) divergence measure as well as the perplexity measure. to the best of our knowledge, this is the most extensive set of experiments interpreting the evalu- ation of topic spaces built from complete and summarized documents without human models. 1 http://www.alexa.com 2 http://www.metrics2.com the rest of the paper is organized in the following way: first, section intro- duces related work in the areas of topic modeling and automatic text summa- rization evaluations. then, section 3 describes the proposed approach, including the topic representation adopted in our work and the different summarization systems employed. section 4 presents the topic space quality measures used for the evaluation. experiments carried out along with with the results presented in section 5. a discussion is finally proposed in section 6 before concluding in section 7.</introduction>
+    <corps></corps>
+    <conclusion>In this paper, a qualitative study of the impact of documents summarization in
+topic space learning is proposed. The basic idea that learning topic spaces from
+compressed documents is less time consuming than learning topic spaces from
+the full documents is noted. The main advantage to use the full text document
+in text corpus to build topic space is to move up the semantic variability into
+each topic, and then increase the divergence between these ones. Experiments
+show that topic spaces with enough topics size have more or less (roughly) the
+same divergence.
+Thus, topic spaces with a large number of topics, i.e. suitable knowing the
+size of the corpus (more than 200 topics in our case), have a lower perplexity, a
+better divergence between topics and are less time consuming during the LDA
+learning process. The only drawback of topic spaces learned from text corpus of
+summarized documents disappear when the number of topics comes up suitable
+for the size of the corpus whatever the language considered.
+</conclusion>
+	<discussion>the experiments conducted in this paper are topic-based concern. thus, each
+metric proposed in section 4 (perplexity and j s) are applied for each language
+(english, spanish and french), for each topic space size ({5, 10, 50, 100, 200, 400}),
+and finally, for each compression rate during the summarization process (10%</discussion>
+	<biblio>1. salton, g.: automatic text processing: the transformation. analysis and retrieval
+of information by computer (1989)
+2. blei, d., ng, a., jordan, m.: latent dirichlet allocation. the journal of machine
+learning research 3 (2003) 993--1022
+3. baeza-yates, r., ribeiro-neto, b., et al.: modern information retrieval. volume
+463. acm press new york (1999)
+4. salton, g., mcgill, m.j.: introduction to modern information retrieval. (1983)
+5. salton, g., yang, c.s.: on the specification of term values in automatic indexing.
+journal of documentation 29 (1973) 351--372
+6. deerwester, s., dumais, s., furnas, g., landauer, t., harshman, r.: indexing by
+latent semantic analysis. journal of the american society for information science
+41 (1990) 391--407
+7. bellegarda, j.: a latent semantic analysis framework for large-span language mod-
+eling. in: fifth european conference on speech communication and technology.
+(1997)
+8. hofmann, t.: probabilistic latent semantic analysis. in: proc. of uncertainty in
+artificial intelligence, uai ' 99, citeseer (1999) 21
+9. bellegarda, j.: exploiting latent semantic information in statistical language mod-
+eling. proceedings of the ieee 88 (2000) 1279--1296
+10. suzuki, y., fukumoto, f., sekiguchi, y.: keyword extraction using term-domain
+interdependence for dictation of radio news. in: 17th international conference on
+computational linguistics. volume 2., acl (1998) 1272--1276
+11. popescul, a., pennock, d.m., lawrence, s.: probabilistic models for unified col-
+laborative and content-based recommendation in sparse-data environments. in:
+proceedings of the seventeenth conference on uncertainty in artificial intelligence,
+morgan kaufmann publishers inc. (2001) 437--444
+12. louis, a., nenkova, a.: automatically evaluating content selection in summa-
+rization without human models. in: empirical methods in natural language
+processing, singapore (2009) 306--314
+13. lin, j.: divergence measures based on the shannon entropy. ieee transactions
+on information theory 37 (1991)
+14. saggion, h., torres-moreno, j.m., da cunha, i., sanjuan, e.: multilingual summa-
+rization evaluation without human models. in: 23rd int. conf. on computational
+linguistics. coling '10, beijing, china, acl (2010) 1059--1067
+15. torres-moreno, j.m., saggion, h., cunha, i.d., sanjuan, e., velazquez-morales,
+p.: summary evaluation with and without references. polibits (2010) 13--20
+16. hofmann, t.: unsupervised learning by probabilistic latent semantic analysis.
+machine learning 42 (2001) 177--196
+17. minka, t., lafferty, j.: expectation-propagation for the generative aspect model.
+in: proceedings of the eighteenth conference on uncertainty in artificial intelli-
+gence, morgan kaufmann publishers inc. (2002) 352--359
+18. griffiths, t.l., steyvers, m.: finding scientific topics. proceedings of the national
+academy of sciences of the united states of america 101 (2004) 5228--5235
+19. geman, s., geman, d.: stochastic relaxation, gibbs distributions, and the bayesian
+restoration of images. ieee transactions on pattern analysis and machine intel-
+ligence (1984) 721--741
+20. heinrich, g.: parameter estimation for text analysis. web: http://www. arbylon.
+net/publications/text-est. pdf (2005)
+21. torres-moreno, j.m.: automatic text summarization. wiley and sons (2014)
+22. torres-moreno, j.m.: artex is another text summarizer. arxiv:1210.3312 [cs.ir]
+(2012)
+23. ledeneva, y., gelbukh, a., garcia-hernandez, r.a.: terms derived from frequent
+sequences for extractive text summarization. in: computational linguistics and
+intelligent text processing. springer (2008) 593--604
+24. manning, c.d., schutze, h.: foundations of statistical natural language process-
+ing. the mit press, cambridge, massachusetts (1999)
+25. duc: document understanding conference. (2002)
+26. torres-moreno, j.m., velazquez-morales, p., meunier, j.g.: cortex : un algorithme
+pour la condensation automatique des textes. in: arco'01. volume 2., lyon,
+france (2001) 365--366
+27. rosen-zvi, m., griffiths, t., steyvers, m., smyth, p.: the author-topic model for
+authors and documents. in: proceedings of the 20th conference on uncertainty in
+artificial intelligence, auai press (2004) 487--494
+28. mccallum, a.k.: mallet: a machine learning for language toolkit.</biblio>
+</article>

@@ -1,0 +1,1170 @@
+<article>
+	<preamble>Exact_Clustering_via_Integer_Programming_and_Maximum_Satisfiability</preamble>
+    <titre>exact clustering via integer programming and maximum satisfiability</titre>
+    <auteur>Atsushi Miyauchi, Tomohiro Sonobe, Noriyoshi Sukegawa atsushi.miyauchi.hv@riken.jp sonobe@nii.ac.jp sukegawa.15k@g.chuo-u.ac.jp </auteur>
+	<abstract> we consider the following general graph clustering problem: given a complete undirected graph g = (v, e, c) with an edge weight function c : e  q, we are asked to find a partition c of v that maximizes the sum of edge weights within the clusters in c. owing to its high generality, this problem has a wide variety of real-world applications, includ- ing correlation clustering, group technology, and community detection. in this study, we investigate the design of mathe- matical programming formulations and constraint satisfaction formulations for the problem. first, we present a novel inte- ger linear programming (ilp) formulation that has far fewer constraints than the standard ilp formulation by grotschel and wakabayashi (1989). second, we propose an ilp-based exact algorithm that solves an ilp problem obtained by mod- ifying our above ilp formulation and then performs simple post-processing to produce an optimal solution to the original problem. third, we present maximum satisfiability (maxsat) counterparts of both our ilp formulation and ilp-based exact algorithm. computational experiments using well-known real- world datasets demonstrate that our ilp-based approaches and their maxsat counterparts are highly effective in terms of both memory efficiency and computation time. </abstract>
+	<introduction> clustering is a fundamental tool in data analysis. roughly speaking, the task of clustering is to divide a given set of objects into subsets of homogeneous objects. to date, vari- ous problem settings and optimization algorithms have been extensively studied (aggarwal and reddy 2013; jain, murty, and flynn 1999; xu and wunsch 2005). let us consider the following general graph clustering problem. an instance is a complete undirected graph g = (v, e, c) with an edge weight function c : e  q, where q is the set of rational numbers. for simplicity, we denote cij = c({i, j}) for each {i, j}  e. the edge weight cij expresses the degree of preference that i, j  v are assigned to the same cluster; if cij is positive, we wish to assign i, j  v to the same cluster, whereas if cij is negative, we wish to assign i, j  v to different clusters. the goal is to find a partition c = {v1, v2, . . . , vk} (i.e., copyright c  2018, association for the advancement of artificial intelligence (www.aaai.org). all rights reserved. k l=1 vl = v and vi  vj =  for i = j) of v that maxi- mizes the sum of edge weights within the clusters in c, i.e.,  {i,j}e cij(c(i), c(j)), where c(i) is the (unique) cluster to which i  v belongs and  is kronecker's symbol, which is equal to 1 if two arguments are the same and 0 otherwise. note here that in this problem, there is no restriction on the number of clusters in the output partition; thus, the algorithms are allowed to specify the optimal number of clusters endoge- nously. this problem is known as the clique partitioning prob- lem (cpp), which was originally introduced by grotschel and wakabayashi (1989). as described in section 2, the high gen- erality of cpp leads to a wide variety of real-world applica- tions, including correlation clustering, group technology, and community detection. the np-hardness was demonstrated in wakabayashi (1986). in the field of artificial intelligence, mathematical pro- gramming and constraint satisfaction are known to be key frameworks to solve np-hard optimization problems. in these frameworks, we first formulate a problem at hand as a math- ematical programming problem or a constraint satisfaction problem such as an integer programming (ip) problem or a maximum satisfiability (maxsat) problem, and then solve it using powerful mathematical programming or constraint satisfaction solvers. for example, in the case of ip problems, we may use gurobi optimizer or ibm ilog cplex. the problem we address, cpp, is not an exception; in fact, both of mathematical programming formulations and constraint satisfaction formulations have been actively developed. mathematical programming formulations. grotschel and wakabayashi (1989) introduced a 0-1 integer linear programming (ilp) formulation for cpp, which has been employed by many algorithms for cpp and its variants (e.g., (agarwal and kempe 2008; bruckner et al. 2013; jaehn and pesch 2013; miyauchi and miyamoto 2013; nowozin and jegelka 2009; oosten, rutten, and spieksma 2001; van gael and zhu 2007)). the ilp formulation is simple and intuitive, but not sufficiently scalable for real- world applications in terms of both memory requirements and computation time. in particular, the issue of memory requirements is quite serious. letting n = |v |, the ilp for- mulation has 3 n 3  = (n3 ) constrains, which grows rapidly as n increases. for example, if n = 1,000, the number of con- the thirty-second aaai conference on artificial intelligence (aaai-18) 1387 straints reaches the order of half a billion; it is quite difficult to store such an ilp formulation on a standard computer. to overcome this issue, much effort has been dedicated to constructing ilp formulations for cpp with fewer con- straints. dinh and thai (2015) addressed a special case of cpp, which is called the modularity maximization prob- lem (fortunato 2010; newman and girvan 2004), and de- rived a set of redundant constraints in the ilp formulation by grotschel and wakabayashi (1989). by removing the con- straints in advance, they introduced an ilp formulation with fewer constraints for the special case. recently, miyauchi and sukegawa (2015b) generalized dinh and thai's result to cpp. if m0 denotes the number of nonnegative-weighted edges in g, i.e., m0 = |{{i, j}  e : cij  0}|, the ilp formulation by miyauchi and sukegawa (2015b) has o(nm0) constraints, which improves on the ilp formula- tion by grotschel and wakabayashi (1989) for the case in which m0 is not large (e.g., m0 = o(n)). however, for most real-world instances of cpp, the pa- rameter m0 is large owing to the large number of edges with weight zero; thus, the benefit of the above reformulation is quite limited for real-world applications. in fact, com- putational experiments in miyauchi and sukegawa (2015b) demonstrated that the decrease in the number of constraints-- which is about 20% at most--is not significant. moreover, their reformulation does not reduce computation time signifi- cantly; in fact, in some cases computation time increases. constraint satisfaction formulations. very recently, berg and jarvisalo (2017) developed maxsat formulations for an optimization problem called the weighted correlation clustering problem (wcc). it should be noted that wcc is equivalent to cpp from an exact optimization perspective (see example 1 in section 2). thus, the maxsat formula- tions by berg and jarvisalo (2017) for wcc can be seen as exact formulations for cpp. wcc and its variants have been actively studied in the field of artificial intelligence (ahn et al. 2015; awasthi, balcan, and voevodski 2014; bansal, blum, and chawla 2004; bonchi, gionis, and ukkonen 2013; chierichetti, dalvi, and kumar 2014; kim et al. 2014; puleo and milenkovic 2016; van gael and zhu 2007). specifically, berg and jarvisalo (2017) developed three maxsat formulations: maxsat-transitive, maxsat-unary, and maxsat-binary. maxsat-transitive is the maxsat coun- terpart of the ilp formulation by grotschel and wak- abayashi (1989). maxsat-unary and maxsat-binary are maxsat formulations that employ the unary encoding and bi- nary encoding techniques, respectively. in their experiments, the maxsat formulations were compared with the ilp for- mulation by grotschel and wakabayashi (1989). the results of their experiments showed that maxsat-binary outperforms both the other maxsat formulations and the ilp formulation. thus, maxsat-binary is known to be state-of-the-art in terms of exact formulation for wcc and thus for cpp. 1.1 our contribution in this study, we further investigate the design of mathemat- ical programming formulations and constraint satisfaction formulations for cpp. our contribution can be summarized as follows: 1. we present a novel ilp formulation for cpp in which the number of constraints is o(nm>0), where m>0 is the number of positive-weighted edges in g, i.e., m>0 = |{{i, j}  e : cij > 0}|. we also propose an ilp-based exact algorithm for cpp. the algorithm first solves an ilp problem obtained by modifying our above ilp formulation and then performs simple post-processing to obtain an optimal solution to cpp. 3. we present maxsat counterparts of both our ilp formu- lation and ilp-based exact algorithm. 4. we conduct thorough experiments to evaluate the effec- tiveness of our ilp-based approaches and their maxsat counterparts in terms of both memory efficiency and com- putation time. we first describe our first result above in detail. to design our ilp formulation, we effectively use the above result by miyauchi and sukegawa (2015b). recall that they proposed an ilp formulation for cpp that has o(nm0) constraints. the serious problem with their formulation is that for most real-world instances of cpp, the parameter m0 is large owing to the large number of edges with weight zero. the critical idea behind the design of our ilp formulation is to perturb the edge weight function of a given instance so that all edges with weight zero have some negative weight. by doing this, the resulting instance has small m0; thus, the ilp formulation by miyauchi and sukegawa (2015b) for the resulting instance, which is our proposed ilp formulation for the original instance, has far fewer constraints. our theoreti- cal analysis demonstrates that if the negative values used for the perturbation are close to zero, the proposed formulation obtains an optimal solution to the original instance. we describe our second result in detail. in our ilp for- mulation above, it is necessary to deal with some negative perturbation values very close to zero. unfortunately, such values may cause numerical instability and therefore increase computation time in practice; hence, such perturbation should be avoided if possible. to this end, we introduce an ilp prob- lem that is identical to our above ilp formulation for cpp except that it uses an unperturbed objective function. this modified ilp problem also has o(nm>0) constraints but does not depend on the perturbation. however, the ilp prob- lem itself is incomplete as an ilp formulation for cpp; in fact, an optimal solution to the ilp problem may be infeasi- ble for cpp. thus, to obtain an optimal solution to cpp, the algorithm also performs simple post-processing that runs in linear time. we next describe our third result in detail. as mentioned above, berg and jarvisalo (2017) introduced a maxsat for- mulation called maxsat-transitive, which is the maxsat counterpart of the ilp formulation by grotschel and wak- abayashi (1989). that is, maxsat-transitive uses hard clauses to represent the constraints in the ilp formulation and soft clauses associated with appropriate weights to represent its objective function. beginning with maxsat-transitive, we 1388 can reproduce our results for ilp in the context of maxsat; specifically, we can obtain maxsat counterparts of both our ilp formulation and ilp-based exact algorithm. finally, we describe our fourth result in detail. in a series of experimental assessments, we compare our ilp-based ap- proaches and their maxsat counterparts with the previous formulations using well-known real-world datasets arising in the context of correlation clustering, group technology, and community detection. the results demonstrate that our approaches significantly outperform the state-of-the-art for- mulations in terms of both memory efficiency and computa- tion time. in particular, our ilp-based approaches can solve a real-world instance with a few thousand vertices for which the ilp formulation by grotschel and wakabayashi (1989) has more than eight billion constraints.</introduction>
+    <corps>The serious problem with their formulation is that for most
+real-world instances of CPP, the parameter m0 is large
+owing to the large number of edges with weight zero. The
+critical idea behind the design of our ILP formulation is to
+perturb the edge weight function of a given instance so that
+all edges with weight zero have some negative weight. By
+doing this, the resulting instance has small m0; thus, the
+ILP formulation by Miyauchi and Sukegawa (2015b) for the
+resulting instance, which is our proposed ILP formulation for
+the original instance, has far fewer co##debut## Our theoreti-
+cal analysis demonstrates that if the negative values used for
+the perturbation are close to zero, the proposed formulation
+obtains an optimal solution to the original instance.
+We describe our second result in detail. In our ILP for-
+mulation above, it is necessary to deal with some negative
+perturbation values very close to zero. Unfortunately, such
+values may cause numerical instability and therefore increase
+computation time in practice; hence, such perturbation should
+be avoided if possible. To this end, we introduce an ILP prob-
+lem that is identical to our above ILP formulation for CPP
+except that it uses an unperturbed objective function. This
+modified ILP problem also has O(nm>0) constraints but
+does not depend on the perturbation. However, the ILP prob-
+lem itself is incomplete as an ILP formulation for CPP; in
+fact, an optimal solution to the ILP problem may be infeasi-
+ble for CPP. Thus, to obtain an optimal solution to CPP, the
+algorithm also performs simple post-processing that runs in
+linear time.
+We next describe our third result in detail. As mentioned
+above, Berg and Jarvisalo (2017) introduced a MaxSAT for-
+mulation called MaxSAT-Transitive, which is the MaxSAT
+counterpart of the ILP formulation by Grotschel and Wak-
+abayashi (1989). That is, MaxSAT-Transitive uses hard clauses
+to represent the constraints in the ILP formulation and soft
+clauses associated with appropriate weights to represent its
+objective function. Beginning with MaxSAT-Transitive, we
+1388
+can reproduce our results for ILP in the context of MaxSAT;
+specifically, we can obtain MaxSAT counterparts of both our
+ILP formulation and ILP-based exact algorithm.
+Finally, we describe our fourth result in detail. In a series
+of experimental assessments, we compare our ILP-based ap-
+proaches and their MaxSAT counterparts with the previous
+formulations using well-known real-world datasets arising
+in the context of correlation clustering, group technology,
+and community detection. The results demonstrate that our
+approaches significantly outperform the state-of-the-art for-
+mulations in terms of both memory efficiency and computa-
+tion time. In particular, our ILP-based approaches can solve
+a real-world instance with a few thousand vertices for which
+the ILP formulation by Grotschel and Wakabayashi (1989)
+has more than eight billion co##debut##
+2 Application Examples
+CPP is a general clustering problem and therefore has a wide
+variety of applications. Here we provide some important
+application examples.
+Example 1 (Correlation clustering). Correlation clustering
+was introduced by Bansal, Blum, and Chawla (2004) for
+clustering with qualitative information. As an example, we
+consider document clustering, in which a set of documents is
+to be clustered into topics, with the hindering constraint that
+there is no exact prior definition of what a "topic" constitutes.
+Alternatively, it can be assumed that there exists qualitative
+similarity information indicating that a number of pairs of
+documents are similar or dissimilar. In such a situation, the
+goal of correlation clustering is to find a partition of the set of
+documents that agrees as much as possible with the similarity
+information.
+A mathematical formulation of correlation clustering is as
+follows: Let G
+= (V 
+, E+, E-) be an edge-labeled undi-
+rected graph in which each edge e  E+ is labeled as "+"
+(similar) and each edge e  E- is labeled as "-" (dissim-
+ilar). Note that E+  E- =  holds. The maximization
+version, MAXAGREE, asks for a partition C of V 
+that max-
+imizes agreements (the number of + edges within clusters
+plus the number of - edges across clusters). The minimiza-
+tion version, MINDISAGREE, asks for a partition C of V 
+that minimizes disagreements (the number of - edges within
+clusters plus the number of + edges across clusters). These
+problems are equivalent in terms of optimality and are both
+NP-hard (Bansal, Blum, and Chawla 2004). WCC, which was
+mentioned above, deals with edge-weighted generalizations
+of both MAXAGREE and MINDISAGREE.
+MAXAGREE and MINDISAGREE can be reduced to CPP.
+An instance G = (V, E, c) of CPP is constructed as fol-
+lows: Let V = V 
+. For each {i, j}  E, we set cij = 1 if
+{i, j}  E+, cij = -1 if {i, j}  E-, and cij = 0 other-
+wise. Clearly, an optimal solution to CPP corresponds to an
+optimal solution to both MAXAGREE and MINDISAGREE. It
+should be noted that WCC can also be reduced to CPP and
+CPP can be reduced to WCC.
+Example 2 (Group technology). Group technology plays
+a key role in the design of efficient manufacturing sys-
+tems (Groover 2007). Suppose that the goal is to develop
+a manufacturing system for some new product, comprising p
+parts that are processed by q machines. In such a situation,
+the goal of group technology is to find a suitable partition of
+the set of parts and machines needed to define an efficient
+cellular manufacturing system.
+As mentioned in Oosten, Rutten, and Spieksma (2001),
+group technology can be modeled as CPP. An instance G =
+(V, E, c) of CPP is constructed as follows: Let V be a union
+of the set of p parts and the set of q machines. An edge
+{i, j}  E between a part i and a machine j has weight 1 if i
+is processed by j and -1 otherwise. Each edge between two
+parts or two machines has weight zero.
+Example 3 (Community detection). Community detection
+is a fundamental task in network analysis that aims to find
+a partition of the set of vertices into communities (Fortu-
+nato 2010). Intuitively speaking, a community is a subset
+of vertices densely connected internally but sparsely con-
+nected with the rest of the network. Recently, the issue of
+community detection in bipartite networks has garnered a
+significant amount interest (Fortunato 2010). Barber (2007)
+introduced a quality function called the bipartite modular-
+ity, which is appropriate for community detection in bipar-
+tite networks. Let G
+= (V 
+, E
+) be an undirected bipar-
+tite graph for which it is known that V 
+is divided into
+V 
+L and V 
+R so that each edge has one endpoint in V 
+L and
+the other in V 
+R. The bipartite modularity, a quality func-
+tion for a partition C of V 
+, can be written as Qb(C) =
+1
+|E|
+
+iV 
+L
+
+jV 
+R
+
+Aij -
+didj
+|E|
+
+(C(i), C(j)), where Aij
+is the (i, j) component of the adjacency matrix of G
+and di is
+the degree of i  V 
+. The bipartite modularity maximization
+problem is NP-hard (Miyauchi and Sukegawa 2015a).
+The problem can be reduced to CPP. An instance G =
+(V, E, c) of CPP is constructed as follows: Let V = V 
+. An
+edge {i, j}  E between i  V 
+L and j  V 
+R has weight
+Aij
+|E| -
+didj
+|E|2 . Each edge between two vertices in V 
+L or two
+vertices in V 
+R has weight zero.
+3 ILP Formulation
+We first revisit the standard formulation by Grotschel and
+Wakabayashi (1989) and the reformulation by Miyauchi and
+Sukegawa (2015b). Let V = {1, 2, . . . , n} and P = {(i, j) :
+1  i < j  n}. For each (i, j)  P, we introduce a decision
+variable xij equal to 1 if i, j  V are in the same cluster and
+0 otherwise. Then the ILP formulation by Grotschel and
+Wakabayashi (1989) can be represented as follows:
+P(G) : max.
+
+(i,j)P
+cijxij
+s. t. xij + xjk - xik  1 (i, j, k)  T,
+xij - xjk + xik  1 (i, j, k)  T,
+-xij + xjk + xik  1 (i, j, k)  T,
+xij  {0, 1} (i, j)  P,
+where T = {(i, j, k) : 1  i < j < k  n}. The triangle
+inequality constraints stipulate that for any i, j, k  V , if
+1389
+i, j  V are in the same cluster and j, k  V are also in
+the same cluster, then i, k  V must be in the same cluster.
+The ILP formulation has
+n
+2
+
+= (n2
+) variables and 3
+n
+3
+
+=
+(n3
+) triangle inequality co##debut##
+Miyauchi and Sukegawa (2015b) derived a set of redun-
+dant triangle inequality constraints in P(G). By removing
+the constraints in advance, they introduced the following ILP
+formulation:
+RP(G) : max.
+
+(i,j)P
+cijxij
+s. t. xij + xjk - xik  1 (i, j, k)  T1
+0,
+xij - xjk + xik  1 (i, j, k)  T2
+0,
+-xij + xjk + xik  1 (i, j, k)  T3
+0,
+xij  {0, 1} (i, j)  P,
+where T1
+0 = {(i, j, k)  T : cij  0 or cjk  0}, T2
+0 =
+{(i, j, k)  T : cij  0 or cik  0}, and T3
+0 = {(i, j, k) 
+T : cjk  0 or cik  0}. They proved the following theorem:
+Theorem 1 (Theorem 1 in Miyauchi and Sukegawa (2015b)).
+Let G = (V, E, c) be an arbitrary instance of CPP. P(G) and
+RP(G) share the same set of optimal solutions.
+Therefore, we can solve RP(G) instead of P(G) to ob-
+tain an optimal solution to CPP. Note that the number of
+triangle inequality constraints in RP(G) can be evaluated
+as O(nm0), where m0 is the number of nonnegative-
+weighted edges in G, i.e., m0 = |{(i, j)  P : cij  0}|.
+3.1 Our Formulation
+Here we present our ILP formulation. Without loss of gen-
+erality, we assume that the edge weight function c is integer-
+valued. When c is rational-valued, we can immediately obtain
+an equivalent instance in which c is integer-valued by multi-
+plying an appropriate value for each cij.
+Let E0 = {{i, j}  E : cij = 0}. We define an edge
+weight function c so that for each {i, j}  E,
+cij =
+- if {i, j}  E0,
+cij otherwise,
+where   (0, 1/
+n
+2
+
+). Let us introduce a new instance G =
+(V, E, c). Then the number of triangle inequality constraints
+in RP(G) is O(nm>0), where m>0 is the number of positive-
+weighted edges in G, i.e., m>0 = |{(i, j)  P : cij > 0}|.
+It is expected that as  > 0 is sufficiently small, an optimal
+solution to RP(G) is also optimal to RP(G) and thus to P(G).
+In fact, we have the following theorem:
+Theorem 2. Let G = (V, E, c) be an arbitrary instance of
+CPP such that c is integer-valued. Any optimal solution to
+RP(G) is also optimal to P(G).
+Proof. Let x = (xij)(i,j)P be an arbitrary optimal solution
+to RP(G). From Theorem 1, x is an optimal solution to
+P(G), which implies that x satisfies all the triangle inequality
+constraints for T. Thus, x is also feasible for P(G).
+We now show the optimality of x to P(G). Let x =
+(xij)(i,j)P be an optimal solution to P(G) and a its objective
+value in P(G). Since all the constraints in RP(G) are also con-
+tained in P(G), the solution x is feasible for RP(G). The ob-
+jective value of x in RP(G), i.e.,
+
+(i,j)P cijxij, is strictly
+greater than a - 1 because the decrement, due to the change
+from P(G) to RP(G), of the objective value of x is at most
+|E0| <
+
+1/
+n
+2
+
+
+n
+2
+
+= 1. As for the objective value of x in
+P(G), i.e.,
+
+(i,j)P cijxij, we have a 
+
+(i,j)P cijxij 
+
+(i,j)P cijxij 
+
+(i,j)P cijxij > a - 1, where the first
+inequality follows from the feasibility of x in P(G), and the
+third inequality follows from the optimality and feasibility of
+x and x, respectively, in RP(G). Since the objective value
+of x in P(G) is an integer, we have
+
+(i,j)P cijxij = a.
+Therefore, x is optimal to P(G).
+4 ILP-Based Exact Algorithm
+We introduce the following ILP problem:
+RP
+(G) : max.
+
+(i,j)P
+cijxij
+s. t. xij + xjk - xik  1 (i, j, k)  T1
+>0,
+xij - xjk + xik  1 (i, j, k)  T2
+>0,
+-xij + xjk + xik  1 (i, j, k)  T3
+>0,
+xij  {0, 1} (i, j)  P,
+where T1
+>0 = {(i, j, k)  T : cij > 0 or cjk > 0}, T2
+>0 =
+{(i, j, k)  T : cij > 0 or cik > 0}, and T3
+>0 = {(i, j, k) 
+T : cjk > 0 or cik > 0}. Note here that the set of constraints
+is the same as in RP(G), whereas the objective function is
+the same as in P(G) and RP(G), i.e., the unperturbed one.
+Unfortunately, RP
+(G) may fail to obtain an optimal
+solution to P(G). In fact, there exist instances such that
+an optimal solution to RP
+(G) is infeasible for P(G). For
+example, consider G = (V, E, c) with V = {1, 2, 3, 4},
+c12 = 1, c13 = c23 = -1, and c14 = c24 = c34 = 0.
+A 0-1 vector x
+= (x
+ij) such that x
+12 = x
+14 = x
+24 =
+x
+34 = 1 and x
+13 = x
+23 = 0 is one of the optimal solu-
+tions to RP
+(G); however, the triangle inequality constraint
+-x13 + x34 + x14  1 in P(G) is violated.
+To obtain an optimal solution to P(G), we perform the
+following simple post-processing, which we refer to as pp,
+for an optimal solution x
+to RP
+(G): Let P
+>0 = {(i, j) 
+P : x
+ij = 1, cij > 0}. Obtain a set of weakly connected
+components {V1, V2, . . . , Vk} of (V, P
+>0) by the depth-first
+search. Output a 0-1 vector x
+that corresponds to the parti-
+tion {V1, V2, . . . , Vk}, i.e., x
+such that x
+ij = 1 if and only
+if i, j  Vq for some q  {1, 2, . . . , k}. Note that pp runs in
+time linear in the size of G.
+4.1 Correctness
+Here we demonstrate that our algorithm (i.e., RP
+(G)+pp)
+returns an optimal solution to P(G). To this end, it suffices
+1390
+to show that the objective value of x
+remains the same as
+that of x
+(in P(G) and RP
+(G)) because x
+is feasible for
+P(G) and x
+is optimal to a relaxation RP
+(G) of P(G). For
+convenience, we define P
+in = {(i, j)  P : x
+ij = 1} and
+P
+out = P \ P
+in. We have the following lemmas:
+Lemma 1. It holds that
+
+(i,j)P 
+in
+cijx
+ij =
+
+(i,j)P 
+in
+cijx
+ij.
+Proof. It suffices to show that for any q  {1, 2, . . . , k},
+it holds that x
+ij = 1 for each i, j  Vq with i < j. Fix
+q  {1, 2, . . . , k}. Let i, j be a pair of distinct vertices of Vq.
+Since Vq is weakly connected by P
+>0, there exists a path on
+P
+>0 that connects i and j if we ignore the direction of edges.
+Denote this (undirected) path by i = v0, v1, . . . , vt = j.
+Since cv0v1
+> 0 (and cv1v2
+> 0), RP
+(G) has the constraint
+xv0v1
++ xv1v2
+- xv0v2
+ 1. Note here that in this notation,
+it is necessary that v0 < v1 < v2 holds. If it is not the
+case, we should swap the order of the indices appropriately.
+Substituting x
+v0v1
+= x
+v1v2
+= 1 to this constraint, we have
+x
+v0v2
+= 1. Moreover, since cv2v3
+> 0, RP
+(G) also has the
+constraint xv0v2
++ xv2v3
+- xv0v3
+ 1. Substituting x
+v0v2
+=
+x
+v2v3
+= 1 to this constraint, we have x
+v0v3
+= 1. Repeating
+this operation, we finally have x
+v0vt
+= x
+ij = 1.
+Lemma 2. It holds that
+
+(i,j)P 
+out
+cijx
+ij  0.
+Proof. For each (i, j)  P
+out, we have (i, j) /
+ P
+>0. If other-
+wise, then x
+ij = 1 and thus (i, j)  P
+in. Therefore, for each
+(i, j)  P
+out, we have x
+ij = 0 or cij  0, which proves the
+lemma.
+By Lemmas 1 and 2, we have
+
+(i,j)P cijx
+ij =
+
+(i,j)P 
+in
+cijx
+ij 
+
+(i,j)P 
+in
+cijx
+ij +
+
+(i,j)P 
+out
+cijx
+ij =
+
+(i,j)P cijx
+ij. Therefore, we have the following theorem:
+Theorem 3. Let G = (V, E, c) be an arbitrary instance of
+CPP such that c is integer-valued. Any 0-1 vector returned
+by our algorithm (i.e., RP
+(G)+pp) is optimal to P(G).
+5 MaxSAT Counterparts
+Here we present MaxSAT counterparts of both our ILP
+formulation (i.e., RP(G)) and ILP-based exact algorithm
+(i.e., RP
+(G)+pp). It should be noted that we here con-
+sider WCC rather than CPP. As described above, WCC is
+equivalent to CPP from an exact optimization perspective.
+Let G = (V, E+, E-, c) be an instance of WCC. Note that
+c : E+  E-  Q>0 is an edge weight function, where Q>0
+is the set of positive rational numbers. The (positive) edge
+weights represent the strength of similarity and dissimilarity
+for {i, j}  E+ and {i, j}  E-, respectively. For simplic-
+ity, we denote cij = c({i, j}) for each {i, j}  E+  E-.
+We revisit MaxSAT-Transitive introduced by Berg and
+Jarvisalo (2017), which is the MaxSAT counterpart of P(G).
+Let V = {1, 2, . . . , n} and P = {(i, j) : 1  i < j  n}.
+For each (i, j)  P, we introduce a Boolean variable xij
+equal to True if i, j  V are in the same cluster and False
+otherwise. Then MaxSAT-Transitive, which we refer to as
+S-P(G) in the present study, can be represented as follows:
+Hard clauses:
+(xij  xjk  xik) (i, j, k)  T,
+(xij  xjk  xik) (i, j, k)  T,
+(xij  xjk  xik) (i, j, k)  T,
+Soft clauses:
+(xij) with weight cij (i, j)  P with {i, j}  E+,
+(xij) with weight cij (i, j)  P with {i, j}  E-,
+where T = {(i, j, k) : 1  i < j < k  n}. The set of
+hard clauses is a clausal representation of the set of triangle
+inequality constraints in P(G), and the set of soft clauses is a
+clausal representation of the objective function in P(G).
+</corps>
+    <conclusion>In this study, we have investigated the design of mathematical
+programming formulations and constraint satisfaction formu-
+lations for CPP. More specifically, we have presented a novel
+ILP formulation, an ILP-based exact algorithm, and their
+MaxSAT counterparts. The experimental results demonstrate
+that our approaches significantly outperform the state-of-the-
+art formulations in terms of both memory efficiency and
+computation time.
+Table 3: Results for the MaxSAT counterparts.
+ID S-P(G) S-RP(G) S-RP(G) S-RP
+(G)+S-pp
+time(s) time(s) time(s) time(s) time(s)
+P1 4,362.6 5,284.4 (0.5%) (0.7%) 1,058.4
+P2 2,690.6 2,779.7 2,049.8 2,366.6 486.0
+P3 (11.0%) (3.1%) (253.1%) (8.2%) (3.9%)
+P4 6,998.2 7,773.0 (31.8%) (31.8%) 3,200.5
+G14 14.9 14.5 16.6 18.0 21.8
+G16 19.6 20.1 41.4 49.0 39.2
+G17 6.1 6.2 11.4 13.1 10.5
+G18 (140.0%) (140.0%) 3,782.8 3,868.5 (140.0%)
+G19 195.7 198.7 45.4 50.8 637.7
+G21 124.3 126.6 49.9 60.2 132.4
+G25 31.9 43.4 46.2 44.4 32.3
+G26 2,017.7 1,986.3 348.5 484.6 4197.1
+G27 (121.1%) (121.1%) 1,615.8 2,338.5 (123.7%)
+G28 OM OM 3,995.1 6,949.2 OM
+G29 OM OM 8,658.7 11085.3 OM
+G30 7.1 6.1 15.8 16.8 14.7
+G31 8.7 9.3 26.9 28.2 8.9
+G32 (118.0%) (118.0%) 772.0 841.4 11,172.4
+G33 OM OM OT OT OM
+G34 (164.4%) (164.4%) OT 13,421.1 (154.9%)
+G35 14.4 11.4 2.8 2.4 3.1
+C1 13.8 13.4 14.5 18.0 9.7
+C2 83.5 87.6 119.3 82.9 106.2
+C3 (1,340.7%) (1,340.7%) OT OT (802.1%)
+C4 (65.8%) (65.8%) OT OT (75.3%)
+C5 4,162.6 2,794.7 525.7 555.7 268.0
+C6 OM OM (18.3%) (25.7%) (8.5%)
+1393
+</conclusion>
+	<discussion>of their experiments showed that maxsat-binary outperforms
+both the other maxsat formulations and the ilp formulation.
+thus, maxsat-binary is known to be state-of-the-art in terms
+of exact formulation for wcc and thus for cpp.
+1.1 our contribution
+in this study, we further investigate the design of mathemat-
+ical programming formulations and constraint satisfaction
+formulations for cpp. our contribution can be summarized
+as follows:
+1. we present a novel ilp formulation for cpp in which
+the number of constraints is o(nm>0), where m>0 is
+the number of positive-weighted edges in g, i.e., m>0 =
+|{{i, j}  e : cij > 0}|.
+2. we also propose an ilp-based exact algorithm for cpp.
+the algorithm first solves an ilp problem obtained by
+modifying our above ilp formulation and then performs
+simple post-processing to obtain an optimal solution to
+cpp.
+3. we present maxsat counterparts of both our ilp formu-
+lation and ilp-based exact algorithm.
+4. we conduct thorough experiments to evaluate the effec-
+tiveness of our ilp-based approaches and their maxsat
+counterparts in terms of both memory efficiency and com-
+putation time.
+we first describe our first result above in detail. to design
+our ilp formulation, we effectively use the above result by
+miyauchi and sukegawa (2015b). recall that they proposed
+an ilp formulation for cpp that has o(nm0) constraints.
+the serious problem with their formulation is that for most
+real-world instances of cpp, the parameter m0 is large
+owing to the large number of edges with weight zero. the
+critical idea behind the design of our ilp formulation is to
+perturb the edge weight function of a given instance so that
+all edges with weight zero have some negative weight. by
+doing this, the resulting instance has small m0; thus, the
+ilp formulation by miyauchi and sukegawa (2015b) for the
+resulting instance, which is our proposed ilp formulation for
+the original instance, has far fewer constraints. our theoreti-
+cal analysis demonstrates that if the negative values used for
+the perturbation are close to zero, the proposed formulation
+obtains an optimal solution to the original instance.
+we describe our second result in detail. in our ilp for-
+mulation above, it is necessary to deal with some negative
+perturbation values very close to zero. unfortunately, such
+values may cause numerical instability and therefore increase
+computation time in practice; hence, such perturbation should
+be avoided if possible. to this end, we introduce an ilp prob-
+lem that is identical to our above ilp formulation for cpp
+except that it uses an unperturbed objective function. this
+modified ilp problem also has o(nm>0) constraints but
+does not depend on the perturbation. however, the ilp prob-
+lem itself is incomplete as an ilp formulation for cpp; in
+fact, an optimal solution to the ilp problem may be infeasi-
+ble for cpp. thus, to obtain an optimal solution to cpp, the
+algorithm also performs simple post-processing that runs in
+linear time.
+we next describe our third result in detail. as mentioned
+above, berg and jarvisalo (2017) introduced a maxsat for-
+mulation called maxsat-transitive, which is the maxsat
+counterpart of the ilp formulation by grotschel and wak-
+abayashi (1989). that is, maxsat-transitive uses hard clauses
+to represent the constraints in the ilp formulation and soft
+clauses associated with appropriate weights to represent its
+objective function. beginning with maxsat-transitive, we
+1388
+can reproduce our results for ilp in the context of maxsat;
+specifically, we can obtain maxsat counterparts of both our
+ilp formulation and ilp-based exact algorithm.
+finally, we describe our fourth result in detail. in a series
+of experimental assessments, we compare our ilp-based ap-
+proaches and their maxsat counterparts with the previous
+formulations using well-known real-world datasets arising
+in the context of correlation clustering, group technology,
+and community detection. the results demonstrate that our
+approaches significantly outperform the state-of-the-art for-
+mulations in terms of both memory efficiency and computa-
+tion time. in particular, our ilp-based approaches can solve
+a real-world instance with a few thousand vertices for which
+the ilp formulation by grotschel and wakabayashi (1989)
+has more than eight billion constraints.
+2 application examples
+cpp is a general clustering problem and therefore has a wide
+variety of applications. here we provide some important
+application examples.
+example 1 (correlation clustering). correlation clustering
+was introduced by bansal, blum, and chawla (2004) for
+clustering with qualitative information. as an example, we
+consider document clustering, in which a set of documents is
+to be clustered into topics, with the hindering constraint that
+there is no exact prior definition of what a "topic" constitutes.
+alternatively, it can be assumed that there exists qualitative
+similarity information indicating that a number of pairs of
+documents are similar or dissimilar. in such a situation, the
+goal of correlation clustering is to find a partition of the set of
+documents that agrees as much as possible with the similarity
+information.
+a mathematical formulation of correlation clustering is as
+follows: let g
+= (v 
+, e+, e-) be an edge-labeled undi-
+rected graph in which each edge e  e+ is labeled as "+"
+(similar) and each edge e  e- is labeled as "-" (dissim-
+ilar). note that e+  e- =  holds. the maximization
+version, maxagree, asks for a partition c of v 
+that max-
+imizes agreements (the number of + edges within clusters
+plus the number of - edges across clusters). the minimiza-
+tion version, mindisagree, asks for a partition c of v 
+that minimizes disagreements (the number of - edges within
+clusters plus the number of + edges across clusters). these
+problems are equivalent in terms of optimality and are both
+np-hard (bansal, blum, and chawla 2004). wcc, which was
+mentioned above, deals with edge-weighted generalizations
+of both maxagree and mindisagree.
+maxagree and mindisagree can be reduced to cpp.
+an instance g = (v, e, c) of cpp is constructed as fol-
+lows: let v = v 
+. for each {i, j}  e, we set cij = 1 if
+{i, j}  e+, cij = -1 if {i, j}  e-, and cij = 0 other-
+wise. clearly, an optimal solution to cpp corresponds to an
+optimal solution to both maxagree and mindisagree. it
+should be noted that wcc can also be reduced to cpp and
+cpp can be reduced to wcc.
+example 2 (group technology). group technology plays
+a key role in the design of efficient manufacturing sys-
+tems (groover 2007). suppose that the goal is to develop
+a manufacturing system for some new product, comprising p
+parts that are processed by q machines. in such a situation,
+the goal of group technology is to find a suitable partition of
+the set of parts and machines needed to define an efficient
+cellular manufacturing system.
+as mentioned in oosten, rutten, and spieksma (2001),
+group technology can be modeled as cpp. an instance g =
+(v, e, c) of cpp is constructed as follows: let v be a union
+of the set of p parts and the set of q machines. an edge
+{i, j}  e between a part i and a machine j has weight 1 if i
+is processed by j and -1 otherwise. each edge between two
+parts or two machines has weight zero.
+example 3 (community detection). community detection
+is a fundamental task in network analysis that aims to find
+a partition of the set of vertices into communities (fortu-
+nato 2010). intuitively speaking, a community is a subset
+of vertices densely connected internally but sparsely con-
+nected with the rest of the network. recently, the issue of
+community detection in bipartite networks has garnered a
+significant amount interest (fortunato 2010). barber (2007)
+introduced a quality function called the bipartite modular-
+ity, which is appropriate for community detection in bipar-
+tite networks. let g
+= (v 
+, e
+) be an undirected bipar-
+tite graph for which it is known that v 
+is divided into
+v 
+l and v 
+r so that each edge has one endpoint in v 
+l and
+the other in v 
+r. the bipartite modularity, a quality func-
+tion for a partition c of v 
+, can be written as qb(c) =
+1
+|e|
+
+iv 
+l
+
+jv 
+r
+
+aij -
+didj
+|e|
+
+(c(i), c(j)), where aij
+is the (i, j) component of the adjacency matrix of g
+and di is
+the degree of i  v 
+. the bipartite modularity maximization
+problem is np-hard (miyauchi and sukegawa 2015a).
+the problem can be reduced to cpp. an instance g =
+(v, e, c) of cpp is constructed as follows: let v = v 
+. an
+edge {i, j}  e between i  v 
+l and j  v 
+r has weight
+aij
+|e| -
+didj
+|e|2 . each edge between two vertices in v 
+l or two
+vertices in v 
+r has weight zero.
+3 ilp formulation
+we first revisit the standard formulation by grotschel and
+wakabayashi (1989) and the reformulation by miyauchi and
+sukegawa (2015b). let v = {1, 2, . . . , n} and p = {(i, j) :
+1  i < j  n}. for each (i, j)  p, we introduce a decision
+variable xij equal to 1 if i, j  v are in the same cluster and
+0 otherwise. then the ilp formulation by grotschel and
+wakabayashi (1989) can be represented as follows:
+p(g) : max.
+
+(i,j)p
+cijxij
+s. t. xij + xjk - xik  1 (i, j, k)  t,
+xij - xjk + xik  1 (i, j, k)  t,
+-xij + xjk + xik  1 (i, j, k)  t,
+xij  {0, 1} (i, j)  p,
+where t = {(i, j, k) : 1  i < j < k  n}. the triangle
+inequality constraints stipulate that for any i, j, k  v , if
+1389
+i, j  v are in the same cluster and j, k  v are also in
+the same cluster, then i, k  v must be in the same cluster.
+the ilp formulation has
+n
+2
+
+= (n2
+) variables and 3
+n
+3
+
+=
+(n3
+) triangle inequality constraints.
+miyauchi and sukegawa (2015b) derived a set of redun-
+dant triangle inequality constraints in p(g). by removing
+the constraints in advance, they introduced the following ilp
+formulation:
+rp(g) : max.
+
+(i,j)p
+cijxij
+s. t. xij + xjk - xik  1 (i, j, k)  t1
+0,
+xij - xjk + xik  1 (i, j, k)  t2
+0,
+-xij + xjk + xik  1 (i, j, k)  t3
+0,
+xij  {0, 1} (i, j)  p,
+where t1
+0 = {(i, j, k)  t : cij  0 or cjk  0}, t2
+0 =
+{(i, j, k)  t : cij  0 or cik  0}, and t3
+0 = {(i, j, k) 
+t : cjk  0 or cik  0}. they proved the following theorem:
+theorem 1 (theorem 1 in miyauchi and sukegawa (2015b)).
+let g = (v, e, c) be an arbitrary instance of cpp. p(g) and
+rp(g) share the same set of optimal solutions.
+therefore, we can solve rp(g) instead of p(g) to ob-
+tain an optimal solution to cpp. note that the number of
+triangle inequality constraints in rp(g) can be evaluated
+as o(nm0), where m0 is the number of nonnegative-
+weighted edges in g, i.e., m0 = |{(i, j)  p : cij  0}|.
+3.1 our formulation
+here we present our ilp formulation. without loss of gen-
+erality, we assume that the edge weight function c is integer-
+valued. when c is rational-valued, we can immediately obtain
+an equivalent instance in which c is integer-valued by multi-
+plying an appropriate value for each cij.
+let e0 = {{i, j}  e : cij = 0}. we define an edge
+weight function c so that for each {i, j}  e,
+cij =
+- if {i, j}  e0,
+cij otherwise,
+where   (0, 1/
+n
+2
+
+). let us introduce a new instance g =
+(v, e, c). then the number of triangle inequality constraints
+in rp(g) is o(nm>0), where m>0 is the number of positive-
+weighted edges in g, i.e., m>0 = |{(i, j)  p : cij > 0}|.
+it is expected that as  > 0 is sufficiently small, an optimal
+solution to rp(g) is also optimal to rp(g) and thus to p(g).
+in fact, we have the following theorem:
+theorem 2. let g = (v, e, c) be an arbitrary instance of
+cpp such that c is integer-valued. any optimal solution to
+rp(g) is also optimal to p(g).
+proof. let x = (xij)(i,j)p be an arbitrary optimal solution
+to rp(g). from theorem 1, x is an optimal solution to
+p(g), which implies that x satisfies all the triangle inequality
+constraints for t. thus, x is also feasible for p(g).
+we now show the optimality of x to p(g). let x =
+(xij)(i,j)p be an optimal solution to p(g) and a its objective
+value in p(g). since all the constraints in rp(g) are also con-
+tained in p(g), the solution x is feasible for rp(g). the ob-
+jective value of x in rp(g), i.e.,
+
+(i,j)p cijxij, is strictly
+greater than a - 1 because the decrement, due to the change
+from p(g) to rp(g), of the objective value of x is at most
+|e0| <
+
+1/
+n
+2
+
+
+n
+2
+
+= 1. as for the objective value of x in
+p(g), i.e.,
+
+(i,j)p cijxij, we have a 
+
+(i,j)p cijxij 
+
+(i,j)p cijxij 
+
+(i,j)p cijxij > a - 1, where the first
+inequality follows from the feasibility of x in p(g), and the
+third inequality follows from the optimality and feasibility of
+x and x, respectively, in rp(g). since the objective value
+of x in p(g) is an integer, we have
+
+(i,j)p cijxij = a.
+therefore, x is optimal to p(g).
+4 ilp-based exact algorithm
+we introduce the following ilp problem:
+rp
+(g) : max.
+
+(i,j)p
+cijxij
+s. t. xij + xjk - xik  1 (i, j, k)  t1
+>0,
+xij - xjk + xik  1 (i, j, k)  t2
+>0,
+-xij + xjk + xik  1 (i, j, k)  t3
+>0,
+xij  {0, 1} (i, j)  p,
+where t1
+>0 = {(i, j, k)  t : cij > 0 or cjk > 0}, t2
+>0 =
+{(i, j, k)  t : cij > 0 or cik > 0}, and t3
+>0 = {(i, j, k) 
+t : cjk > 0 or cik > 0}. note here that the set of constraints
+is the same as in rp(g), whereas the objective function is
+the same as in p(g) and rp(g), i.e., the unperturbed one.
+unfortunately, rp
+(g) may fail to obtain an optimal
+solution to p(g). in fact, there exist instances such that
+an optimal solution to rp
+(g) is infeasible for p(g). for
+example, consider g = (v, e, c) with v = {1, 2, 3, 4},
+c12 = 1, c13 = c23 = -1, and c14 = c24 = c34 = 0.
+a 0-1 vector x
+= (x
+ij) such that x
+12 = x
+14 = x
+24 =
+x
+34 = 1 and x
+13 = x
+23 = 0 is one of the optimal solu-
+tions to rp
+(g); however, the triangle inequality constraint
+-x13 + x34 + x14  1 in p(g) is violated.
+to obtain an optimal solution to p(g), we perform the
+following simple post-processing, which we refer to as pp,
+for an optimal solution x
+to rp
+(g): let p
+>0 = {(i, j) 
+p : x
+ij = 1, cij > 0}. obtain a set of weakly connected
+components {v1, v2, . . . , vk} of (v, p
+>0) by the depth-first
+search. output a 0-1 vector x
+that corresponds to the parti-
+tion {v1, v2, . . . , vk}, i.e., x
+such that x
+ij = 1 if and only
+if i, j  vq for some q  {1, 2, . . . , k}. note that pp runs in
+time linear in the size of g.
+4.1 correctness
+here we demonstrate that our algorithm (i.e., rp
+(g)+pp)
+returns an optimal solution to p(g). to this end, it suffices
+1390
+to show that the objective value of x
+remains the same as
+that of x
+(in p(g) and rp
+(g)) because x
+is feasible for
+p(g) and x
+is optimal to a relaxation rp
+(g) of p(g). for
+convenience, we define p
+in = {(i, j)  p : x
+ij = 1} and
+p
+out = p \ p
+in. we have the following lemmas:
+lemma 1. it holds that
+
+(i,j)p 
+in
+cijx
+ij =
+
+(i,j)p 
+in
+cijx
+ij.
+proof. it suffices to show that for any q  {1, 2, . . . , k},
+it holds that x
+ij = 1 for each i, j  vq with i < j. fix
+q  {1, 2, . . . , k}. let i, j be a pair of distinct vertices of vq.
+since vq is weakly connected by p
+>0, there exists a path on
+p
+>0 that connects i and j if we ignore the direction of edges.
+denote this (undirected) path by i = v0, v1, . . . , vt = j.
+since cv0v1
+> 0 (and cv1v2
+> 0), rp
+(g) has the constraint
+xv0v1
++ xv1v2
+- xv0v2
+ 1. note here that in this notation,
+it is necessary that v0 < v1 < v2 holds. if it is not the
+case, we should swap the order of the indices appropriately.
+substituting x
+v0v1
+= x
+v1v2
+= 1 to this constraint, we have
+x
+v0v2
+= 1. moreover, since cv2v3
+> 0, rp
+(g) also has the
+constraint xv0v2
++ xv2v3
+- xv0v3
+ 1. substituting x
+v0v2
+=
+x
+v2v3
+= 1 to this constraint, we have x
+v0v3
+= 1. repeating
+this operation, we finally have x
+v0vt
+= x
+ij = 1.
+lemma 2. it holds that
+
+(i,j)p 
+out
+cijx
+ij  0.
+proof. for each (i, j)  p
+out, we have (i, j) /
+ p
+>0. if other-
+wise, then x
+ij = 1 and thus (i, j)  p
+in. therefore, for each
+(i, j)  p
+out, we have x
+ij = 0 or cij  0, which proves the
+lemma.
+by lemmas 1 and 2, we have
+
+(i,j)p cijx
+ij =
+
+(i,j)p 
+in
+cijx
+ij 
+
+(i,j)p 
+in
+cijx
+ij +
+
+(i,j)p 
+out
+cijx
+ij =
+
+(i,j)p cijx
+ij. therefore, we have the following theorem:
+theorem 3. let g = (v, e, c) be an arbitrary instance of
+cpp such that c is integer-valued. any 0-1 vector returned
+by our algorithm (i.e., rp
+(g)+pp) is optimal to p(g).
+5 maxsat counterparts
+here we present maxsat counterparts of both our ilp
+formulation (i.e., rp(g)) and ilp-based exact algorithm
+(i.e., rp
+(g)+pp). it should be noted that we here con-
+sider wcc rather than cpp. as described above, wcc is
+equivalent to cpp from an exact optimization perspective.
+let g = (v, e+, e-, c) be an instance of wcc. note that
+c : e+  e-  q>0 is an edge weight function, where q>0
+is the set of positive rational numbers. the (positive) edge
+weights represent the strength of similarity and dissimilarity
+for {i, j}  e+ and {i, j}  e-, respectively. for simplic-
+ity, we denote cij = c({i, j}) for each {i, j}  e+  e-.
+we revisit maxsat-transitive introduced by berg and
+jarvisalo (2017), which is the maxsat counterpart of p(g).
+let v = {1, 2, . . . , n} and p = {(i, j) : 1  i < j  n}.
+for each (i, j)  p, we introduce a boolean variable xij
+equal to true if i, j  v are in the same cluster and false
+otherwise. then maxsat-transitive, which we refer to as
+s-p(g) in the present study, can be represented as follows:
+hard clauses:
+(xij  xjk  xik) (i, j, k)  t,
+(xij  xjk  xik) (i, j, k)  t,
+(xij  xjk  xik) (i, j, k)  t,
+soft clauses:
+(xij) with weight cij (i, j)  p with {i, j}  e+,
+(xij) with weight cij (i, j)  p with {i, j}  e-,
+where t = {(i, j, k) : 1  i < j < k  n}. the set of
+hard clauses is a clausal representation of the set of triangle
+inequality constraints in p(g), and the set of soft clauses is a
+clausal representation of the objective function in p(g).</discussion>
+	<biblio>agarwal, g., and kempe, d. 2008. modularity-maximizing
+graph communities via mathematical programming. euro-
+pean physical journal b 66(3):409--418.
+aggarwal, c. c., and reddy, c. k. 2013. data clustering:
+algorithms and applications. crc press.
+ahn, k. j.; cormode, g.; guha, s.; mcgregor, a.; and wirth,
+a. 2015. correlation clustering in data streams. in icml '15:
+proceedings of the 32nd international conference on ma-
+chine learning, 2237--2246.
+altschul, s. f.; gish, w.; miller, w.; myers, e. w.; and
+lipman, d. j. 1990. basic local alignment search tool.
+journal of molecular biology 215(3):403--410.
+awasthi, p.; balcan, m.-f.; and voevodski, k. 2014. local al-
+gorithms for interactive clustering. in icml '14: proceedings
+of the 31st international conference on machine learning,
+550--558.
+bansal, n.; blum, a.; and chawla, s. 2004. correlation
+clustering. machine learning 56(1--3):89--113.
+barber, m. j. 2007. modularity and community detection in
+bipartite networks. physical review e 76:066102.
+berg, j., and jarvisalo, m. 2017. cost-optimal constrained
+correlation clustering via weighted partial maximum satisfia-
+bility. artificial intelligence 244:110--142.
+bonchi, f.; gionis, a.; and ukkonen, a. 2013. overlapping
+correlation clustering. knowledge and information systems
+35(1):1--32.
+bruckner, s.; huffner, f.; komusiewicz, c.; and niedermeier,
+r. 2013. evaluation of ilp-based approaches for partitioning
+into colorful components. in sea '13: proceedings of the
+12th international symposium on experimental algorithms,
+176--187.
+chierichetti, f.; dalvi, n.; and kumar, r. 2014. correlation
+clustering in mapreduce. in kdd '14: proceedings of the
+20th acm sigkdd international conference on knowledge
+discovery and data mining, 641--650.
+dinh, t. n., and thai, m. t. 2015. toward optimal com-
+munity detection: from trees to general weighted networks.
+internet mathematics 11(3):181--200.
+fortunato, s. 2010. community detection in graphs. physics
+reports 486(3):75--174.
+goncalves, j. f., and resende, m. g. c. 2004. an evolution-
+ary algorithm for manufacturing cell formation. computers
+& industrial engineering 47(2--3):247--273.
+groover, m. p. 2007. automation, production systems, and
+computer-integrated manufacturing. prentice hall press.
+grotschel, m., and wakabayashi, y. 1989. a cutting plane
+algorithm for a clustering problem. mathematical program-
+ming 45(1--3):59--96.
+jaehn, f., and pesch, e. 2013. new bounds and constraint
+propagation techniques for the clique partitioning problem.
+discrete applied mathematics 161(13--14):2025--2037.
+jain, a. k.; murty, m. n.; and flynn, p. j. 1999. data
+clustering: a review. acm computing surveys 31(3):264--
+323.
+kim, s.; yoo, c. d.; nowozin, s.; and kohli, p. 2014. image
+segmentation using higher-order correlation clustering. ieee
+transactions on pattern analysis and machine intelligence
+36(9):1761--1774.
+miyauchi, a., and miyamoto, y. 2013. computing an up-
+per bound of modularity. european physical journal b
+86(7):302.
+miyauchi, a., and sukegawa, n. 2015a. maximizing bar-
+ber's bipartite modularity is also hard. optimization letters
+9(5):897--913.
+miyauchi, a., and sukegawa, n. 2015b. redundant con-
+straints in the standard formulation for the clique partitioning
+problem. optimization letters 9(1):199--207.
+newman, m. e. j., and girvan, m. 2004. finding and
+evaluating community structure in networks. physical review
+e 69:026113.
+nowozin, s., and jegelka, s. 2009. solution stability in
+linear programming relaxations: graph partitioning and un-
+supervised learning. in icml '09: proceedings of the 26th
+international conference on machine learning, 769--776.
+oosten, m.; rutten, j. h. g. c.; and spieksma, f. c. r. 2001.
+the clique partitioning problem: facets and patching facets.
+networks 38(4):209--226.
+puleo, g. j., and milenkovic, o. 2016. correlation clustering
+and biclustering with locally bounded errors. in icml '16:
+proceedings of the 33rd international conference on ma-
+chine learning.
+van gael, j., and zhu, x. 2007. correlation clustering for
+crosslingual link detection. in ijcai '07: proceedings of the
+20th international joint conference on artificial intelligence,
+1744--1749.
+wakabayashi, y. 1986. aggregation of binary relations: al-
+gorithmic and polyhedral investigations. ph.d. dissertation,
+universitat augsburg.
+xu, r., and wunsch, d. 2005. survey of clustering algo-
+rithms. ieee transactions on neural networks 16(3):645--
+678.</biblio>
+</article>

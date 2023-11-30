@@ -1,0 +1,1381 @@
+<article>
+	<preamble>Cabrera_RESUMES_2019</preamble>
+    <titre>ranking rsums automatically using only rsums: a method free of job offers</titre>
+    <auteur>Luis Adri&amp;#x00E1;n Cabrera-Diego diegol@edgehill.ac.uk marc.elbeze@univavignon.fr juan-manuel.torres@univ-avignon.fr durette@adoc-tm.com </auteur>
+	<abstract> of the job offer related to the job posting. in table 6, we present an extract of vocabulary scor- ing using the three simulations, s1, s2 and s3, for 20 rsums of relevance feedback.23 it should be remembered, that for obtaining the n-grams and the values presented in table 6, we did not make use of the job offer at any moment, they are result from simulation s1, s2 and s3 as explained in section 4.2.1. we see from table 6 that simulation s3 provides the best weights to the terms related to the job offer, even when the last one was not included in the analysis process. nevertheless, sand s2 have trouble correctly weighting the terms of the job offer or at least placing them within the first five positions; the reason is the lack of information. additionally, although impossible to show due to their length, it should be mentioned that for simulation s3, the n-grams of both classes always had a squared probability, p2 c (t), of for simula- tions sand s2 the squared probabilities were always regarding the relevant class, while they varied from to 0.444 for the irrel- evant class. in general, thanks to outputs like those presented in table 6, it is possible to better understand which characteristics were the ones looked for or impacted the decision of hrm. with this kind of lists, psychologist can do a posteriori studies regarding the selec- tion of candidates. or, other hrms can use this kind of output to explain to candidates why they were not selected for an interview. one interesting thing to note, as seen in fig. 6, is that s2 is bet- ter than sdespite the former did not contain the terms that were boosted in the latter. the reason for this discrepancy is related to the quality of the n-grams chosen for the simulations and how we determine the term scores. as seen in table 6, the terms used for simulations sand s2, especially those for the relevant rsums, are quite different from the terms found in s3 and in the job offer. they can be considered as "bad" in terms of representativeness. thus, in swe gave these "bad" n-grams the power to reflect the classes, even though they do not truly represent them; the con- sequences are bad rankings. in s2 we deleted these "bad" terms, while the rest of terms represented the classes, although with poor term scores; the resulting rankings are affected negatively but not as much as in s1. in the previous results, we can see that the terms chosen by hrm may have a crucial role in the performance of vocabulary scoring, and as a consequence on the performance of the rele- vance factor. in other words, to choose terms that do not correctly represent what an hrm wants and does not want can negatively impact the ranking of rsums. related to this last point, we want to know how the vocabulary scoring is affected by the way the terms are sorted because it may not be an obvious task for an hrm to perform. in fact, an hrm 23 simulations sand s2 sort in the same way the n-grams; their difference is that s2 gives a term score of 0 to the first 50 n-grams. simulation s3 makes use of all the information available in the job to sort the terms presented in the 20 rsums analyzed. 104 l.a. cabrera-diego, m. el-bze and j.-m. torres-moreno et al. / expert systems with applications 123 (2019) 91--107 fig. 7. summary of a project manager job offer. the job offer comes from one of the 60 job postings to which we found their respective job offers. the original job offer was in french; we translated it to english and summarized it. table 6 squared probabilities, sum of weights, number of documents, factors and rank for a set of terms ac- cording to each vocabulary scoring simulation. all the n-grams, originally in french but translated to english, belong to the rsums linked to the job offer presented in fig. 7. the job has in total 36 rele- vant rsums and 29 irrelevant ones. simulations class n-gram (t) pc(t) w(t) dc(t) fc(t) rank sand s2 irrelevant project engineer 0.024 3 0.072 1 micro-techniques 0.022 2 0.045 2 investment 0.013 3 0.040 3 solidworks catia v5 0.019 2 0.039 4 supplier france 0.019 2 0.039 5 relevant business 0.040 7 0.285 1 rail 0.030 7 0.216 2 planning 0.024 8 0.196 3 range 0.023 8 0.189 4 respect 0.024 7 0.174 5 s3 irrelevant responsible supplier 0.038 4 0.154 1 unit 0.026 4 0.106 2 renault project 0.032 3 0.098 3 to orient 0.024 4 0.096 4 validation piece 0.042 0.083 5 relevant rail 0.023 22 5.098 1 alstom transport 0.074 8 0.598 2 train 0.076 7 0.532 3 tgv 0.062 6 0.372 4 cad software 0.048 5 0.245 can ask how to determine whether one term better represents the relevant or irrelevant rsums than another one. moreover, they can question whether to "incorrectly" sort one term would affect the resulting ranking at the same level as choosing a bad term. to answer these questions, instead of computing the term score with eq. (7), we decided to assign a term score of to the 50 more representative n-grams of each class. this is equivalent to saying that the order in which the n-grams are sorted has no importance. the results of setting the term scores equal to using simula- tion s3 showed that at 10 rsums, we get a map of 0.913  0.015; at 20 rsums, the map is 0.947  0.012. the ranova between our method using term scores set to and those computed with the 5th root indicated there is no significant difference at 10 and 20 rsums (p value = 1.7  10-3 and p value = 1.37  10-9 respec- tively). these outcomes do not mean that both methods are equiv- alent and as a consequence interchangeable, but that they perform very similarly.24 as well, the results obtained from using a term score of may provide a hint that the success of vocabulary scor- ing is related more to the quality of the chosen n-grams and the weight difference we create with respect to the other terms, i.e., those to which we set a term score of 0.0in other words, to put the most representative n-gram at the 50th position of the vocabu- lary scoring does not affect the results as much as leaving it aside. one interesting thing we observed in five different job post- ings using s3 is that the top ranked n-grams from the relevant rsums appear in more documents than the top ranked n-grams from the irrelevant rsums. we see this behavior in column dc(t) 24 the lack of significant difference between two means does not express that they are equal. it indicates that we need more data to determine a significant difference. however, the effect size of this difference may be very small and, in consequence, they would behave very similar in real conditions. of table 6. if this is true for all the job postings, we could confirm the ideas on which we based airp and mirp: the rsums from relevant applicants have in common multiple terms while the ir- relevant rsums usually present a great variety of terms that are not frequently shared. however, we must perform a deeper analy- sis to validate this hypothesis. despite the interest to determine what would be the results us- ing human judgments instead of simulations, it should be noted that this cannot be done without redoing the selection process. the main reason is the relation between the selection of appli- cants and the person specification, a document that can evolve over time. in other words, the hrm who would redo the selec- tion process may not have access to the previous person speci- fication. this may result in a different evaluation of rsums, es- pecially those from the first candidates who applied. however, we can imagine that in reality, humans would do a good job, even bet- ter than simulations, because they know a priori the person speci- fication. although we did not test vocabulary scoring with a set of less than 50 n-grams, it may be possible to reduce this figure. in first place, we should test whether a smaller vocabulary scoring with term scores set to 1, or determined by eq. (7), have the same per- formance. if this is not the case, we may change eq. (7). for ex- ample, a gradient closer to zero might help to give better results to the top 10 terms. another option would be to further reduce the term score for the n-grams that do not appear in the rele- vance feedback. in previous experiments, not presented here, we observed that as we decreased the term scores of the unseen n- grams the results were boosted even more. moreover, it could be of help to find the n-grams or terms, and even their synonyms, that appear in the job offer and per- son specification in order to improve or automate the generation l.a. cabrera-diego, m. el-bze and j.-m. torres-moreno et al. / expert systems with applications 123 (2019) 91--107 105 of vocabulary scorings. in other words, these n-grams or terms could be those that should be positioned at the top of the vo- cabulary scoring. to this end, we could make use of human re- sources lexica, ontologies and terminological extractors. however, the use of these resources may introduce some difficulties as terms may not correspond exactly to the n-grams used in the vector model. 8. conclusions and future work the massive access of the internet has changed multiple as- pects of our lives, and the way we find and apply for a job offer is not an exception. although the use of computers and the in- ternet has made easier to find job offers and potential candidates to send their rsums or curricula vitae, it has negatively affected the performance of human resource managers during the selection process. human resource managers have trouble to find rapidly the candidates, among all who applied, that meet the job requirements and should be called for an interview. we presented two innovative methods for ranking rsums by relevance, making it easier for human resource managers to iden- tify candidates with the desired characteristics. the methods here presented are innovative because they make use only of the r- sums sent in response to a job offer. these methods contrast with state-of-the-art methods that usually compare rsums and job offers with proximity measures. our methods are language in- dependent and do not need semantic resources to work. moreover, the methods presented here are statistically better than a random baseline or a baseline grounded on the similarity between rsums and a job offer. moreover, we presented two different ways to apply relevance feedback in a rsum ranker. one method for applying relevance feedback works at a general level (relevance factor), while the other method works at a finer lexical one (vocabulary scoring). al- though the relevance factor helps to improve rsum rankings, we find that it is its use along with vocabulary scoring that helps us to reach a mean average precision of 0.937. put differently, by us- ing the relevance factor with vocabulary scoring we can correctly rank almost every rsum. as a consequence, we can reduce the time needed by human resource managers to find the rsums of relevant applicants. it is important to note that the very good re- sults obtained with vocabulary scoring reinforces the concept that relevant rsums share more characteristics with themselves than with irrelevant ones, as seen in our previous works. we believe that, within the rsums we can intrinsically find a "facial composite" of the ideal candidate, and possibly the "facial composite" that represents the unqualified candidates. it may be these "facial composites" that enable us to rank rsums without the use of a job offer or semantic resources. we consider that methodologies based only on rsums and their vocabularies are the future of rsum rankers. the main rea- son to think this is that they are capable of offering excellent performance without being limited to one domain or language. despite these methods were created to be used in a particular database, where it was impossible to have access to every job of- fer, we believe that it can be used in any database of rsums, only if these are separated by job postings. furthermore, the methods here presented do not make use of any kind of semantic resources, which can make them easier to implement in under-resources lan- guages. there are still things that must be studied with this kind of methods. in the first place are the temporal aspects. we assumed in this article that all the rsums were present at the same time, but in real life this may not be true. on occasions, the process of recruitment and selection are done in parallel, i.e., once a r- sum arrives to a human resource manager, it is analyzed. we have to consider as well the evolution of the person specification over time. in some cases, human resource managers are obliged to be- come more or less strict in order to filter the applicants. these changes, in consequence, will affect the human resource managers' perception regarding the relevance of applicants. due to this effect, the way to apply our methods may need to change, and we should evaluate until which extent they remain valid. however, despite all, the proposed methods could be used to evaluate a posteriori the reasons why a group of candidates was chosen to do an interview. moreover, other human resource managers or psychologists may find useful the tool to determine whether human resource man- agers were affected by personality inferences, misspellings or any kind of discrimination. another aspect to take into account is the way to match terms or concepts and n-grams. these representations are not the same, and this can infuse difficulty to some degree in the application of our methods. put differently, a concept may be difficult to repre- sent with an n-gram. finally, it should be analyzed the economics and whether human resource managers will adopt these methods to make their tasks easier. regarding the scalability of the methods here presented, we do not observe any particular problem. as we indicated in section 5, the methods were called using the program gnu parallel, meaning that each job posting was analyzed using different cpu threads. this indicates that multiple job postings can be processed at the same time without any collision. furthermore, it is possible to par- allelize the similarity between rsums, i.e., to use several threads to calculate multiple dice's coefficient scores at the same time. the only aspect to take into consideration is that the vectors represent- ing the rsums should be accessible to every thread. at the end, all the methods described in this work can be easily scaled and distributed in a cluster. in the future, we would like to use word embedding in order to calculate the proximity between rsums differently. it could also be useful for vocabulary scorings. in addition, we will work on the improvements described in the discussion. since the meth- ods developed here are language independent, it will be easy to test them on other languages than french. although this last task can be difficult to achieve due to the lack of a corpus of real se- lection processes. during the experimentation, we observed that our methods can keep a good performance when they are tested on an encrypted version of the data set here used.25 therefore, we can rely on this clue that for other languages, the methods should work as well. in conclusion, we hope that our methods and results will attract new and deeper research in this domain. credit authorship contribution statement luis adrin cabrera-diego: conceptualization, methodology, software, validation, formal analysis, investigation, data curation, writing - original draft, writing - review & editing, visualiza- tion. marc el-bze: conceptualization, methodology, validation, formal analysis, investigation, writing - review & editing, super- vision, project administration, funding acquisition. juan-manuel torres-moreno: conceptualization, methodology, writing - review & editing, supervision, project administration, funding acquisi- tion. barthlmy durette: conceptualization, methodology, formal analysis, writing - review & editing, supervision, project adminis- tration. 25 we did not achieve the same results in the encrypted data set, as the rsums were encrypted without doing a deep pre-processing, like lemmatization or stop words deletion. thus, the rsums contained a greater variety of terms and noisy words. 106 l.a. cabrera-diego, m. el-bze and j.-m. torres-moreno et al. / expert systems with applications 123 (2019) 91--107 acknowledgments this work was partially funded by the agence national de la recherche et de la technologie (anrt), france, through the cifre convention 2012/0293b and by the consejo nacional de ciencia y tecnologa (conacyt), mexico, with the grant 327165. references armstrong, m., & taylor, s. (2014). armstrong's handbook of human resource manage- ment practice (13th). kogan page publishers. arthur, d. (2001). the employee recruitment and retention handbook. amacom. barber, l. (2006). e-recruitment developments. institute for employment studies. buckley, c., & voorhees, e. m. (2000). evaluating evaluation measure stability. in proceedings of the 23rd annual international acm sigir conference on research and development in information retrieval (pp. 33--40). athens, greece: acm. doi:10. 1145/345508.345543. cabrera-diego, l. a. (2015). automatic methods for assisted recruitment. universit d'avignon et des pays de vaucluse ph.d. thesis. cabrera-diego, l. a., durette, b., lafon, m., torres-moreno, j.-m., & el-bze, m. (2015). how can we measure the similarity between rsums of selected candidates for a job?. in stahlbock, robert, & weiss, gary m. (eds.), proceedings of the 11th international conference on data mining (dmin'15) (pp. 99--106). las vegas, usa chapman, d. s., & webster, j. (2003). the use of technologies in the recruiting, screening, and selection processes for job candidates. international journal of se- lection and assessment, 11(2--3), 113--120. doi:10.1111/1468-2389.00234. cohen, j. (1988). statistical power analysis for the behavioral sciences (2nd). hillsdale, usa: lawrence earlbaum associates. cole, m. s., feild, h. s., giles, w. f., & harris, s. g. (2009). recruiters' infer- ences of applicant personality based on rsum screening: do paper people have a personality? journal of business and psychology, 24(1), 5--18. doi:10.1007/ s10869-008-9086-9. cossu, j.-v. (2015). analyse de l'image de marque sur le web 2.0. avignon, france: universit d'avignon et des pays de vaucluse ph.d. thesis. cossu, j.-v., janod, k., ferreira, e., gaillard, j., & el-bze, m. (2014). lia@replab 2014: 10 methods for 3 tasks. in l. cappellato, n. ferro, m. halvey, & w. kraaij (eds.), working notes for 4th international conference of the clef initiative (pp. 1458--1467). sheffield, uk elkington, t. (2005). bright future for online recruitment. personnel today, 9. faliagka, e., iliadis, l., karydis, i., rigou, m., sioutas, s., tsakalidis, a., & tz- imas, g. (2013). on-line consistent ranking on e-recruitment: seeking the truth behind a well-formed cv. artificial intelligence review, 1--14. doi:10.1007/ s10462-013-9414-y. faliagka, e., kozanidis, l., stamou, s., tsakalidis, a., & tzimas, g. (2011). a person- ality mining system for automated applicant ranking in online recruitment sys- tems. in s. auer, o. daz, & g. a. papadopoulos (eds.), proceedings of the 11th international conference web engineering (icwe 2011). in lecture notes in com- puter science: 6757 (pp. 379--382). paphos, cyprus: springer berlin heidelberg. doi:10.1007/978-3-642-22233-7_30. fang, x., & zhan, j. (2015). sentiment analysis using product review data. journal of big data, 2(1), 5. doi:10.1186/s40537-015-0015-2. garca-snchez, f., martnez-bjar, r., contreras, l., fernndez-breis, j. t., & castellanos-nieves, d. (2006). an ontology-based intelligent system for recruit- ment. expert systems with applications, 31(2), 248--263. doi:10.1016/j.eswa.2005. 09.023. guo, s., alamudun, f., & hammond, t. (2016). rsumatcher: a personalized rsum- job matching system. expert systems with applications, 60(supplement c), 169-- 182. doi:10.1016/j.eswa.2016.04.013. harzallah, m., leclre, m., & trichet, f. (2002). commoncv: modelling the compe- tencies underlying a curriculum vitae. in proceedings of the 14th international conference on software engineering and knowledge engineering (seke'02) (pp. 65-- 71). ischia island, italy: acm. doi:10.1145/568760.568773. hutterer, m. (2011). enhancing a job recommender with implicit user feedback. vienna, austria: fakultt fr informatik der technischen universitt wien master's thesis. jrvelin, k., & keklinen, j. (2000). ir evaluation methods for retrieving highly rel- evant documents. in proceedings of the 23rd annual international acm sigir con- ference on research and development in information retrieval (pp. 41--48). athens, greece: acm. doi:10.1145/345508.345545. kessler, r., bchet, n., roche, m., el-bze, m., & torres-moreno, j. m. (2008a). au- tomatic profiling system for ranking candidates answers in human resources. in r. meersman, z. tari, & p. herrero (eds.), on the move to meaningful inter- net systems: otm 2008 workshops. in lecture notes in computer science: 5333 (pp. 625--634). monterrey, mexico: springer berlin heidelberg. doi:10.1007/ 978-3-540-88875-8_86. kessler, r., bchet, n., roche, m., torres-moreno, j.-m., & el-bze, m. (2012). a hy- brid approach to managing job offers and candidates. information processing & management, 48(6), 1124--1135. doi:10.1016/j.ipm.2012.03.002. kessler, r., bchet, n., torres-moreno, j.-m., roche, m., & el-bze, m. (2009). job offer management: how improve the ranking of candidates. in foundations of intelligent systems: proceedings of 18th international symposium on methodologies for intelligent systems (ismis 2009). in lecture notes in computer science: 5722 (pp. 431--441). prague, czech republic: springer berlin heidelberg. doi:10.1007/ 978-3-642-04125-9_46. kessler, r., torres-moreno, j. m., & el-bze, m. (2008b). e-gen: profilage automa- tique de candidatures. in actes de la 15me confrence sur le traitement automa- tique des langues naturelles (taln 2008) (pp. 370--379). avignon, france kmail, a. b., maree, m., & belkhatir, m. (2015). matchingsem: online recruitment system based on multiple semantic resources. in 12th international conference on fuzzy systems and knowledge discovery (fskd 2015) (pp. 2654--2659). doi:10. 1109/fskd.2015.7382376. looser, d., ma, h., & schewe, k.-d. (2013). using formal concept analysis for ontol- ogy maintenance in human resource recruitment. in f. ferrarotti, & g. gross- mann (eds.), proceedings of the ninth asia-pacific conference on conceptual mod- elling: 143 (pp. 61--68). adelaide, australia: australian computer society, inc. martin-lacroux, c. (2017). "without the spelling errors i would have shortlisted her...":the impact of spelling errors on recruiters' choice during the personnel selection process. international journal of selection and assessment, 25(3), 276-- 283. doi:10.1111/ijsa.12179. martinez-gil, j., paoletti, a. l., rcz, g., sali, a., & schewe, k.-d. (2018). accurate and efficient profile matching in knowledge bases. data & knowledge engineering, 117, 195--215. doi:10.1016/j.datak.2018.07.010. martinez-gil, j., paoletti, a. l., & schewe, k.-d. (2016). a smart approach for match- ing, learning and querying information from the human resources domain. in m. ivanovic, b. thalheim, b. catania, k.-d. schewe, m. kirikova, p. saloun, a. da- hanayake, t. cerquitelli, e. baralis, & p. michiardi (eds.), proceedings of the new trends in databases and information systems: adbis 2016 short papers and work- shops, bigdap, dcsa, dc (pp. 157--167). prague, czech republic: springer inter- national publishing. doi:10.1007/978-3-319-44066-8_17. mason, r. l., gunst, r. f., & hess, j. l. (2003). statistical design and analysis of exper- iments: with applications to engineering and science. wiley series in probability and statistics (2nd). wiley-interscience. doi:10.1002/0471458503. menon, v. m., & rahulnath, h. a. (2016). a novel approach to evaluate and rank can- didates in a recruitment process by estimating emotional intelligence through social media data. in international conference on next generation intelligent sys- tems (icngis) (pp. 1--6). kottayam, india: ieee. doi:10.1109/icngis.2016.7854061. montuschi, p., gatteschi, v., lamberti, f., sanna, a., & demartini, c. (2014). job re- cruitment and job seeking processes: how technology can help. it professional, 16(5), 41--49. doi:10.1109/mitp.2013.62. padr, l., & stanilovsky, e. (2012). freeling 3. 0: towards wider multilinguality. in n. calzolari, k. choukri, t. declerck, m. u. dogan, b. maegaard, j. mariani, a. moreno, j. odijk, & s. piperidis (eds.), proceedings of the eight international conference on language resources and evaluation (lrec'12) (pp. 2473--2479). is- tanbul, turkey: elra. r core team (2018). r: a language and environment for statistical computing. r foundation for statistical computing vienna, austria. radevski, v., & trichet, f. (2006). ontology-based systems dedicated to human re- sources management: an application in e-recruitment. in r. meersman, z. tari, & p. herrero (eds.), on the move to meaningful internet systems 2006: otm 2006 workshops. in lecture notes in computer science: 4278 (pp. 1068--1077). montpellier, france: springer berlin heidelberg. doi:10.1007/11915072_9. rocchio, j. j. (1971). relevance feedback in information retrieval. in g. salton (ed.), the smart retrieval system: experiments in automatic document processing. in au- tomatic computation (pp. 313--323). englewood cliffs, n.j., usa: prentice-hall. salton, g., wong, a., & yang, c.-s. (1975). a vector space model for automatic index- ing. communications of the acm, 18(11), 613--620. doi:10.1145/361219.361220. sen, a., das, a., ghosh, k., & ghosh, s. (2012). screener: a system for extracting ed- ucation related information from resumes using text based information extrac- tion system. in proceedings of 2012 international on computer and software model- ing (iccsm 2012). in international proceedings of computer science & information technology: 54 (pp. 31--35). international association of computer science and information technology press (iacsit press). doi:10.7763/ipcsit.2012.v54.06. senthil kumaran, v., & sankar, a. (2012). expert locator using concept linking. inter- national journal of computational systems engineering, 1(1), 42--49. doi:10.1504/ ijcsyse.2012.044742. senthil kumaran, v., & sankar, a. (2013). towards an automated system for in- telligent screening of candidates for recruitment using ontology mapping (ex- pert). international journal of metadata, semantics and ontologies, 8(1), 56--64. doi:10.1504/ijmso.2013.054184. singh, a., rose, c., visweswariah, k., chenthamarakshan, v., & kambhatla, n. (2010). prospect: a system for screening candidates for recruitment. in proceedings of the 19th acm international conference on information and knowledge manage- ment (cikm 2010) (pp. 659--668). toronto, canada: acm. doi:10.1145/1871437. 1871523. sprck-jones, k. (1972). a statistical interpretation of term specificity and its appli- cation in retrieval. journal of documentation, 28(1), 11--2doi:10.1108/eb026526. tange, o. (2011). gnu parallel - the command-line power tool. login: the usenix magazine, 36(1), 42--47. thompson, m. a. (2000). the global resume and cv guide. chichester, new york: wi- ley. tinelli, e., colucci, s., donini, f. m., di sciascio, e., & giannini, s. (2017). embedding semantics in human resources management automation via sql. applied intelli- gence, 46(4), 952--982. doi:10.1007/s10489-016-0868-x. torres-moreno, j.-m., el-bze, m., bellot, p., & bchet, f. (2012). opinion detection as a topic classification problem. in . gaussier, & f. yvon (eds.), textual information access: statistical models (pp. 337--368). wiley-iste. doi:10.1002/9781118562796. ch9. l.a. cabrera-diego, m. el-bze and j.-m. torres-moreno et al. / expert systems with applications 123 (2019) 91--107 107 trichet, f., bourse, m., leclre, m., & morin, e. (2004). human resource management and semantic web technologies. in proceedings of information and communica- tion technologies: from theory to applications (ictta'04) (pp. 641--642). damas- cus, syria: ieee. doi:10.1109/ictta.2004.1307928. voorhees, e. m., & harman, d. (2001). overview of trec 200in proceedings of the 10th text retrieval conference (trec 2001) (pp. 1--15). gaithersburg, maryland, usa: national institute of standards and technology (nist). zaroor, a., maree, m., & sabha, m. (2017). a hybrid approach to conceptual classification and ranking of resumes and their corresponding job posts. in i. czarnowski, r. j. howlett, & l. c. jain (eds.), intelligent decision technologies 2017: proceedings of the 9th kes international conference on intelligent decision technologies (kes-idt 2017) - part i (pp. 107--119). vilamoura, portugal: springer international publishing. doi:10.1007/978-3-319-59421-7_10. </abstract>
+	<introduction> for at least 15 years, the process of attracting possible candi- dates for a job, i.e., recruitment process, moved from traditional means, like newspapers and job boards, to the internet and started to be known as electronic recruitment or e-recruitment (kessler, bchet, roche, torres-moreno, & el-bze, 2012; radevski & trichet, 2006). the success of e-rectruitment over traditional recruitment pro- cesses lies in the advantages it brings to users and especially to  corresponding author. e-mail addresses: diegol@edgehill.ac.uk (l.a. cabrera-diego), marc.elbeze@univ- avignon.fr (m. el-bze), juan-manuel.torres@univ-avignon.fr (j.-m. torres-moreno), durette@adoc-tm.com (b. durette). 1 present address: department of computing, edge hill university, st. helens road, l39 4qp ormskirk, uk human resources managers (hrms). today, due to e-recruitment, job offers can more easily reach not only specialized communi- ties (arthur, 2001, page 126) but also wider audiences locally, na- tionally or internationally (montuschi, gatteschi, lamberti, sanna, & demartini, 2014). hrms' operational costs have been reduced, in certain cases to one-twentieth of the original expenses (chapman & webster, 2003). now, job seekers can search for job offers through the internet (looser, ma, & schewe, 2013) and apply to them faster by sending an e-mail or filling out a web form with an electronic rsum or cv attached (elkington, 2005). the great- est e-recruitment's advantage is the possibility of being in con- tact with job seekers, employers and hrm all the time around the world (barber, 2006, page 1). although e-recruitment has helped hrms with the task of identifying and attracting potential candidates, its use has brought a number of undesirable consequences, especially when high vol- https://doi.org/10.1016/j.eswa.2018.12.054 0957-4174/ 2019 elsevier ltd. all rights reserved. 9l.a. cabrera-diego, m. el-bze and j.-m. torres-moreno et al. / expert systems with applications 123 (2019) 91--107 umes of applications are received (barber, 2006, page 11). after the recruitment process, an hrm must select the group of applicants that are relevant for the job offered. this selection is performed by manually screening rsums.the manual screening consists of examining and comparing applicant information, found in the rsum, with respect to the specifications of the position or per- son specification3 (armstrong and taylor, 2014, page 226). however, given the large number of applications, hrms have trouble screen- ing them correctly and rapidly (trichet, bourse, leclre, & morin, 2004). furthermore, hrms have seen an increase in applications from unqualified candidates (faliagka, kozanidis, stamou, tsaka- lidis, & tzimas, 2011), meaning they lose valuable time during the screening process. the scientific community has proposed multiple systems to re- duce the negative impacts of e-recruitment. the vast majority of the developed systems are based on comparing rsums and job offers, e.g., using measures like cosine similarity (kessler, bchet, torres-moreno, roche, & el-bze, 2009; singh, rose, visweswariah, chenthamarakshan, & kambhatla, 2010). in some cases, to im- prove the matching, they include ontologies or semantic resources that are expected to ameliorate the similarity between docu- ments, like those shown in senthil kumaran and sankar (2013) and montuschi et al. (2014). the work that is here presented occurs in the following con- text. it is the outcome of a collaboration project with a human resources enterprise that had a large database of recruitment and selection processes conducted by them previously. the database is divided by job postings4 in which we can find the applications sent by the interested or directly contacted candidates. each application is composed, at least, of a rsum and the outcome of the selec- tion process. this database, however, has a particular characteristic, for most of the job postings, neither the job offer nor the person specification is available.5 this characteristic is due to the software used to store automatically the incoming applications did not pro- vide the option to keep these documents. due to the fact that it is impossible to apply state-of-the-art's methods for all the database, we decided to explore how to rank rsums without making use of job offers. the result of this ex- ploration are innovative and simple methods that use uniquely the proximity between rsums sent for the same job posting. to this end, we use a similarity measure and relevance feedback (rocchio, 1971) applied with methods based on a similarity quo- tient and a vocabulary scoring. despite in this work, we do not make use of more complex methods, like deep-learning neural networks, or dense text repre- sentations, i.e., word embedding, the idea of using them was al- ways present. there were several reasons why not to use these 2 according to thompson (2000), a rsum, also known as resume, curriculum vi- tae or cv, is a document prepared by a job candidate, for potential employers, that describes one's education, qualifications and professional experience. in this paper we will use rsum as common term. 3 this is a document detailing which characteristics, mandatory and optional, should be found in a rsum according to the employer. this document can evolve through the time depending on the job market. 4 a job posting is composed of three elements: a job offer, a person specifica- tion and a set of applications. the job offer is the document that describes the job position (e.g., technician, researcher) but also which are the characteristics that are searched; this document is visible to the job seekers. the person specification, see footnote 3, is a document only accessible to the hrm and the employer. the set of applications corresponds to the rsums and other documents that are propor- tioned by the job seekers interested in the job offer. 5 at the beginning of this work, none of the job postings was linked with its respective job offer. however, after a manual search, we arrived to manually link a portion of job postings, from the database, with their respective job offers. with this subset we created a baseline. techniques, but the main was that in cabrera-diego, durette, lafon, torres-moreno, and el-bze (2015) we started to observe that r- sums could be used to rank themselves using similarity measures. thus, a simple method, like the one here presented could work. moreover, by using methods based on neural networks, we reduce the chances of understanding and providing the reasons of why a candidate has been chosen to be interviewed, something that it is being looked for, like in martinez-gil, paoletti, and schewe (2016). the results obtained from applying our methods over a large set of real recruitment and selection processes, show that our meth- ods, despite not using job offers or semantic resources, can reach great performance. by just applying the method based on rsums proximity, we can rank correctly in average 61% of the rsums sent for a job posting. nonetheless, this value can reach 93% when it is used along with our proposed relevance feedback methods, in which an hrm just need to analyze 20 rsums per job posting, i.e., no more than 50% of the applications sent to the job posting. in summary, this work present multiple and diverse contribu- tions. the first contribution is that we offer an innovative method, completely different to the ones found in the state-of-the-art, that can rank rsums correctly and automatically. although this sys- tem is used in a very specific context, where job offers are not always present, it can be applied in any condition where the goal is to rank rsums sent to the very same job posting. the second contribution is the use of two different relevance feedback that can improve to a great extent other rsum ranking systems. the third and final contribution is the methodology used in this arti- cle, which can be used by people to do a posteriori analyses of se- lection processes. for example, hrms can use the methodology to understand how the selection of candidates was done and which were the keywords that represented the selected and rejected can- didates. as well, hrms can use the tool to determine whether a candidate that should have been called for an interview was left aside. whereas, psychologist can use the outcome of our methods as a way to determine whether hrm infers aspects like personality (cole, feild, giles, & harris, 2009) or whether they are affected by errors like misspellings (martin-lacroux, 2017). in addition, other systems could use our methods' outputs to generate feedback that rejected candidates could find useful to improve their profiles. this work is divided into eight sections. in section 2, we introduce the state-of-the-art methods and our previous work. the methodology and the data are explained in section 3 and section 4, respectively. we introduce the experimental and eval- uative settings in section 5. the outcomes from the experiments are presented in section 6. we discuss the results in section 7. the work's conclusions and possible future work are presented in section 8. related work in 2002, harzallah, leclre, and trichet (2002) presented the project commoncv that consists of an automatic analysis and matching of competencies between rsums and job offers. to the best of our knowledge, this was the first project where the sci- entific community became interested in the automated analysis of rsums. since the publication of this project, several systems were developed with different approaches and goals. we have grouped the systems into three types: rsum matchers, rsum classifiers and rsum rankers. rsum matchers are systems created for on-line job boards that match uploaded rsums with a job offer or a query, e.g., garca-snchez, martnez-bjar, contreras, fernndez-breis, and castellanos-nieves (2006); guo, alamudun, and hammond (2016); radevski and trichet (2006); sen, das, ghosh, and ghosh (2012). to achieve the matching of rsums, these systems use mainly on- l.a. cabrera-diego, m. el-bze and j.-m. torres-moreno et al. / expert systems with applications 123 (2019) 91--107 93 tologies and rules, but they can use some kind of relevance feed- back,6 like in hutterer (2011) to improve the match results. rsum classifiers consist of systems that bypass hrms by au- tomatically classifying rsums into relevant or irrelevant candi- dates. these kinds of systems, such as kessler, torres-moreno, and el-bze (2008b) and faliagka et al. (2013), use machine learning methods to perform this task. in other words, they create a model using data from previous selection processes. the model contains, in theory, the features that make an applicant to appear relevant or irrelevant to an hrm. rsum rankers are systems that sort rsums based on prox- imity between a rsum and a job offer, or even others rsums. as these systems propose rankings, an hrm can decide the point in which rsums become irrelevant for a job and stop reading them. in this kind of systems, proximity between elements can be lexical (cabrera-diego, 2015; kessler, bchet, roche, el-bze, & torres-moreno, 2008a; singh et al., 2010), semantic (kmail, maree, & belkhatir, 2015; montuschi et al., 2014; tinelli, colucci, donini, di sciascio, & giannini, 2017) or ontological (senthil kumaran & sankar, 2013). in the following paragraphs we discuss the most representative rsum rankers found in the literature. e-gen (kessler et al., 2009) is a system that can create r- sum rankings based on the lexical proximity between rsums and a particular job offer. more specifically, e-gen compares r- sums and a specific job offer using measures such as cosine sim- ilarity and minkowski distance. the rsums are ranked accord- ing to how proximal they are to the job offer. the documents, i.e., rsums and job offers, are represented using a vector space model. as well, they make use of a relevance feedback method that consists of enriching the job offer vocabulary by concatenat- ing already analyzed relevant rsums from the same job posting. in kessler et al. (2012) the authors improved the system's perfor- mance by adding an automatic text summarization tool to obtain the most relevant information from job offers and rsums. prospect is a system developed by singh et al. (2010) that has a rsum ranker among its tools. prospect extracts relevant information from rsums and job offers using conditional ran- dom fields (crf), a lexicon, a named-entity recognizer and a data normalizer. then, to rank the rsums based on the job offer, prospect compares the information from both documents using okapi bm25, kullback-leibler divergence or lucene scoring. we note in the literature the lo-match platform (montuschi et al., 2014). it is a web-based system developed to match professional competencies from rsums and job offers. the lo-match platform is based on ontologies which are used to enhance information from rsums and job offers. the ranking of rsums with respect to a job offer is determined through semantic similarity. lo-match establishes to what degree the words found in a rsum have similar or related meanings to the words occurring in a job offer. the rsums most similar to the job offer are ranked near the top. expert (senthil kumaran & sankar, 2013) is another system that ranks rsums. however, each rsum and job offer is individually represented by an ontology. to generate each ontology, expert an- alyzes the information with an ontology and a set of previously de- fined rules (senthil kumaran & sankar, 2012). expert ranks the r- sums by determining how close the job offer ontology is with re- spect to each rsum ontology. the rsums with ontologies most similar to those of the job offer are ranked near the top. matchingsem (kmail et al., 2015) is a ranking system designed to use multiple ontologies to find the most similar rsums for 6 relevance feedback is the interaction of a human user with an information re- trieval system, in order to evaluate its results and to modify requests for improving data retrieval rocchio (1971). a job posting. the reason to design a system capable to extract information from multiple ontologies is to represent several do- mains and/or decrease their lack of coverage. thanks to ontologies, matchingsem can create semantic networks that are matched us- ing the jaro-winkler distance. i.m.p.a.k.t. (tinelli et al., 2017) is a platform that allows hrm ranking candidates automatically and obtain the reasons of putting a rsum in a certain position. it is based on relational database management systems which help in the creation of improved knowledge bases. as well, the platform allows defining which com- petencies are required and which are only desired. i.m.p.a.k.t. of- fers to hrms information about conflicts or underspecified features found in a rsum. another rsum ranker is the one detailed in our previous work (cabrera-diego, 2015). there, we present the first version of the method that in this work is extended and improved. it consists of using a measure that we call average inter-rsum proximity (airp). this measure determines the relevance of a rsum according to how similar it is to other rsums from the same job posting. to improve the ranking of rsums, we use relevance feedback and apply it with a factor that increases when a rsum is closer to those considered by an hrm as relevant. in the last years, some other researchers have worked on tasks related to the automatic ranking of rsums. for example, in martinez-gil et al. (2016) the authors propose an approach to im- prove the ranking of rsums by matching learning; as well, how to use matching learning to represent, in the future, documents using a common vocabulary. as well, related to the previous work, martinez-gil, paoletti, rcz, sali, and schewe (2018) propose a the- ory of how to match rsums and job offers, but also ranking them by using knowledge bases, lattice graphs and lattice filters. another example is the analysis of social media to evaluate the emotional intelligence of candidates (menon & rahulnath, 2016). in zaroor, maree, and sabha (2017), for instance, rsums and job offers are classified automatically in occupational categories; se- mantic networks are used to find the best matching between these documents. 3. methodology our methodology is composed of two parts. in the first part, we determine the similarity of rsums in order to rank them. in the second, which is optional although suggested, we ask the hrm for relevance feedback and apply it. more specifically, the methodol- ogy used in this article is composed of five steps which are graph- ically represented in fig. 1. in step i, we calculate the proximity between pairs of rsums using inter-rsum proximity (section 3.1). once all the proximity values have been calculated, we estimate the average or median inter-rsum proximity for each rsum in step ii (section 3.2). it is in this step where we formulate the hypothesis that the result- ing values indicate the relevance of the rsums for the job post- ing. in step iii, we sort the scores obtained in step ii in descending order to rank the rsums. if we want to improve a ranking, we can make use of rele- vance feedback (section 3.3). this process starts in step iv where an hrm analyzes a small set of rsums in order to determine whether they are relevant or not. furthermore, they can identify and sort the terms that represent better relevancy. once the hrm has finished, the relevance feedback is processed in step v. in this case, we can process the relevance feedback using the relevance factor (section 3.3.1) and vocabulary scoring (section 3.3.2). the output of the relevance feedback is then introduced in step iii to re-rank the remaining rsums, i.e those not seen during the rele- vance feedback. 94 l.a. cabrera-diego, m. el-bze and j.-m. torres-moreno et al. / expert systems with applications 123 (2019) 91--107 fig. 1. methodology overview. 3.1. inter-rsum proximity the inter-rsum proximity (irp) is defined as the degree of sim- ilarity between two rsums that were sent by different candidates applying for the same job positing. to mathematically define the irp, consider j as the set of rsums gathering all the candidates that applied to the same job posting, j = {r1, r2, r3, . . . rj}. every rsum r in j is unique and from a different applicant, i.e. there are no duplicated rsums or candidates in the job posting. we present the definition of inter-rsum proximity (irp) by eq. (1). irp(r, rx) =  (r, rx); r = rx; r, rx  j (1) where r and rx are two different rsums from j;  is a proximity measure. in this study, we use dice's coefficient as  because in cabrera- diego et al. (2015) we observed, through statistical analyses, that this similarity measure is the most adequate for this task.7 al- though dice's coefficient is frequently defined in terms of sets, as in eq. (2), we have redefined it in eq. (3) to be used in a vector representation. dice's coefficient(r, rx) =</introduction>
+    <corps>2  |r  rx|
+|r| + |rx|
+(2)
+Dice's Coefficien##debut##
+2 
+n
+i min(i, xi)
+n
+i i +
+n
+i xi
+(3)
+where r = {1, 2, . . . , n} and rx = {x1, x2, . . . , xn} are vector
+representations of the rsums r and rx respectively. Each vector
+has n dimensions and their components are expressed by ; min
+is a function that outputs the smallest component between r and
+rx in each vector dimension.
+Note that Dice's Coefficient has a closed interval [0, 1], where 1
+means that both documents are identical and 0 indicates they are
+completely different and have nothing in common.
+7
+Other measures tested in Cabrera-Diego et al. (2015) were Cosine Similarity, Jac-
+card's Index, Manhattan distance and Euclidean distance. However, it was Dice's Co-
+efficient the one that presented the best performance in the analysis of rsums.
+3.2. Average and median Inter-Rsum Proximity
+In Cabrera-Diego et al. (2015) we determined through a sta-
+tistical analysis that, on average, the similarity between relevant
+rsums is greater than the similarity between irrelevant ones.
+Equally, we observed that relevant rsums tend to be dissimilar
+to the group of irrelevant rsums. From this outcome, we can in-
+fer that relevant rsums should have multiple terms in common,
+while irrelevant rsums should present a variety of terms that are
+not shared, either by other irrelevant rsums or by the relevant
+ones. Based on this interpretation, we designed what we call the
+Average Inter-Rsum Proximity (AIRP). It is a method of finding rel-
+evant rsums based on their proximity to other rsums. The con-
+cept is that a relevant rsum will have, on average, higher values
+of IRP than an irrelevant rsum.8
+The mathematical definition of AIRP is presented by Eq. (4).
+AIRP(r) =
+1
+j - 1
+j
+
+x=1
+IRP(r, rx) (4)
+where r is a rsum selected for analysis from J, rx is another r-
+sum related to J but different from r and j is the number of r-
+sums sent to J.
+We introduce as well the Median Inter-Rsum Proximity (MIRP).
+It is a variation of AIRP, but it consists of calculating the median
+instead of the average of a set of Inter-Rsum Proximity values.
+The main reason to use this central-tendency measure is that it
+is more robust against skewness and outliers9 than the mean. The
+formula for calculating the MIRP is given by Eq. (5).
+MIRP(r) = MEDIAN[IRP(r, rx)]
+j
+x=1 (5)
+8
+A relevant rsum should have high values of IRP with respect to other relevant
+rsums and low values of IRP with respect to irrelevant ones. However, irrelevant
+rsums should have constantly low values of IRP in accordance with the analyses
+done in Cabrera-Diego et al. (2015).
+9
+An outlier is a value with an atypical magnitude with respect to the total set
+(Mason, Gunst, and Hess, 2003, page 70).
+L.A. Cabrera-Diego, M. El-Bze and J.-M. Torres-Moreno et al. / Expert Systems With Applications 123 (2019) 91--107 95
+where r and rx are two different rsums from J and j is the num-
+ber of rsums sent to J.
+3.3. Relevance Feedback
+In addition to AIRP and MIRP, we propose to use Relevance
+Feedback as a method for validating and enriching the information
+used by our ranking methods.
+In our study, Relevance Feedback is the process where an HRM
+determines which rsums, from a sample of the ranking given
+by AIRP or MIRP, are relevant and irrelevant for the job posting.
+Furthermore, an HRM can indicate the terms that better character-
+ize the relevant and irrelevant rsums found during the previous
+step. Based on these inputs, we process and apply the feedback
+to offer an improved ranking of the remaining rsums. The Rele-
+vance Feedback given for one job posting does not affect the way
+we rank other job postings, as the inputs can differ.
+We propose two methods for applying Relevance Feedback.
+The first method, called Relevance Factor and presented in
+Section 3.3.1, consists of calculating a quotient that takes into ac-
+count the Inter-Rsum Proximity between a rsum and those
+considered relevant or irrelevant during Relevance Feedback. This
+method, as seen in Fig. 1, is introduced into the ranking process
+by a simple multiplication during the calculation of either AIRP or
+MIRP. The second method (Section 3.3.2) resides in weighting the
+terms indicated by the HRM that better represent the relevant and
+irrelevant rsums seen during Relevance Feedback. Because of its
+characteristics, explained in its respective section, this last method
+modifies the Relevance Factor.
+3.3.1. Relevance factor
+The first method for introducing Relevance Feedback consists of
+determining the proximity between the remaining rsums from a
+job posting and those, from the same job posting, that were ana-
+lyzed during the Relevance Feedback. We achieve this with a for-
+mula that we have called Relevance Factor (RFa). The Relevance Fac-
+tor goal is to improve the ranking of rsums. Thus, on one hand,
+the Relevance Factor pushes to the ranking's top the rsums that
+are more proximal to those considered as relevant during the Rele-
+vance Feedback. On the other hand, it pulls down, to the ranking's
+bottom, those rsums which are more proximal to the irrelevant
+ones.
+Let us consider F = {r1, r2, . . . , rf } as the set of rsums sent by
+applicants for a job posting J that were analyzed during a Rele-
+vance Feedback process. Each rsum from F was classified by an
+HRM into one class, either relevant (R) or irrelevant (I). We have
+defined the Relevance Factor, RFa, in Eq. (6).
+RFa(r) =
+ +
+
+IRP(r, rxR)
+ + |R|
+
+ + |I|
+ +
+
+IRP(r, rxI)
+;
+rxR  R; rxI  I; rxR, rxI  F (6)
+where r is the rsum to be analyzed, R and I represent the set
+of rsums considered, respectively, as relevant and irrelevant dur-
+ing the Relevance Feedback process. Furthermore,  is a constant,
+empirically set to 1  10-10 which is used to avoid undetermined
+values10 and IRP is the function described in Eq. (1).
+The behavior of the Relevance Factor depends on the interval
+of the proximity measure used to determine IRP (Eq. (1)). Since
+we use Dice's Coefficient, the Relevance Factor will be greater than
+one (RFa(r) > 1) when the rsum r is more proximal to the rel-
+evant rsums. It is going to be RFa(r) = 1 if r is equally similar
+10
+In some cases during the Relevance Feedback, it is possible to find only relevant
+or irrelevant rsums, but not both. Without this constant one side of the formula
+would be 0/0.
+Table 1
+Example of how the Relevance Factor would be calculated for three rsums, A,
+B and C, that belong to a hypothetical job posting J containing eight different
+rsums, J = {R1, R2, R3, I1, I2, A, B,C}. The example considers that J has three rel-
+evant rsums (R1, R2, R3) and two irrelevant ones (I1, I2) previously detected by
+an HRM during a Relevance Feedback process.
+r rxR IRP(r, rxR)  IRP(r, rxR) rxI IRP(r, rxI)  IRP(r, rxI) RFa(r)
+A R1 0.90 2.45 I1 0.20 0.50 2.45
+3
+ 2
+0.50
+= 3.26
+R2 0.75 I2 0.30
+R3 0.80
+B R1 0.35 1.35 I1 0.40 0.90 1.35
+3
+ 2
+0.90
+= 1.00
+R2 0.55 I2 0.50
+R3 0.45
+C R1 0.30 0.90 I1 0.80 1.55 0.90
+3
+ 2
+1.55
+= 0.38
+R2 0.40 I2 0.75
+R3 0.20
+to relevant and irrelevant rsums. And, if the rsum r has more
+in common with the irrelevant rsums, the Relevance Factor will
+approach to zero.
+The introduction of the Relevance Factor into the ranking of r-
+sums is done by simple multiplication, i.e., the Relevance Factor of
+a rsum is multiplied by its respective score determined by either
+AIRP or MIRP.
+To understand the Relevance Factor better, it should be indi-
+cated that Eq. (6), can be split into two parts. The left side calcu-
+lates IRP with respect to the relevant rsums, while the right side
+is in accordance with the irrelevant rsums. We describe in the
+following paragraph a hypothetical process of its calculation.
+Let us consider a job posting J composed of eight differ-
+ent rsums, J = {R1, R2, R3, I1, I2, A, B,C}. During a Relevance Feed-
+back process, an HRM analyzed five of these rsums, i.e., F =
+{R1, R2, R3, I1, I2}, and found out that three were relevant (R1, R2,
+R3), while two were irrelevant (I1, I2). In Table 1, we present how
+the Relevance Factor would be calculated for the rsums that
+were not analyzed by the HRM (A, B, C). As it can be observed
+in Table 1, the rsum A is very similar to relevant rsums, there-
+fore, its RFa(A) = 3.26; this means that its score, either AIRP or
+MIRP, will be multiplied by a factor of 3.26. Regarding rsum B,
+it has a RFa(B) = 1.00, this means that it is equally similar to rel-
+evant and irrelevant rsums; the AIRP or MIRP of B will rest the
+same. Concerning rsum C, it has a RFa(C) = 0.38 due to its high
+similarity to irrelevant rsums and, in consequence, its AIRP or
+MIRP will be affected by a factor of 0.38.
+3.3.2. Vocabulary Scoring
+The second method for applying Relevance Feedback consists of
+processing the vocabulary that, in accordance with the HRM, bet-
+ter represents the rsums marked as relevant or irrelevant during
+the Relevance Feedback. The objective is to adjust the weights of
+the terms that cause a candidate to be considered by an HRM as
+relevant or irrelevant for the job posting. To achieve this, during
+the Relevance Feedback an HRM indicates and sorts which terms,
+seen in the analyzed rsums, characterized what made a candi-
+date to be relevant or irrelevant. The sorting of the terms should
+be done regarding their representativeness.
+Formally, consider Vc = {t1,t2, . . . ,tv} as the vocabulary selected
+and sorted by an HRM that better represents the rsums from
+class c during Relevance Feedback. For each term from Vc, we com-
+pute its Term Score Tc(t), i.e., a value that allows us to boost or
+minimize the terms that define each class c. In Eq. (7), we define
+the Term Score Tc(t) for a term t appearing in Vc.
+Tc(t) = 5
+
+1
+rank(t)
+; t  Vc (7)
+where rank(t) is the position of term t defined by an HRM in Vc.
+The Term Score always has a value within the half-closed interval
+96 L.A. Cabrera-Diego, M. El-Bze and J.-M. Torres-Moreno et al. / Expert Systems With Applications 123 (2019) 91--107
+0.45
+0.50
+0.55
+0.60
+0.65
+0.70
+0.75
+0.80
+0.85
+0.90
+0.95
+1.00
+1.05
+0 2 4 6 8 10 12 14 16 18 20 22 24 26 28 30 32 34 36 38 40 42 44 46 48 50
+Rank(t)
+Term
+Score
+(t)
+Fig. 2. Plot of the term score for ranks of t between 1 and 50.
+[1, 0). A term with a value close to 1 expresses a high representa-
+tiveness of class c, while a term with a value near to zero means
+that it hardly represents class c and should be minimized.
+Using a root in Eq. (7), specifically the 5th root, should be dis-
+cussed. We empirically chose this function for two reasons. First,
+it allows us to create a score between 1 and 0. Second, it slowly
+decreases and preserves the sense of representativeness provided
+by the HRM, i.e., the way that terms were sorted by the HRM is
+kept. It can be seen in Fig. 2 how the Term Score changes in accor-
+dance to the rank of t; for instance, the term that is ranked first
+has a Term score equal to 1; the second ranked term has a score
+Tc = 0.870; and for the fiftieth score, Tc = 0.457.
+As there is always a set of terms that will not appear in V but
+that are found in other rsums for the same job posting J, it is
+essential to give to these terms a Term Score Tc in order to keep
+the model balanced. In other words, we cannot leave the terms
+that did not appear in a Vc with higher values than those that were
+analyzed by an HRM. We assign a value of 0.01 to all the terms
+belonging to the rsums of J that are not present in a Vc.11 This
+figure was chosen empirically to minimize the terms that are not
+representative of the model without deleting them.12
+Since the Term Score Tc(t) of every term t is different for each
+class c (relevant and irrelevant), we use the Term Score uniquely
+within the Relevance Factor (Section 3.3.1), as it calculates the
+Inter-Rsum Proximity with respect to relevant and irrelevant r-
+sums separately. To be more specific, the Term Scores only mod-
+ify terms' weights of each class used at the computation of Inter-
+Rsum Proximity in Eq. (6).
+3.3.3. Selecting the rsum s for the Relevance Feedback
+Even though the Relevance Feedback described in
+Rocchio (1971) consists of choosing a number of top-retrieved
+documents, we test whether the Relevance Feedback determined
+with other position-retrieved documents is useful to HRMs. More
+specifically, we use the Relevance Feedback of the documents
+retrieved from the following positions:
+* Top. This is the classic method which consists of taking the top
+ranked rsums to improve the following rankings. In the case
+11
+For instance, a term t can appear in VIrrelevant but not in VRelevant. Thus, for this
+same t the Term score VRelevant will be 0.01.
+12
+We experimented with other values: 0.25, 0.1 and 0.05. We observed that by
+decreasing the value the results were improved.
+where we find non-relevant rsums among the top, it may be
+a way to determine which characteristics, although common,
+may not be required for the job or are not the ones searched
+by the HRM.
+* Bottom. This is the opposite of the classic method, as we se-
+lect the rsums located at the end of rankings. We infer that
+finding a relevant rsum with a low ranking can provide more
+useful feedback than detecting an irrelevant rsum at the top.
+Furthermore, this may be interesting for the Human Resources
+domain, as leaving a relevant rsum at the bottom would set
+aside the objectives of the rankings.
+* Top and Bottom (henceforth Both). For this position, we de-
+cided to merge the ideas from the first two Relevance Feedback
+positions. More specifically, in this position we ask a recruiter
+whether some rsums from the top and the bottom are truly
+relevant.13 The goal is to reduce the weaknesses of the Bottom
+and Top positions; we may detect truly relevant and irrelevant
+documents ranked first and also those that are interesting but
+mis-positioned at the end of a ranking.
+In addition to the different Relevance Feedback positions, we
+decided to test whether an iterative application of Relevance Feed-
+back could improve the rsum rankings more quickly. Under non-
+iterative conditions, once the Relevance Feedback has produced a
+new ranking the process ends. Nonetheless, for iterative conditions,
+once a new ranking is produced, it can be re-analyzed by an HRM
+in a new Relevance Feedback process.
+4. Data
+For this article, we used a set of 171 job postings which
+were processed (recruitment and selection) by a French human
+resources enterprise between November 2008 and March 2014.
+These job postings come from different professional domains (e.g.,
+chemistry, communications, physics and biotechnology) and posi-
+tion levels (e.g., laboratory researcher, intern, project manager and
+engineer). These 171 job postings were chosen because they con-
+tain at least 20 unique rsums in French; at least 5 of them are
+13
+Half of the rsums for the Relevance Feedback are from the top. The other half
+belong to the ranking's bottom.
+L.A. Cabrera-Diego, M. El-Bze and J.-M. Torres-Moreno et al. / Expert Systems With Applications 123 (2019) 91--107 97
+relevant, and 5 are irrelevant.14 In total, the corpus contains 14,144
+French rsums divided among these 171 job postings.
+All the job postings are composed of applications, and each ap-
+plication contains the documents associated with the recruitment
+and selection process. It is important to note that not all the doc-
+uments located inside the applications corresponded to rsums;
+we could find motivation and recommendation letters, diplomas,
+interview minutes and social network invitations as well. To ob-
+tain only the French rsums, we made use of a rsum detec-
+tor. The rsum detector is a linear Support Vector Machine (SVM)
+developed previously in Cabrera-Diego et al. (2015). Furthermore,
+all the rsums were lower cased and lemmatized; for lemmatiz-
+ing the documents, we used Freeling 3 (Padr & Stanilovsky, 2012).
+Stop-words, punctuation marks and numbers were deleted. In ad-
+dition, all duplicated rsums within the same job posting were
+deleted.15 See Cabrera-Diego et al. (2015) in order to learn more
+about this pre-processing task.
+According to the HRMs with whom we worked, the system em-
+ployed to manage the applications allowed them to organize each
+applicant into one of the following selection phases: Unread, Ana-
+lyzed, Contacted, Interviewed and Hired. The phases were assigned
+to each applicant depending on the last point to which they ar-
+rived. For this article, we grouped four of these phases into two
+different classes: relevant and irrelevant.
+The first class, relevant, corresponds to the phases Contacted,
+Interviewed and Hired. It represents the applicants who after read-
+ing their rsums were approached by a recruiter. The second
+class, irrelevant, contains only the rsums that remained in the
+Analyzed phase, i.e., the applicants that were not approached by
+an HRM after reading their rsums.
+With respect to the applications that remained in the Unread
+phase, these were discarded from the analysis since we cannot in-
+fer whether they were relevant or irrelevant for the job. Further-
+more, most of these applications were not read because the selec-
+tion process ended as they were received.
+There are two reasons to classify four of five phases into two
+classes. The first is that to determine whether an applicant will
+be hired implies the analysis of elements that are not present in
+a rsum (e.g., interview results, expected salary, job location and
+withdrawal). The second one is that we do not want to replace hu-
+mans with an automaton in the selection process. Instead, we want
+to assist humans during the most difficult part of the selection pro-
+cess, which is in discerning relevant and irrelevant applicants. And
+this can be achieved by ordering applicant's rsums in terms of
+how relevant are for the job posting.
+It is important to note that some applications from the cor-
+pus, although impossible to trace, started as Direct contact. This
+means that an HRM found, usually on the Internet or job seek-
+ers databases, the rsum of a person who fulfilled the person
+specification and decided to contact this person directly. Thus, for
+some job postings the relevant rsums can accurately reflect the
+searched profile. This action can affect the number of relevant ap-
+plicants for a job posting, which in some cases can be equal or
+greater than the number of irrelevant applicants. However, this
+characteristic from the corpus should be seen as normal, since for
+an HRM to make direct contact is a way to speed up the recruit-
+ment and selection processes.
+14
+All the rsums must be either relevant or irrelevant, but each job cannot have
+less than 5 per class.
+15
+There were job postings in which the same applicant sent their own rsum
+multiple times. Thus, to avoid a bias, we deleted the duplicated rsums with a set
+of heuristics developed in Cabrera-Diego et al. (2015). Among the heuristics used,
+we can highlight the selection of the most recent rsum in the application folder
+or the detection of the exact same applicant e-mail.
+Furthermore, it should be indicated that we do not combine ap-
+plications from different job postings, even if they belong to sim-
+ilar job positions. The reason is that each job posting is linked
+to a job offered by a specific enterprise, in a particular date and
+with a set of desired characteristics. In other words, each job post-
+ing might attract different job seekers despite describing a very
+similar job position; aspects like years of experience, spoken lan-
+guages, mobility, relocation and salary can affect how the job mar-
+ket reacts. This variability makes impossible to determine whether
+a candidate from one job posting would participate in another one
+or whether a candidate would be considered equally relevant.
+To conclude with this section, after a manual search, we arrived
+to link 60 of the 171 job postings with their respective job offer.
+With these 60 job postings we created a baseline that will be de-
+scribed in Section 5.
+4.1. Data representation
+We decided to represent each rsum from the corpus as a set
+of n-grams in a Vector Space Model (VSM) (Salton, Wong, & Yang,
+1975). To be specific, for each rsum we extracted its set of un-
+igrams, bigrams and trigrams. Every set of n-grams was saved as
+a vector, one per rsum. The vectors' component weights (W) are
+the relative frequency of each n-gram which could be multiplied
+by a weight modifier (); we present W in Eq. (8).
+W (*) = F(*)  (*) (8)
+where * is an n-gram and F is the relative frequency calculated
+with respect to each rsum. The weight modifier  can be one of
+the following:
+*  = 1. In this case, we represent the data only by the relative
+frequency of each n-gram.
+*  = IDF(*). Each n-gram (*) is weighted with respect to
+a Term-Frequency Inverse-Document Frequency (TF-IDF) Sprck-
+Jones (1972).16
+Once the rsums of a job posting have been ranked for the
+first time, either with AIRP or MIRP, and a vocabulary scoring has
+been set, a new  for Eq. (6) can be used:
+*  = Tc(*). In this case each n-gram (*) is modified by its re-
+spective Term Score Tc (see Eq. (7)); where c is the class (rele-
+vant or irrelevant) that will affect uniquely.
+*  = IDF(*)  Tc(*). It is similar to the previous , however, it
+can be modified by IDF in the case, the original representation
+made use of the weight too.
+In all the cases, these last two  do not affect permanently the
+weights of the terms, they are only locally used each time Eq. (6) is
+called.
+4.2. Data for the Relevance Feedback
+Although the ideal experimentation would consist in applying
+our methods and asking HRM for Relevance Feedback on real time,
+the fact is that this task would be very expensive. Moreover, the
+HRM would have to do this task besides their normal work duties
+and it would be hard to get accurate results in cases where the
+person specification evolved over time. Thus, we decided to simu-
+late the Relevance Feedback.
+Regarding the Relevance Feedback in which an HRM indicates
+whether a rsum is relevant or irrelevant, we made use of the
+information available in the corpus. As we explained at the begin-
+ning of Section 4, every application and, therefore, every rsum
+16
+The IDF for each unigram, bigram and trigram was calculated using all the cor-
+pus described at the beginning of Section 4 (14,144 rsums).
+98 L.A. Cabrera-Diego, M. El-Bze and J.-M. Torres-Moreno et al. / Expert Systems With Applications 123 (2019) 91--107
+belongs to a real selection process. Thus, at a given moment, every
+rsum was analyzed by an HRM who considered whether it was
+from a relevant or irrelevant applicant. The information found in
+the corpus allows us to create a simulation that can be reproduced
+again if necessary.
+For the vocabulary scoring, we decided to explore three simu-
+lations, S1, S2 and S3, in which we select and weight differently
+the terms for the vocabulary scoring. Each simulation is composed
+of 100 n-grams in total, 50 describing the relevant rsums and
+50 the irrelevant ones. These simulations are different from the
+one used to determine whether a rsum is relevant or irrelevant,
+as the corpus does not contain this kind of information. However,
+they are based on information found in the corpus and in con-
+sequence reproducible. In the following subsection, we explain in
+detail how S1, S2 and S3 were determined.
+4.2.1. Simulations for Vocabulary Scoring
+Consider V = {t1,t2, . . . ,tv}, the vocabulary composed of the n-
+grams (t) that occur in at least 2 rsums from the Relevance Feed-
+back.17 The process to generate the three simulations is as follows:
+1. For each term t belonging to V, we calculate the squared proba-
+bility of term t occurring in each possible class c, either relevant
+or irrelevant. This is done using Eq. (9):
+p2
+c (t) =
+
+Dc(t)
+D(t)
+2
+(9)
+where Dc(t) is the number of rsums belonging to class c; D(t)
+is the number of rsums analyzed in the Relevance Feedback.
+The equation is an adaptation of Gini's Coefficient18 presented
+in Cossu (2015). For a set of classes C = {c1, c2, . . . , ck}, Gini's
+Coefficient has an interval between [1/k, 1], where 1/k means
+that a term appears in every class, while 1 indicates that the
+term belongs to one class (Torres-Moreno et al., 2012).
+2. Then, we calculate a factor (fc) that takes into account the num-
+ber of documents from class c where the n-gram appeared and
+the sum of the n-gram's weights (W) inside these documents.
+The factor is presented in Eq. (10).
+fc(t) = Dc(t) 
+
+Wc(t) (10)
+where t represents an n-gram, c is one of the two possible
+classes (relevant or irrelevant), fc is the factor for the class c,
+Dc is the number of documents of class c where t appears and
+W is the n-gram weight (see Eq. (8)).
+3. For each class c we sort the n-grams first according to their
+squared probabilities p2
+c and then by their factor fc. If two or
+more n-grams share the same squared probabilities and factors,
+although this is unusual, we assign them different but consec-
+utive locations in the sorted list.
+4. We select the first 50 n-grams for each class, to which we cal-
+culate their Term Scores (Tc) using Eq. (7).
+5. For the rest of n-grams, or those that did not occur in the
+rsums from the Relevance Feedback, we give them a Term
+Score of 0.01 as explained in Section 3.3.2.
+Simulation S1 consists of selecting and scoring the vocabulary
+according to the information found only in the rsums used for
+17
+Because we simulate the vocabulary scoring, to use terms that were seen only
+in one rsum may not be reliable but speculative. In fact, a one time-seen term,
+and in consequence its pertinence, may be no more than a coincidence which could
+change by increasing the number of documents analyzed.
+18
+Although Gini's Coefficient is frequently used in economics for wealth dis-
+tribution, it has been used in other NLP works, e.g., Fang and Zhan (2015) and
+Cossu, Janod, Ferreira, Gaillard, and El-Bze (2014). Gini's Coefficient in NLP has the
+objective of modifying the weight of an element in the data model by determining
+to which degree it represents a certain class or set of them (Torres-Moreno, El-Bze,
+Bellot, & Bchet, 2012).
+Relevance Feedback. In other words, the rsums from the Rele-
+vance Feedback are used to calculate the squared probabilities and
+the factors of the n-grams. Next, for each class c, we calculate the
+Term Scores for the first sorted 50 n-grams.
+For simulation S2, we decided to recreate a scenario where the
+selection and sorting of the terms is done carelessly. Put differ-
+ently, the terms that, in theory, represent relevant and irrelevant
+rsums are ignored and are not used in the Relevance Factor
+(Eq. (6)). To this end, we sort the n-grams using only the informa-
+tion from the Relevance Feedback, as we do for S1, but the Term
+Score of the first 50 n-gram of each class c is set to zero (Tc = 0).19
+For the rest of terms, the Term Score is the default one, i.e. 0.01.
+In simulation S3, we try to model optimally the n-grams that
+would be chosen by an HRM in real life. To this end, we calculate
+the squared probabilities and factors fc based on the information
+in all the rsums from the job posting. However, we continue to
+sort and calculate the Term Scores for the terms that only occur in
+the rsums from Relevance Feedback. In summary, we can have
+high reliable squared probabilities and factors fc but we only affect
+the n-grams that would have been seen by an HRM during the Rel-
+evance Feedback.20
+5. Experimental and evaluative settings
+There are multiple experiments that can be done following
+different configurations, however, although we explored a large
+amount of possible combinations, due to space limitations we only
+present the experiments that could contribute the most to the
+state-of-the-art. The experiments realized are summarized in the
+following list:
+* No Relevance Feedback: We apply our methods without using
+any kind of relevance feedback, and we compare them against
+a couple of baselines.
+* Relevance Feedback applied using
+-- The Relevance Factor: We explore how different Relevance
+Feedback position (Top, Bottom and Both) affect the Rel-
+evance Factor. As well, we analyze whether the iterative
+application of the Relevance Factor can improve faster the
+ranking of rsums.
+-- The Relevance Factor with Vocabulary Scoring: We analyze
+how the simulations of Vocabulary Scoring affect the rank-
+ings created by the Relevance Factor.
+Two different baselines are used, the first one consists of a sys-
+tem that generates a random ranking for each job posting. The sec-
+ond baseline resides in using the 60 job postings to which we ar-
+rived to link with their respective job offer and calculate the sim-
+ilarity rsums/job offer. More specifically, for each job posting,
+we apply Dice's Coefficient between its job offer and every ele-
+ment from its set of rsums. Job offers are pre-processed under
+the same parameters that the rsums, as explained in Section 4.
+Although a comparison with other methods or systems from the
+state-of-the-art would have been desired, to the extent of our
+19
+By making zero the Term Score of these n-grams, we affect their weight in the
+vector space model as explained in Section 4.1. This modification has, in conse-
+quence, an effect in the Relevance Factor (Eq. (6)), where the rsums containing
+most of the terms representing a class, instead of being pushed up or pulled down,
+they will stay in the same position in the rank.
+20
+In simulation S3 is possible that after sorting the n-grams, the one placed in the
+first place does not appear in the Relevance Feedback. Thus, as this n-gram could
+not have been seen by the HRM during the Relevance Feedback, we must consider
+another n-gram as the one in the first place. This will be the first term seen in
+the Relevance Feedback that has the best squared probability and factor fc. For the
+following terms the rules are the same.
+L.A. Cabrera-Diego, M. El-Bze and J.-M. Torres-Moreno et al. / Expert Systems With Applications 123 (2019) 91--107 99
+knowledge, none of the systems or datasets have been released to
+the public.21
+In the case of the experiments with Relevance Feedback, we
+have restricted the feedback size to a range between 2 and 20 r-
+sums. It should be noted that we never use more than 50% of the
+rsums for each job as feedback. In fact, the 171 job postings de-
+scribed in Section 4 were chosen because they had at least 20 r-
+sums, from which at least 5 were from relevant applicants and 5
+from irrelevant ones. When we use more than 10 rsums for the
+Relevance Feedback, we always verify that there is at least twice
+the rsums for the job posting, with more than 1/4 of them being
+relevant and no less than 1/4 irrelevant. For example, to do a Rel-
+evance Feedback of 16 rsums, a job posting must have at least
+32 rsums in total, and no less than 8 must be relevant or irrele-
+vant. If one job posting do not have these characteristics then it is
+discarded, for that size of Relevant Feedback, from the analysis. All
+these precautions are taken to avoid inflating the measurements
+for evaluation artificially.
+In the experiments related to the iterative application of Rele-
+vance Factor, we explore how rankings are affected when multi-
+ple and sequential Relevance Factor processes are done. In other
+words, we start by doing a Relevance Factor over 2 rsums. This
+process will rank the remaining rsums of the job posting in an
+improved way. After that, a new process of Relevance Feedback is
+done on which 2 new rsums are analyzed. The Relevance Fac-
+tor is calculated again and the process is repeated until having re-
+vealed up to 20 rsums.
+It should be mentioned that the corpus had 171 job postings
+that fulfilled the characteristics used for the Relevance Feedback
+up to size 10. For a Relevance Feedback of size 20, there were only
+127 job postings with the established characteristics.
+All the calculations for AIRP and MIRP were parallelized using
+GNU Parallel (Tange, 2011), a shell tool created to run the same
+task multiple times but with different inputs. More specifically, the
+parallelization consists in assigning a CPU thread to each job post-
+ing. Therefore, multiple job postings can be run at the same time.
+We decided to evaluate each ranking of rsums using Average
+Precision (AP) (Buckley & Voorhees, 2000). AP is an evaluation met-
+ric designed for rankings with two grades of relevance: relevant
+and irrelevant.22 Furthermore, AP determines, at the same time,
+the precision and the recall of a ranking in accordance to the po-
+sition of its elements (Voorhees & Harman, 2001). In order to have
+a good value of AP, i.e., close to 1, the relevant elements should
+be positioned at the top of a ranking, while those that are irrele-
+vant should be located at the bottom of a ranking. In our case, a
+ranked rsum is considered to have the correct relevance when it
+is similarly marked in the corpus data (see Section 4).
+To evaluate the performance of the methods used to rank r-
+sums, we calculate the Mean Average Precision (MAP) for each
+one (Buckley & Voorhees, 2000). As the name indicates, the MAP
+consists of averaging all the AP values obtained using the same
+method.
+In order to verify whether the MAP values obtained for each
+tested method are significantly different, we analyze the results us-
+ing a one-way Repeated Measures Analysis of Variance (rANOVA).
+The assumptions of rANOVA, data normality and sphericity, are
+tested with the Shapiro-Wilk Test and the Mauchly's Test, respec-
+21
+The only exception could be LO-MATCH, which provided a service through a
+website during a time. However, the software, per se, was never available to down-
+load for testing purposes.
+22
+Apart from the AP, we can find in the literature two other metrics specialized in
+the evaluation of rankings: Kendall's tau and (Normalized) Discounted Cumulative
+Gain (Jrvelin & Keklinen, 2000). These metrics are used in rankings with mul-
+tiple grades of relevance, e.g., very relevant, relevant, irrelevant and very irrelevant.
+However, our data set is only annotated with two grades of relevance, thus, AP is
+the most appropriate metric.
+Table 2
+Summary of the statistical analysis done over the results presented in
+Fig. 3. The upper diagonal shows the p value of the results that were
+significantly different. The lower diagonal shows the values of Cohen's
+d effect size.
+AIRP AIRP IDF MIRP MIRP IDF Random
+AIRP 0.017 - - 4.4  10-4
+AIRP IDF 0.230 - - 1.2  10-3
+MIRP - - - 5.4  10-4
+MIRP IDF - - - 1.5  10-4
+Random 0.316 0.344 0.309 0.339
+tively. In both cases, the alpha to refute the null hypothesis is set
+to 0.05.
+The results from the rANOVA are considered to be significantly
+different when the p value is less than 0.05. In the case we com-
+pare more than two methods, and the rANOVA show a significant
+difference, we also make use of a post hoc test. More specifically,
+we utilize a Pairwise t-Test with  = 0.05 in order to determine
+which pairs of groups are significantly different.
+For each pair of experiments showing a significant difference,
+we calculated the effect size using Cohen's d. Effect sizes are values
+that helps to quantify the difference between two analyzed groups.
+As thumb rule, effect size can be classified into small (d = 0.2),
+medium (d = 0.5) and large (d = 0.8) (Cohen, 1988, Page 20).
+The statistical analyses were performed using R (R Core
+Team, 2018).
+</corps>
+    <conclusion>The massive access of the Internet has changed multiple as-
+pects of our lives, and the way we find and apply for a job offer
+is not an exception. Although the use of computers and the In-
+ternet has made easier to find job offers and potential candidates
+to send their rsums or curricula vitae, it has negatively affected
+the performance of human resource managers during the selection
+process. Human resource managers have trouble to find rapidly the
+candidates, among all who applied, that meet the job requirements
+and should be called for an interview.
+We presented two innovative methods for ranking rsums by
+relevance, making it easier for human resource managers to iden-
+tify candidates with the desired characteristics. The methods here
+presented are innovative because they make use only of the r-
+sums sent in response to a job offer. These methods contrast
+with state-of-the-art methods that usually compare rsums and
+job offers with proximity measures. Our methods are language in-
+dependent and do not need semantic resources to work. Moreover,
+the methods presented here are statistically better than a random
+baseline or a baseline grounded on the similarity between rsums
+and a job offer.
+Moreover, we presented two different ways to apply Relevance
+Feedback in a rsum ranker. One method for applying Relevance
+Feedback works at a general level (Relevance Factor), while the
+other method works at a finer lexical one (Vocabulary Scoring). Al-
+though the Relevance Factor helps to improve rsum rankings, we
+find that it is its use along with Vocabulary Scoring that helps us
+to reach a Mean Average Precision of 0.937. Put differently, by us-
+ing the Relevance Factor with Vocabulary Scoring we can correctly
+rank almost every rsum. As a consequence, we can reduce the
+time needed by human resource managers to find the rsums of
+relevant applicants. It is important to note that the very good re-
+sults obtained with Vocabulary Scoring reinforces the concept that
+relevant rsums share more characteristics with themselves than
+with irrelevant ones, as seen in our previous works.
+We believe that, within the rsums we can intrinsically find a
+"facial composite" of the ideal candidate, and possibly the "facial
+composite" that represents the unqualified candidates. It may be
+these "facial composites" that enable us to rank rsums without
+the use of a job offer or semantic resources.
+We consider that methodologies based only on rsums and
+their vocabularies are the future of rsum rankers. The main rea-
+son to think this is that they are capable of offering excellent
+performance without being limited to one domain or language.
+Despite these methods were created to be used in a particular
+database, where it was impossible to have access to every job of-
+fer, we believe that it can be used in any database of rsums, only
+if these are separated by job postings. Furthermore, the methods
+here presented do not make use of any kind of semantic resources,
+which can make them easier to implement in under-resources lan-
+guages.
+There are still things that must be studied with this kind of
+methods. In the first place are the temporal aspects. We assumed
+in this article that all the rsums were present at the same time,
+but in real life this may not be true. On occasions, the process
+of recruitment and selection are done in parallel, i.e., once a r-
+sum arrives to a human resource manager, it is analyzed. We have
+to consider as well the evolution of the person specification over
+time. In some cases, human resource managers are obliged to be-
+come more or less strict in order to filter the applicants. These
+changes, in consequence, will affect the human resource managers'
+perception regarding the relevance of applicants. Due to this effect,
+the way to apply our methods may need to change, and we should
+evaluate until which extent they remain valid. However, despite all,
+the proposed methods could be used to evaluate a posteriori the
+reasons why a group of candidates was chosen to do an interview.
+Moreover, other human resource managers or psychologists may
+find useful the tool to determine whether human resource man-
+agers were affected by personality inferences, misspellings or any
+kind of discrimination.
+Another aspect to take into account is the way to match terms
+or concepts and n-grams. These representations are not the same,
+and this can infuse difficulty to some degree in the application of
+our methods. Put differently, a concept may be difficult to repre-
+sent with an n-gram. Finally, it should be analyzed the economics
+and whether human resource managers will adopt these methods
+to make their tasks easier.
+Regarding the scalability of the methods here presented, we do
+not observe any particular problem. As we indicated in Section 5,
+the methods were called using the program GNU Parallel, meaning
+that each job posting was analyzed using different CPU threads.
+This indicates that multiple job postings can be processed at the
+same time without any collision. Furthermore, it is possible to par-
+allelize the similarity between rsums, i.e., to use several threads
+to calculate multiple Dice's Coefficient scores at the same time. The
+only aspect to take into consideration is that the vectors represent-
+ing the rsums should be accessible to every thread. At the end,
+all the methods described in this work can be easily scaled and
+distributed in a cluster.
+In the future, we would like to use word embedding in order
+to calculate the proximity between rsums differently. It could
+also be useful for Vocabulary Scorings. In addition, we will work
+on the improvements described in the discussion. Since the meth-
+ods developed here are language independent, it will be easy to
+test them on other languages than French. Although this last task
+can be difficult to achieve due to the lack of a corpus of real se-
+lection processes. During the experimentation, we observed that
+our methods can keep a good performance when they are tested
+on an encrypted version of the data set here used.25 Therefore, we
+can rely on this clue that for other languages, the methods should
+work as well.
+In conclusion, we hope that our methods and results will attract
+new and deeper research in this domain.
+Credit authorship contribution statement
+Luis Adrin Cabrera-Diego: Conceptualization, Methodology,
+Software, Validation, Formal analysis, Investigation, Data curation,
+Writing - original draft, Writing - review & editing, Visualiza-
+tion. Marc El-Bze: Conceptualization, Methodology, Validation,
+Formal analysis, Investigation, Writing - review & editing, Super-
+vision, Project administration, Funding acquisition. Juan-Manuel
+Torres-Moreno: Conceptualization, Methodology, Writing - review
+& editing, Supervision, Project administration, Funding acquisi-
+tion. Barthlmy Durette: Conceptualization, Methodology, Formal
+analysis, Writing - review & editing, Supervision, Project adminis-
+tration.
+25
+We did not achieve the same results in the encrypted data set, as the rsums
+were encrypted without doing a deep pre-processing, like lemmatization or stop
+words deletion. Thus, the rsums contained a greater variety of terms and noisy
+words.
+106 L.A. Cabrera-Diego, M. El-Bze and J.-M. Torres-Moreno et al. / Expert Systems With Applications 123 (2019) 91--107
+</conclusion>
+	<discussion>in the following subsections, we discuss the results obtained in
+section 6. the discussion is divided based on the experiments.
+7.1. airp, mirp, idf and baselines
+the significant difference between our methods and the ran-
+dom baseline method means that our methods can be, by them-
+selves, of help to hrms. in other words, the inter-rsum proxim-
+ity, used through airp and mirp, can rank correctly, to a certain
+degree, the rsums and proposes a better start point, than a ran-
+dom one, to hrms during the selection process. as we observed
+in section 6.1, there was no significant difference between airp
+and mirp. this finding means that the distribution of inter-rsum
+proximities is often symmetrical and does not contain outliers.
+we observed that between all our methods and the random
+baseline there was a statistical difference, however between our
+other methods, in general, there was not a significant difference.
+moreover, the ranova performed on the results presented over
+the subset of 60 job postings (fig. 4) suggests that our methods
+are better than the method based on the similarity between job
+offers and rsums. we could see this, as evidence that rsums
+contain more information about the job requirements than the job
+offer does, at least without using semantic resources. this could
+also mean that the vocabulary used in the job offer and the r-
+sums differs to a certain degree.
+it is interesting how in terms of map, our methods worked
+better over the 60 job postings to which we had access to the
+job offer than for the set of 171 job postings. one reason for this
+outcome might be that these 60 job postings had one particular
+characteristic: on average, the number of relevant rsums was
+2.2 times the number of irrelevant rsums. this contrasts with
+the average number of relevant rsums for the 171 job postings,
+which was 1.4 times the number of irrelevant rsums. another
+explanation, is that this difference can be a signal that the "true"
+map, the one that would be obtained if we analyze the statistical
+population instead of a statistical sample, is located between 0.60
+and 0.73. although these could be the main reasons, we do not
+leave aside the fact that there could be others, intrinsic or not, to
+these job postings. to find these other reasons, we need to per-
+form a deeper analysis of these job postings and validate whether
+the number of relevant rsums had an impact on the performance
+of airp and mirp.
+7.2. relevance feedback positions and the relevance factor
+as we observed in section 6.2.1, the relevance factor is affected
+by the place from where the rsums used for the relevance feed-
+back were obtained. in fact, the most helpful position was the top
+one while the bottom position was the one that gave the lowest
+performance. the latter result indicates that at the end of the rank-
+ings we did not find relevant rsums. in other words, we do not
+find rsums that could help us determine what is sought by the
+hrm. as a consequence, it is difficult to improve the results using
+only irrelevant rsums. moreover, in order to see an improvement
+l.a. cabrera-diego, m. el-bze and j.-m. torres-moreno et al. / expert systems with applications 123 (2019) 91--107 103
+with the bottom position, it is necessary to increase the number of
+analyzed rsums. this means reaching the middle of the rankings,
+from the bottom, to increase the probability of finding relevant r-
+sums.
+despite the both position results were less performing than
+those obtained with the top position, it could be of interest to fol-
+low it in real life. the main reason is that it may verify that we did
+not leave someone relevant at the end of the rsum ranking. the
+second reason is that its behavior is not far from the behavior ob-
+tained with the top position; although according to the statistical
+test, there is a significant difference and the effect size is between
+small and medium-small.
+it is of interest to determine whether an asymmetric both po-
+sition is better than a symmetric one. currently, the same number
+of rsums is analyzed from the top and the bottom of the rsum
+rankings. however, it may be better to analyze more rsums from
+the top of the rankings than from the bottom to improve the speed
+of our methods.
+it can be asked why the map decreases when using two r-
+sums for relevance feedback for the bottom and both positions.
+the reason is that we increase the probability of finding only ir-
+relevant rsums by looking for rsums at these positions. when
+we use only irrelevant rsums for the relevance factor (eq. (6)),
+we can penalize relevant rsums based on their small similarities
+with the irrelevant ones. as mentioned previously, by increasing
+the number of analyzed rsums, we can increase the number of
+relevant rsums analyzed and reduce the effect of the irrelevant
+ones located at the end of the rankings.
+we did not found any significant difference with respect to
+the iterative and non-iterative application of the relevance feed-
+back. moreover, we do not have a precise idea of why the itera-
+tive application did not improve the speed of rsum ranking. the
+best idea that we have is that the improvement is so small that
+the map cannot detect it. put differently, the rsums just change
+ranking positions with other rsums of the same type (relevant
+or irrelevant) and this cannot be detected by the map. it is pos-
+sible that the number of rsums used in each iteration, two, is
+not enough to provide visible improvement. we may need to de-
+termine with other experiments how many rsums are necessary
+in an iterative application of the relevance feedback to see real
+improvement.
+to improve the performance of the iterative application of the
+relevance feedback, we may need as well to take into account the
+history of how the rsums move within the rankings. if we find
+that rsum rankings do not change greatly, it could mean that we
+arrived at a point where we cannot further improve the rankings
+with this method. thus, we should change the method, for exam-
+ple, by using vocabulary scoring or looking for relevant rsums at
+the bottom, or even at a random position.
+7.3. vocabulary scoring
+the results obtained using vocabulary scoring and the rele-
+vance factor were surprising. we never expected to surpass a map
+of 0.9, as we did with s3 (map of 0.9372  0.014). furthermore, we
+were surprised by the results because vocabulary scoring only af-
+fects the model used in determining the relevance factor. thus,
+the airp of one rsum r is modified only by the relevance factor
+(eq. (6)) which determines how proximal rsum r is to the rele-
+vant and irrelevant ones using basically 100 n-grams chosen by the
+hrm (50 terms per class).
+the poor performance of s1 and s2, seen in section 6.3, may
+be related to the quantity of data utilized to establish the term
+scores. using only the information provided by documents from
+the relevance feedback is not enough to simulate correctly the
+knowledge that an hrm would have about the job posting and, in
+consequence, to determine the term scores. it should be remem-
+bered that the simulations are based on the squared probabilities
+(eq. (9)) and without enough information these values lack the re-
+liability to correctly represent the classes. although, we tried to
+increase the reliability by using only n-grams observed in at least
+two rsums, as explained in section 4.2.1, this minimum might
+not be enough for these two simulations. the problem is solved
+when we make use of s3, where we calculate the squared proba-
+bilities based on all the information available.
+to better understand how the simulations worked and affected
+the results, we present in the following lines a discussion of the
+simulations generated regarding a project manager job posting; this
+job posting is one of the 60 job postings linked manually to the job
+offer. in fig. 7, we present an abstract of the job offer related to the
+job posting. in table 6, we present an extract of vocabulary scor-
+ing using the three simulations, s1, s2 and s3, for 20 rsums of
+relevance feedback.23 it should be remembered, that for obtaining
+the n-grams and the values presented in table 6, we did not make
+use of the job offer at any moment, they are result from simulation
+s1, s2 and s3 as explained in section 4.2.1.
+we see from table 6 that simulation s3 provides the best
+weights to the terms related to the job offer, even when the last
+one was not included in the analysis process. nevertheless, s1 and
+s2 have trouble correctly weighting the terms of the job offer or at
+least placing them within the first five positions; the reason is the
+lack of information.
+additionally, although impossible to show due to their length,
+it should be mentioned that for simulation s3, the n-grams of both
+classes always had a squared probability, p2
+c (t), of 1. for simula-
+tions s1 and s2 the squared probabilities were always 1 regarding
+the relevant class, while they varied from 1 to 0.444 for the irrel-
+evant class.
+in general, thanks to outputs like those presented in table 6,
+it is possible to better understand which characteristics were the
+ones looked for or impacted the decision of hrm. with this kind
+of lists, psychologist can do a posteriori studies regarding the selec-
+tion of candidates. or, other hrms can use this kind of output to
+explain to candidates why they were not selected for an interview.
+one interesting thing to note, as seen in fig. 6, is that s2 is bet-
+ter than s1 despite the former did not contain the terms that were
+boosted in the latter. the reason for this discrepancy is related to
+the quality of the n-grams chosen for the simulations and how we
+determine the term scores. as seen in table 6, the terms used for
+simulations s1 and s2, especially those for the relevant rsums,
+are quite different from the terms found in s3 and in the job offer.
+they can be considered as "bad" in terms of representativeness.
+thus, in s1 we gave these "bad" n-grams the power to reflect the
+classes, even though they do not truly represent them; the con-
+sequences are bad rankings. in s2 we deleted these "bad" terms,
+while the rest of terms represented the classes, although with poor
+term scores; the resulting rankings are affected negatively but not
+as much as in s1.
+in the previous results, we can see that the terms chosen by
+hrm may have a crucial role in the performance of vocabulary
+scoring, and as a consequence on the performance of the rele-
+vance factor. in other words, to choose terms that do not correctly
+represent what an hrm wants and does not want can negatively
+impact the ranking of rsums.
+related to this last point, we want to know how the vocabulary
+scoring is affected by the way the terms are sorted because it may
+not be an obvious task for an hrm to perform. in fact, an hrm
+23
+simulations s1 and s2 sort in the same way the n-grams; their difference is that
+s2 gives a term score of 0 to the first 50 n-grams. simulation s3 makes use of all
+the information available in the job to sort the terms presented in the 20 rsums
+analyzed.
+104 l.a. cabrera-diego, m. el-bze and j.-m. torres-moreno et al. / expert systems with applications 123 (2019) 91--107
+fig. 7. summary of a project manager job offer. the job offer comes from one of the 60 job postings to which we found their respective job offers. the original job offer
+was in french; we translated it to english and summarized it.
+table 6
+squared probabilities, sum of weights, number of documents, factors and rank for a set of terms ac-
+cording to each vocabulary scoring simulation. all the n-grams, originally in french but translated to
+english, belong to the rsums linked to the job offer presented in fig. 7. the job has in total 36 rele-
+vant rsums and 29 irrelevant ones.
+simulations class n-gram (t) pc(t) w(t) dc(t) fc(t) rank
+s1 and s2
+irrelevant project engineer 1 0.024 3 0.072 1
+micro-techniques 1 0.022 2 0.045 2
+investment 1 0.013 3 0.040 3
+solidworks catia v5 1 0.019 2 0.039 4
+supplier france 1 0.019 2 0.039 5
+relevant business 1 0.040 7 0.285 1
+rail 1 0.030 7 0.216 2
+planning 1 0.024 8 0.196 3
+range 1 0.023 8 0.189 4
+respect 1 0.024 7 0.174 5
+s3
+irrelevant responsible supplier 1 0.038 4 0.154 1
+unit 1 0.026 4 0.106 2
+renault project 1 0.032 3 0.098 3
+to orient 1 0.024 4 0.096 4
+validation piece 1 0.041 2 0.083 5
+relevant rail 1 0.023 22 5.098 1
+alstom transport 1 0.074 8 0.598 2
+train 1 0.076 7 0.532 3
+tgv 1 0.062 6 0.372 4
+cad software 1 0.048 5 0.241 5
+can ask how to determine whether one term better represents the
+relevant or irrelevant rsums than another one. moreover, they
+can question whether to "incorrectly" sort one term would affect
+the resulting ranking at the same level as choosing a bad term. to
+answer these questions, instead of computing the term score with
+eq. (7), we decided to assign a term score of 1 to the 50 more
+representative n-grams of each class. this is equivalent to saying
+that the order in which the n-grams are sorted has no importance.
+the results of setting the term scores equal to 1 using simula-
+tion s3 showed that at 10 rsums, we get a map of 0.913  0.015;
+at 20 rsums, the map is 0.947  0.012. the ranova between our
+method using term scores set to 1 and those computed with the
+5th root indicated there is no significant difference at 10 and 20
+rsums (p value = 1.7  10-3 and p value = 1.37  10-9 respec-
+tively). these outcomes do not mean that both methods are equiv-
+alent and as a consequence interchangeable, but that they perform
+very similarly.24 as well, the results obtained from using a term
+score of 1 may provide a hint that the success of vocabulary scor-
+ing is related more to the quality of the chosen n-grams and the
+weight difference we create with respect to the other terms, i.e.,
+those to which we set a term score of 0.01. in other words, to put
+the most representative n-gram at the 50th position of the vocabu-
+lary scoring does not affect the results as much as leaving it aside.
+one interesting thing we observed in five different job post-
+ings using s3 is that the top ranked n-grams from the relevant
+rsums appear in more documents than the top ranked n-grams
+from the irrelevant rsums. we see this behavior in column dc(t)
+24
+the lack of significant difference between two means does not express that they
+are equal. it indicates that we need more data to determine a significant difference.
+however, the effect size of this difference may be very small and, in consequence,
+they would behave very similar in real conditions.
+of table 6. if this is true for all the job postings, we could confirm
+the ideas on which we based airp and mirp: the rsums from
+relevant applicants have in common multiple terms while the ir-
+relevant rsums usually present a great variety of terms that are
+not frequently shared. however, we must perform a deeper analy-
+sis to validate this hypothesis.
+despite the interest to determine what would be the results us-
+ing human judgments instead of simulations, it should be noted
+that this cannot be done without redoing the selection process.
+the main reason is the relation between the selection of appli-
+cants and the person specification, a document that can evolve
+over time. in other words, the hrm who would redo the selec-
+tion process may not have access to the previous person speci-
+fication. this may result in a different evaluation of rsums, es-
+pecially those from the first candidates who applied. however, we
+can imagine that in reality, humans would do a good job, even bet-
+ter than simulations, because they know a priori the person speci-
+fication.
+although we did not test vocabulary scoring with a set of less
+than 50 n-grams, it may be possible to reduce this figure. in first
+place, we should test whether a smaller vocabulary scoring with
+term scores set to 1, or determined by eq. (7), have the same per-
+formance. if this is not the case, we may change eq. (7). for ex-
+ample, a gradient closer to zero might help to give better results
+to the top 10 terms. another option would be to further reduce
+the term score for the n-grams that do not appear in the rele-
+vance feedback. in previous experiments, not presented here, we
+observed that as we decreased the term scores of the unseen n-
+grams the results were boosted even more.
+moreover, it could be of help to find the n-grams or terms,
+and even their synonyms, that appear in the job offer and per-
+son specification in order to improve or automate the generation
+l.a. cabrera-diego, m. el-bze and j.-m. torres-moreno et al. / expert systems with applications 123 (2019) 91--107 105
+of vocabulary scorings. in other words, these n-grams or terms
+could be those that should be positioned at the top of the vo-
+cabulary scoring. to this end, we could make use of human re-
+sources lexica, ontologies and terminological extractors. however,
+the use of these resources may introduce some difficulties as terms
+may not correspond exactly to the n-grams used in the vector
+model.
+8. conclusions and future work
+the massive access of the internet has changed multiple as-
+pects of our lives, and the way we find and apply for a job offer
+is not an exception. although the use of computers and the in-
+ternet has made easier to find job offers and potential candidates
+to send their rsums or curricula vitae, it has negatively affected
+the performance of human resource managers during the selection
+process. human resource managers have trouble to find rapidly the
+candidates, among all who applied, that meet the job requirements
+and should be called for an interview.
+we presented two innovative methods for ranking rsums by
+relevance, making it easier for human resource managers to iden-
+tify candidates with the desired characteristics. the methods here
+presented are innovative because they make use only of the r-
+sums sent in response to a job offer. these methods contrast
+with state-of-the-art methods that usually compare rsums and
+job offers with proximity measures. our methods are language in-
+dependent and do not need semantic resources to work. moreover,
+the methods presented here are statistically better than a random
+baseline or a baseline grounded on the similarity between rsums
+and a job offer.
+moreover, we presented two different ways to apply relevance
+feedback in a rsum ranker. one method for applying relevance
+feedback works at a general level (relevance factor), while the
+other method works at a finer lexical one (vocabulary scoring). al-
+though the relevance factor helps to improve rsum rankings, we
+find that it is its use along with vocabulary scoring that helps us
+to reach a mean average precision of 0.937. put differently, by us-
+ing the relevance factor with vocabulary scoring we can correctly
+rank almost every rsum. as a consequence, we can reduce the
+time needed by human resource managers to find the rsums of
+relevant applicants. it is important to note that the very good re-
+sults obtained with vocabulary scoring reinforces the concept that
+relevant rsums share more characteristics with themselves than
+with irrelevant ones, as seen in our previous works.
+we believe that, within the rsums we can intrinsically find a
+"facial composite" of the ideal candidate, and possibly the "facial
+composite" that represents the unqualified candidates. it may be
+these "facial composites" that enable us to rank rsums without
+the use of a job offer or semantic resources.
+we consider that methodologies based only on rsums and
+their vocabularies are the future of rsum rankers. the main rea-
+son to think this is that they are capable of offering excellent
+performance without being limited to one domain or language.
+despite these methods were created to be used in a particular
+database, where it was impossible to have access to every job of-
+fer, we believe that it can be used in any database of rsums, only
+if these are separated by job postings. furthermore, the methods
+here presented do not make use of any kind of semantic resources,
+which can make them easier to implement in under-resources lan-
+guages.
+there are still things that must be studied with this kind of
+methods. in the first place are the temporal aspects. we assumed
+in this article that all the rsums were present at the same time,
+but in real life this may not be true. on occasions, the process
+of recruitment and selection are done in parallel, i.e., once a r-
+sum arrives to a human resource manager, it is analyzed. we have
+to consider as well the evolution of the person specification over
+time. in some cases, human resource managers are obliged to be-
+come more or less strict in order to filter the applicants. these
+changes, in consequence, will affect the human resource managers'
+perception regarding the relevance of applicants. due to this effect,
+the way to apply our methods may need to change, and we should
+evaluate until which extent they remain valid. however, despite all,
+the proposed methods could be used to evaluate a posteriori the
+reasons why a group of candidates was chosen to do an interview.
+moreover, other human resource managers or psychologists may
+find useful the tool to determine whether human resource man-
+agers were affected by personality inferences, misspellings or any
+kind of discrimination.
+another aspect to take into account is the way to match terms
+or concepts and n-grams. these representations are not the same,
+and this can infuse difficulty to some degree in the application of
+our methods. put differently, a concept may be difficult to repre-
+sent with an n-gram. finally, it should be analyzed the economics
+and whether human resource managers will adopt these methods
+to make their tasks easier.
+regarding the scalability of the methods here presented, we do
+not observe any particular problem. as we indicated in section 5,
+the methods were called using the program gnu parallel, meaning
+that each job posting was analyzed using different cpu threads.
+this indicates that multiple job postings can be processed at the
+same time without any collision. furthermore, it is possible to par-
+allelize the similarity between rsums, i.e., to use several threads
+to calculate multiple dice's coefficient scores at the same time. the
+only aspect to take into consideration is that the vectors represent-
+ing the rsums should be accessible to every thread. at the end,
+all the methods described in this work can be easily scaled and
+distributed in a cluster.
+in the future, we would like to use word embedding in order
+to calculate the proximity between rsums differently. it could
+also be useful for vocabulary scorings. in addition, we will work
+on the improvements described in the discussion. since the meth-
+ods developed here are language independent, it will be easy to
+test them on other languages than french. although this last task
+can be difficult to achieve due to the lack of a corpus of real se-
+lection processes. during the experimentation, we observed that
+our methods can keep a good performance when they are tested
+on an encrypted version of the data set here used.25 therefore, we
+can rely on this clue that for other languages, the methods should
+work as well.
+in conclusion, we hope that our methods and results will attract
+new and deeper research in this domain.
+credit authorship contribution statement
+luis adrin cabrera-diego: conceptualization, methodology,
+software, validation, formal analysis, investigation, data curation,
+writing - original draft, writing - review & editing, visualiza-
+tion. marc el-bze: conceptualization, methodology, validation,
+formal analysis, investigation, writing - review & editing, super-
+vision, project administration, funding acquisition. juan-manuel
+torres-moreno: conceptualization, methodology, writing - review
+& editing, supervision, project administration, funding acquisi-
+tion. barthlmy durette: conceptualization, methodology, formal
+analysis, writing - review & editing, supervision, project adminis-
+tration.
+25
+we did not achieve the same results in the encrypted data set, as the rsums
+were encrypted without doing a deep pre-processing, like lemmatization or stop
+words deletion. thus, the rsums contained a greater variety of terms and noisy
+words.
+106 l.a. cabrera-diego, m. el-bze and j.-m. torres-moreno et al. / expert systems with applications 123 (2019) 91--107</discussion>
+	<biblio>armstrong, m., & taylor, s. (2014). armstrong's handbook of human resource manage-
+ment practice (13th). kogan page publishers.
+arthur, d. (2001). the employee recruitment and retention handbook. amacom.
+barber, l. (2006). e-recruitment developments. institute for employment studies.
+buckley, c., & voorhees, e. m. (2000). evaluating evaluation measure stability. in
+proceedings of the 23rd annual international acm sigir conference on research and
+development in information retrieval (pp. 33--40). athens, greece: acm. doi:10.
+1145/345508.345543.
+cabrera-diego, l. a. (2015). automatic methods for assisted recruitment. universit
+d'avignon et des pays de vaucluse ph.d. thesis.
+cabrera-diego, l. a., durette, b., lafon, m., torres-moreno, j.-m., &
+el-bze, m. (2015). how can we measure the similarity between rsums
+of selected candidates for a job?. in stahlbock, robert, & weiss, gary m. (eds.),
+proceedings of the 11th international conference on data mining (dmin'15)
+(pp. 99--106). las vegas, usa
+chapman, d. s., & webster, j. (2003). the use of technologies in the recruiting,
+screening, and selection processes for job candidates. international journal of se-
+lection and assessment, 11(2--3), 113--120. doi:10.1111/1468-2389.00234.
+cohen, j. (1988). statistical power analysis for the behavioral sciences (2nd). hillsdale,
+usa: lawrence earlbaum associates.
+cole, m. s., feild, h. s., giles, w. f., & harris, s. g. (2009). recruiters' infer-
+ences of applicant personality based on rsum screening: do paper people
+have a personality? journal of business and psychology, 24(1), 5--18. doi:10.1007/
+s10869-008-9086-9.
+cossu, j.-v. (2015). analyse de l'image de marque sur le web 2.0. avignon, france:
+universit d'avignon et des pays de vaucluse ph.d. thesis.
+cossu, j.-v., janod, k., ferreira, e., gaillard, j., & el-bze, m. (2014). lia@replab
+2014: 10 methods for 3 tasks. in l. cappellato, n. ferro, m. halvey, & w. kraaij
+(eds.), working notes for 4th international conference of the clef initiative
+(pp. 1458--1467). sheffield, uk
+elkington, t. (2005). bright future for online recruitment. personnel today, 9.
+faliagka, e., iliadis, l., karydis, i., rigou, m., sioutas, s., tsakalidis, a., & tz-
+imas, g. (2013). on-line consistent ranking on e-recruitment: seeking the
+truth behind a well-formed cv. artificial intelligence review, 1--14. doi:10.1007/
+s10462-013-9414-y.
+faliagka, e., kozanidis, l., stamou, s., tsakalidis, a., & tzimas, g. (2011). a person-
+ality mining system for automated applicant ranking in online recruitment sys-
+tems. in s. auer, o. daz, & g. a. papadopoulos (eds.), proceedings of the 11th
+international conference web engineering (icwe 2011). in lecture notes in com-
+puter science: 6757 (pp. 379--382). paphos, cyprus: springer berlin heidelberg.
+doi:10.1007/978-3-642-22233-7_30.
+fang, x., & zhan, j. (2015). sentiment analysis using product review data. journal of
+big data, 2(1), 5. doi:10.1186/s40537-015-0015-2.
+garca-snchez, f., martnez-bjar, r., contreras, l., fernndez-breis, j. t., &
+castellanos-nieves, d. (2006). an ontology-based intelligent system for recruit-
+ment. expert systems with applications, 31(2), 248--263. doi:10.1016/j.eswa.2005.
+09.023.
+guo, s., alamudun, f., & hammond, t. (2016). rsumatcher: a personalized rsum-
+job matching system. expert systems with applications, 60(supplement c), 169--
+182. doi:10.1016/j.eswa.2016.04.013.
+harzallah, m., leclre, m., & trichet, f. (2002). commoncv: modelling the compe-
+tencies underlying a curriculum vitae. in proceedings of the 14th international
+conference on software engineering and knowledge engineering (seke'02) (pp. 65--
+71). ischia island, italy: acm. doi:10.1145/568760.568773.
+hutterer, m. (2011). enhancing a job recommender with implicit user feedback. vienna,
+austria: fakultt fr informatik der technischen universitt wien master's
+thesis.
+jrvelin, k., & keklinen, j. (2000). ir evaluation methods for retrieving highly rel-
+evant documents. in proceedings of the 23rd annual international acm sigir con-
+ference on research and development in information retrieval (pp. 41--48). athens,
+greece: acm. doi:10.1145/345508.345545.
+kessler, r., bchet, n., roche, m., el-bze, m., & torres-moreno, j. m. (2008a). au-
+tomatic profiling system for ranking candidates answers in human resources.
+in r. meersman, z. tari, & p. herrero (eds.), on the move to meaningful inter-
+net systems: otm 2008 workshops. in lecture notes in computer science: 5333
+(pp. 625--634). monterrey, mexico: springer berlin heidelberg. doi:10.1007/
+978-3-540-88875-8_86.
+kessler, r., bchet, n., roche, m., torres-moreno, j.-m., & el-bze, m. (2012). a hy-
+brid approach to managing job offers and candidates. information processing &
+management, 48(6), 1124--1135. doi:10.1016/j.ipm.2012.03.002.
+kessler, r., bchet, n., torres-moreno, j.-m., roche, m., & el-bze, m. (2009). job
+offer management: how improve the ranking of candidates. in foundations of
+intelligent systems: proceedings of 18th international symposium on methodologies
+for intelligent systems (ismis 2009). in lecture notes in computer science: 5722
+(pp. 431--441). prague, czech republic: springer berlin heidelberg. doi:10.1007/
+978-3-642-04125-9_46.
+kessler, r., torres-moreno, j. m., & el-bze, m. (2008b). e-gen: profilage automa-
+tique de candidatures. in actes de la 15me confrence sur le traitement automa-
+tique des langues naturelles (taln 2008) (pp. 370--379). avignon, france
+kmail, a. b., maree, m., & belkhatir, m. (2015). matchingsem: online recruitment
+system based on multiple semantic resources. in 12th international conference
+on fuzzy systems and knowledge discovery (fskd 2015) (pp. 2654--2659). doi:10.
+1109/fskd.2015.7382376.
+looser, d., ma, h., & schewe, k.-d. (2013). using formal concept analysis for ontol-
+ogy maintenance in human resource recruitment. in f. ferrarotti, & g. gross-
+mann (eds.), proceedings of the ninth asia-pacific conference on conceptual mod-
+elling: 143 (pp. 61--68). adelaide, australia: australian computer society, inc.
+martin-lacroux, c. (2017). "without the spelling errors i would have shortlisted
+her...":the impact of spelling errors on recruiters' choice during the personnel
+selection process. international journal of selection and assessment, 25(3), 276--
+283. doi:10.1111/ijsa.12179.
+martinez-gil, j., paoletti, a. l., rcz, g., sali, a., & schewe, k.-d. (2018). accurate and
+efficient profile matching in knowledge bases. data & knowledge engineering,
+117, 195--215. doi:10.1016/j.datak.2018.07.010.
+martinez-gil, j., paoletti, a. l., & schewe, k.-d. (2016). a smart approach for match-
+ing, learning and querying information from the human resources domain. in
+m. ivanovic, b. thalheim, b. catania, k.-d. schewe, m. kirikova, p. saloun, a. da-
+hanayake, t. cerquitelli, e. baralis, & p. michiardi (eds.), proceedings of the new
+trends in databases and information systems: adbis 2016 short papers and work-
+shops, bigdap, dcsa, dc (pp. 157--167). prague, czech republic: springer inter-
+national publishing. doi:10.1007/978-3-319-44066-8_17.
+mason, r. l., gunst, r. f., & hess, j. l. (2003). statistical design and analysis of exper-
+iments: with applications to engineering and science. wiley series in probability
+and statistics (2nd). wiley-interscience. doi:10.1002/0471458503.
+menon, v. m., & rahulnath, h. a. (2016). a novel approach to evaluate and rank can-
+didates in a recruitment process by estimating emotional intelligence through
+social media data. in international conference on next generation intelligent sys-
+tems (icngis) (pp. 1--6). kottayam, india: ieee. doi:10.1109/icngis.2016.7854061.
+montuschi, p., gatteschi, v., lamberti, f., sanna, a., & demartini, c. (2014). job re-
+cruitment and job seeking processes: how technology can help. it professional,
+16(5), 41--49. doi:10.1109/mitp.2013.62.
+padr, l., & stanilovsky, e. (2012). freeling 3. 0: towards wider multilinguality.
+in n. calzolari, k. choukri, t. declerck, m. u. dogan, b. maegaard, j. mariani,
+a. moreno, j. odijk, & s. piperidis (eds.), proceedings of the eight international
+conference on language resources and evaluation (lrec'12) (pp. 2473--2479). is-
+tanbul, turkey: elra.
+r core team (2018). r: a language and environment for statistical computing. r
+foundation for statistical computing vienna, austria.
+radevski, v., & trichet, f. (2006). ontology-based systems dedicated to human re-
+sources management: an application in e-recruitment. in r. meersman, z. tari,
+& p. herrero (eds.), on the move to meaningful internet systems 2006: otm
+2006 workshops. in lecture notes in computer science: 4278 (pp. 1068--1077).
+montpellier, france: springer berlin heidelberg. doi:10.1007/11915072_9.
+rocchio, j. j. (1971). relevance feedback in information retrieval. in g. salton (ed.),
+the smart retrieval system: experiments in automatic document processing. in au-
+tomatic computation (pp. 313--323). englewood cliffs, n.j., usa: prentice-hall.
+salton, g., wong, a., & yang, c.-s. (1975). a vector space model for automatic index-
+ing. communications of the acm, 18(11), 613--620. doi:10.1145/361219.361220.
+sen, a., das, a., ghosh, k., & ghosh, s. (2012). screener: a system for extracting ed-
+ucation related information from resumes using text based information extrac-
+tion system. in proceedings of 2012 international on computer and software model-
+ing (iccsm 2012). in international proceedings of computer science & information
+technology: 54 (pp. 31--35). international association of computer science and
+information technology press (iacsit press). doi:10.7763/ipcsit.2012.v54.06.
+senthil kumaran, v., & sankar, a. (2012). expert locator using concept linking. inter-
+national journal of computational systems engineering, 1(1), 42--49. doi:10.1504/
+ijcsyse.2012.044742.
+senthil kumaran, v., & sankar, a. (2013). towards an automated system for in-
+telligent screening of candidates for recruitment using ontology mapping (ex-
+pert). international journal of metadata, semantics and ontologies, 8(1), 56--64.
+doi:10.1504/ijmso.2013.054184.
+singh, a., rose, c., visweswariah, k., chenthamarakshan, v., & kambhatla, n. (2010).
+prospect: a system for screening candidates for recruitment. in proceedings
+of the 19th acm international conference on information and knowledge manage-
+ment (cikm 2010) (pp. 659--668). toronto, canada: acm. doi:10.1145/1871437.
+1871523.
+sprck-jones, k. (1972). a statistical interpretation of term specificity and its appli-
+cation in retrieval. journal of documentation, 28(1), 11--21. doi:10.1108/eb026526.
+tange, o. (2011). gnu parallel - the command-line power tool. login: the usenix
+magazine, 36(1), 42--47.
+thompson, m. a. (2000). the global resume and cv guide. chichester, new york: wi-
+ley.
+tinelli, e., colucci, s., donini, f. m., di sciascio, e., & giannini, s. (2017). embedding
+semantics in human resources management automation via sql. applied intelli-
+gence, 46(4), 952--982. doi:10.1007/s10489-016-0868-x.
+torres-moreno, j.-m., el-bze, m., bellot, p., & bchet, f. (2012). opinion detection as
+a topic classification problem. in . gaussier, & f. yvon (eds.), textual information
+access: statistical models (pp. 337--368). wiley-iste. doi:10.1002/9781118562796.
+ch9.
+l.a. cabrera-diego, m. el-bze and j.-m. torres-moreno et al. / expert systems with applications 123 (2019) 91--107 107
+trichet, f., bourse, m., leclre, m., & morin, e. (2004). human resource management
+and semantic web technologies. in proceedings of information and communica-
+tion technologies: from theory to applications (ictta'04) (pp. 641--642). damas-
+cus, syria: ieee. doi:10.1109/ictta.2004.1307928.
+voorhees, e. m., & harman, d. (2001). overview of trec 2001. in proceedings of the
+10th text retrieval conference (trec 2001) (pp. 1--15). gaithersburg, maryland,
+usa: national institute of standards and technology (nist).
+zaroor, a., maree, m., & sabha, m. (2017). a hybrid approach to conceptual
+classification and ranking of resumes and their corresponding job posts. in
+i. czarnowski, r. j. howlett, & l. c. jain (eds.), intelligent decision technologies
+2017: proceedings of the 9th kes international conference on intelligent decision
+technologies (kes-idt 2017) - part i (pp. 107--119). vilamoura, portugal: springer</biblio>
+</article>

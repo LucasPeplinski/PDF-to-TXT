@@ -1,0 +1,196 @@
+<article>
+	<preamble>Stolcke_1996_Automatic_linguistic</preamble>
+    <titre>paper.dvi</titre>
+    <auteur> stolcke@speech.sri.com ees@speech.sri.com </auteur>
+	<abstract> as speech recognition moves toward more unconstrained domains such as conversational speech, we encounter a need to be able to segment (or resegment) waveforms and recognizer output into lin- guistically meaningful units, such a sentences. toward this end, we present a simple automatic segmenter of transcripts based on n-gram language modeling. we also study the relevance of sev- eral word-level features for segmentation performance. using only word-level information, we achieve 85% recall and 70% precision on linguistic boundary detection. </abstract>
+	<introduction> today's large-vocabulary speechrecognizers typically prefer to pro- cess a few tens of seconds of speech at a time, to keep the time and memory demands of the decoder within bounds. for longer inputs, the waveform is usually presegmented into shorter pieces based on simple acoustic criteria, such as nonspeech intervals (e.g., pauses) and turn boundaries (when several speakers are involved). we refer to such segmentations as acoustic segmentations. acoustic segmentations generally do not reflect the linguistic struc- ture of utterances. they may fragment sentences or semantic units, or group together spans of unrelated units. we examine several rea- sons why such behavior is undesirable, and propose that linguistic segmentations be used instead. this requires algorithms for auto- matically finding linguistic units. in this paper we report on first results from our ongoing efforts toward such an automatic linguis- tic segmentation. in all further discussion, unless otherwise noted, the terms `segment,' `segmentation,' etc. will refer to linguistic seg- mentations. the importance of linguistic segmentation acoustic segmentations are inadequate in cases where the output of a speech recognizer is to serve as input for further processing based on syntactically or semantically coherent units. this includes most natural language (nl) parsers or nl understanding or transla- tion systems. for such systems, the fragmented recognition output would have to be put back together and large spans of unrelated material would need to be resegmented into linguistic units. automatic detection of linguistic segments could also improve the user interface of many speech systems. a spoken language system could use the knowledge incorporated in an automatic segmenter to help end-point a user's speech input. a speech indexing and re- trieval system (such as for transcribed broadcast audio) could pro- cess its data in more meaningful units if the locations of linguistic segment boundaries were known. our main motivation for the work reported here comes from speech language modeling. experiments at the 1995 johns hopkins lan- guage modeling workshop showed that the quality of a language model (lm) can be improved if both training and test data are seg- mented linguistically, rather than acoustically [8]. we showed in [10] and [9] that proper modeling of filled pauses requires knowl- edge of linguistic segment boundaries. we found for example that segment-internal filled pauses condition the following words quite differently from segment-initial filled pauses. finally, recent efforts in languagemodeling for conversationalspeech, suchas [8], attempt to capitalize on the internal structure of utterances and turns. such models are formulated in terms of linguistic units and therefore re- quire linguistic segmentations to be applicable. 3. method our main goal for this work was to examine to what extent various kinds of lexical (word-based) information were useful for automatic linguistic segmentation. this precluded a study based on the out- put of existing speech recognition systems, which currently achieve about 40-50% word error rate on the type of data used in our exper- iments. at such high error rates, the analysis of any segmentation algorithm and the features it uses would likely be confounded by the unreliable nature of the input data. we therefore chose to elimi- nate the problem of inaccurate speech recognition and tested our al- gorithms on hand-transcribed word-level transcripts of spontaneous speech from the switchboard corpus [4]. an additional benefit of this approach is that the models employed by the segmentation al- gorithms can also be directly used as language models for speech recognizers for the same type of data, an application we are pursu- ing as well. the segmentation approacheswe investigated all fell within the fol- lowing framework. we first trained a statistical language model of the n-gram variety to model the distribution of both words and segment boundaries. (for this purpose, segment boundaries were represented as special tokens <s> within the text.) the segmenta- tion information was removed from the test data, and the language model was used to hypothesize the most probable locations of seg- ment boundaries. the resulting segmentations were then evaluated along a number of metrics. as training data, we used 1.4 million words of switchboard tran- scripts annotated for linguistic segmentations by the upenn tree- bank project [7], comprising a total of 193,000 segments. one half of the standard switchboard development test set, totaling 10,000 words and 1,300 segments, was used for testing. the hand-annotated segments encompassed different kinds of lin- guistic structures, including  complete sentences  stand-alone phrases  disfluent sentences aborted in mid-utterance1  interjections and back-channel responses the following excerpt illustrates the character of the data. linguis- tic segment boundaries are marked <s>, whereas acoustic segmen- tations are indicated by //. b.44: worried that they're not going to get enough attention? <s> // a.45: yeah, <s> and, uh, you know, colds and things like that <laughter> get -- // b.46: yeah. <s> // a.47: -- spread real easy and things, <s> but, // and they're expensive <s> and, // <lipsmack> // course, // there's a lot of different types of day care available, too, // you know, where they teach them academic things. <s> // b.48: yes. <s> // this short transcript shows some of the ubiquitous features of spon- taneous speech affecting segmentation, such as  mismatch between acoustic and linguistic segmentations (a.47)  segments spanning several turns (a.45 and a.47)  backchannel responses (b.46) 4. the model the languagemodels used were of the n-gram type commonly used in speech recognition [5]. in n-gram models, a word wn from a n 1 word history w1 : : : wn 1. if the history contains a segment boundary <s>, it is truncated before that location. during testing, the model is run as a hidden segmentmodel, hypothesizing segment boundaries between any two words and implicitly computing the probabilities of all possible segmentations. associatedwith each word position are two states, s and no-s, cor- responding to a segment starting or not before that word. a forward 1although complete and disfluent sentences were marked differently in the corpus, we modeled these with a single type of boundary token. computation yields the likelihoods of the states at each position k: pno-s(w1 : : : wk) = pno-s(w1 : : : wk 1)  p(wkjwk 2wk 1) +ps(w1 : : : wk 1)  p(wkj<s>wk 1) ps(w1 : : : wk) = pno-s(w1 : : : wk 1)  p(<s>jwk 2wk 1)p(wkj<s>) +ps(w1 : : : wk 1)  p(<s>j<s>wk 1)p(wkj<s>) a corresponding viterbi algorithm is used to find the most likely sequence of s and no-s (i.e., a segmentation) for a given word string. this language model is a full implementation of the model approximated in [8]. the hidden disfluency model of [10] has a similar structure. as indicated in the formulae above, we currently use at most two words of history in the local conditional probabili- ties p(j). longer n-grams can be used if more state information is kept. the local n-gram probabilities are estimated from the training data by using katz backoff with good-turing discounting [6]. 5. results 5.1. baseline segmentation model the first model we looked at models only plain words and segment boundaries in the manner described. it was applied to the concate- nation of all turns of a conversation side, with no additional con- textual cues supplied. during testing, this model thus operates with very minimal information, i.e., with only the raw word sequence to be segmented. table 1 shows results for bigram and trigram mod- els. the performance metrics used are defined as follows. recall table 1: baseline model performance model recall precision fa ser bigram 65.5% 56.9% 1.9% 58.9% trigram 70.2% 60.7% 2.0% 53.1% is the percentage of actual segment boundaries hypothesized. pre- cision is the percentage of hypothesized boundaries that are actual. false alarms (fa) are the fraction of potential boundaries incor- rectly hypothesized as boundaries. segment error rate (ser) is the percentage of actual segments identified without intervening false alarms. as can be seen, word context alone can identify a majority of seg- ment boundaries at a modest false alarm rate of about 2%. the tri- gram model does better than the bigram, but this is expected since it has access to a larger context around potential segment boundaries. to use in its decision. given these results, we only consider trigram models in all following experiments. 5.using turn information next we examined a richer model that incorporated information about the turn-taking between speakers.note that turn boundaries are already present in acoustic segmentations, but in this case we will only use them as a cue to the identification of linguistic seg- ments. turn information is easily incorporated into the segmenta- tion model by placing special tags at turn boundaries (in both train- ing and testing). model performance is summarized in table 2. table 2: segmentation performance using turn information model recall precision fa ser baseline 70.2% 60.7% 2.0% 53.1% turn-tagged 76.9% 66.9% 1.8% 44.9% as can be seen, adding turn information improves performance on all metrics. this improvement occurs even though turn boundaries are far from perfectly correlated with segment boundaries. as illus- trated earlier, turns can contain multiple segments, or segments may span multiple turns. 5.3. using part-of-speech information so far we have used only the identity of words. it is likely that segmentation is closely related to syntactic (as opposed to lexical) structure. short of using a full-scale parser on the input we could use the parts of speech (pos) of words as a more suitable represen- tation from which to predict segment boundaries. parts of speech should also generalize much better to contexts containing n-grams not observed in the training data (assuming the pos of the words involved is known). we were able to test this hypothesis by using the pos-tagged ver- sion of the switchboard corpus. we built two models based on pos from this data. model i had all words replaced by their pos labels during training and test, and also used turn boundary information. model ii also used pos labels, but retained the word identities of certain word classes that were deemed to be particularly relevant to segmentation. these retained words include filled pauses, conjunc- tions, and certain discourse markers such as "okay," "so," "well," etc. results are shown in table 3. table 3: segmentation performance using pos information model recall precision fa ser word-based 76.9% 66.9% 1.8% 44.9% pos-based i 68.9% 58.5% 2.0% 59.3% pos-based ii 79.6% 73.5% 0.9% 39.9% we see that pos tags alone (model i) do not result in better segmen- tations than words. the fact that model ii performs better than both the all-word based model and the pure pos model indicates that certain function words that tend to occur in the context of segment 2speakers can talk over each other. we did not model this case sepa- rately; instead, we adopted the serialization of turns implied by the tran- scripts. boundaries provide some of the strongest cues for these boundaries. apart from these strong lexical cues, it seems to be helpful to ab- stract from word identity and use pos information instead. in other words, the tag set could be optimized to provide the right level of resolution for the segmentation task. it should be noted that the results for pos-based models are op- timistic in the sense that for an actual application one would first have to tag the input with pos labels, and then apply the segmenta- tion model. the actual performance would be degraded by tagging errors. 5.4. error trade-offs as an aside to our search for useful features for the segmenta- tion task, we observe that we can optimize any particular language model by trading off recall performance for false alarm rate, or vice versa. we did this by biasing the likelihoods of s states by some constant factor, causing the viterbi algorithm to choose these states more often. table 4 compares two bias values, and shows that the bias can be used to increase both recall and precision, while also reducing the segment error rate. table 4: biasing segmentation model recall precision fa ser bias = 1 76.9% 66.9% 1.8% 44.9% bias = 85.2% 69.2% 2.7% 37.4% 6. discussion 6.1. error analysis to understand what type of errors the segmenter makes, we hand- checked a set of 200 false alarms generated by the baseline trigram model. the most frequent type (34%) of false alarm corresponded to splitting of segments at sentence-internal clause boundaries, e.g., false alarms triggered by a conjunction that would be likely to start a segment. for example, the <s> in the segmentation i'm not sure how many active volcanos there are now <s> and and what the amount of material that they do uh put into the atmosphere represents a false alarm, presumably triggered by the following co- ordinating conjunction "and." 5% of the false alarms could be attributed to filled pauses at the end of segments, which were often attached to the following seg- ment. this actually reflects a labeling ambiguity that should not be counted as an error. another 7% of the false alarm we deemed to be labeling errors. thus, a total of 12% of false alarms could be considered to be actually correct. 6.other segmentation algorithms our language-model-based segmentation algorithm is only one of many that could be used to perform the linguistic segmentation task, given a set of features. conceptually, segmentation is just another classification problem, in which each word transition must be la- beled as either a segment boundary or a within-segment transition. two natural choices for alternative approaches are decision trees and a transformation-based, error-driven classifier of the type de- veloped by eric brill for other tagging problems [2]. both of these methods would make it easier to combine diverse input features that are not readily integrated into a single probabilistic languagemodel, e.g., if we wanted to use both pos and word identity for each word.3 our approach, on the other hand, has the advantage of simplicity and efficiency. furthermore, the language model used for segmen- tation can also be used for speech decoding or rescoring. we already mentioned that if pos information is to be used for segmentation, an automatic tagging step is required. this presents somewhat of a chicken-and-egg problem, in that taggers typically rely on segmentations. an appealing solution to this problem in the statistical tagging framework [3] would be to model both segmen- tation and tag assignment as a single hidden markov process. 6.3. other features for segmentation all of our experiments were based on lexical information only. to further improve segmentation performance, and to make it less de- pendenton accurate speechrecognition, we plan to combine the lm approach with a model for various acoustic and prosodic correlates of segmentation. these include:  unfilled pause durations  fundamental frequency patterns  phone durations  glottalization our current segmentation model deals with each conversation side in isolation. an alternative approach is to model the two sides jointly, thereby allowing us to capitalize on correlations between the segment structure of one speaker and what is said by the other. it is likely, for example, that backchannel responses would be modeled better this way. 7. conclusions we have argued for the need for automatic speech segmentation al- gorithms that can identify linguistically motivated, sentence-level units of speech. we have shown that transcribed speech can be segmented linguistically with good accuracy by using an n-gram language model for the locations of the hidden segment boundaries. we studied several word-level features for possible incorporation in the model, and found that best performance so far was achieved with a combination of function `cue' words, pos labels, and turn markers. acknowledgments this research was supported by darpa and nsf, under nsf grant iri-9314967. the views herein are those of the authors and should not be interpreted as representing the policies of darpa or the nsf. 3such an integration can be achieved in a language model using the max- imum entropy paradigm [1], but this would make the estimation process considerably more expensive. 8. references 1. a. l. berger, s. a. della pietra, and v. j. della pietra. a max- imum entropy approach to natural language processing. com- putational linguistics, 22(1):39--71, 1996. e. brill. some advances in transformation-based part of speech tagging. in proceedings of the 12th national conference on artificial intelligence, seattle, wa, 1994. aaai press. 3. k. w. church. a stochastic parts program and noun phrase parser for unrestricted text. in second conference on applied natural language processing, pages 136--143, austin, texas, 1988. 4. j. j. godfrey, e. c. holliman, and j. mcdaniel. switch- board: telephone speech corpus for research and develop- ment. in proceedings ieee conference on acoustics, speech and signal processing, volume i, pages 517--520, san fran- cisco, march 1992. 5. f. jelinek. self-organized language modeling for speech recog- nition. in a. waibel and k.-f. lee, editors, readings in speech recognition. morgan kaufmann, san mateo, ca., 1990. 6. s. m. katz. estimation of probabilities from sparse data for the language model component of a speech recognizer. ieee transactions on acoustics, speech, and signal processing, 35(3):400--401, march 1987. 7. m. meteer et al. dysfluency annotation stylebook for the switchboard corpus. distributed by ldc, february 1995. re- vised june 1995 by ann taylor. 8. m. meteer and r. iyer. modeling conversational speech for speech recognition. in proceedings of the conference on em- pirical methods in natural languageprocessing,philadelphia, pa, may 1996. 9. e. shriberg and a. stolcke. word predictability after hesi- tations: a corpus-based study. in proceedings international conferenceon spoken languageprocessing,philadelphia, pa, october 1996. 10. a. stolcke and e. shriberg. statistical language modeling for speech disfluencies. in proceedings ieee conference on acoustics, speech and signal processing,volume i, pages405-- 408, atlanta, ga, may 1996. </introduction>
+    <corps></corps>
+    <conclusion></conclusion>
+	<discussion>5.1. baseline segmentation model
+the first model we looked at models only plain words and segment
+boundaries in the manner described. it was applied to the concate-
+nation of all turns of a conversation side, with no additional con-
+textual cues supplied. during testing, this model thus operates with
+very minimal information, i.e., with only the raw word sequence to
+be segmented. table 1 shows results for bigram and trigram mod-
+els. the performance metrics used are defined as follows. recall
+table 1: baseline model performance
+model recall precision fa ser
+bigram 65.5% 56.9% 1.9% 58.9%
+trigram 70.2% 60.7% 2.0% 53.1%
+is the percentage of actual segment boundaries hypothesized. pre-
+cision is the percentage of hypothesized boundaries that are actual.
+false alarms (fa) are the fraction of potential boundaries incor-
+rectly hypothesized as boundaries. segment error rate (ser) is the
+percentage of actual segments identified without intervening false
+alarms.
+as can be seen, word context alone can identify a majority of seg-
+ment boundaries at a modest false alarm rate of about 2%. the tri-
+gram model does better than the bigram, but this is expected since it
+has access to a larger context around potential segment boundaries.
+to use in its decision. given these results, we only consider trigram
+models in all following experiments.
+5.2. using turn information
+next we examined a richer model that incorporated information
+about the turn-taking between speakers.2 note that turn boundaries
+are already present in acoustic segmentations, but in this case we
+will only use them as a cue to the identification of linguistic seg-
+ments. turn information is easily incorporated into the segmenta-
+tion model by placing special tags at turn boundaries (in both train-
+ing and testing). model performance is summarized in table 2.
+table 2: segmentation performance using turn information
+model recall precision fa ser
+baseline 70.2% 60.7% 2.0% 53.1%
+turn-tagged 76.9% 66.9% 1.8% 44.9%
+as can be seen, adding turn information improves performance on
+all metrics. this improvement occurs even though turn boundaries
+are far from perfectly correlated with segment boundaries. as illus-
+trated earlier, turns can contain multiple segments, or segments may
+span multiple turns.
+5.3. using part-of-speech information
+so far we have used only the identity of words. it is likely that
+segmentation is closely related to syntactic (as opposed to lexical)
+structure. short of using a full-scale parser on the input we could
+use the parts of speech (pos) of words as a more suitable represen-
+tation from which to predict segment boundaries. parts of speech
+should also generalize much better to contexts containing n-grams
+not observed in the training data (assuming the pos of the words
+involved is known).
+we were able to test this hypothesis by using the pos-tagged ver-
+sion of the switchboard corpus. we built two models based on pos
+from this data. model i had all words replaced by their pos labels
+during training and test, and also used turn boundary information.
+model ii also used pos labels, but retained the word identities of
+certain word classes that were deemed to be particularly relevant to
+segmentation. these retained words include filled pauses, conjunc-
+tions, and certain discourse markers such as "okay," "so," "well,"
+etc. results are shown in table 3.
+table 3: segmentation performance using pos information
+model recall precision fa ser
+word-based 76.9% 66.9% 1.8% 44.9%
+pos-based i 68.9% 58.5% 2.0% 59.3%
+pos-based ii 79.6% 73.5% 0.9% 39.9%
+we see that pos tags alone (model i) do not result in better segmen-
+tations than words. the fact that model ii performs better than both
+the all-word based model and the pure pos model indicates that
+certain function words that tend to occur in the context of segment
+2speakers can talk over each other. we did not model this case sepa-
+rately; instead, we adopted the serialization of turns implied by the tran-
+scripts.
+boundaries provide some of the strongest cues for these boundaries.
+apart from these strong lexical cues, it seems to be helpful to ab-
+stract from word identity and use pos information instead. in other
+words, the tag set could be optimized to provide the right level of
+resolution for the segmentation task.
+it should be noted that the results for pos-based models are op-
+timistic in the sense that for an actual application one would first
+have to tag the input with pos labels, and then apply the segmenta-
+tion model. the actual performance would be degraded by tagging
+errors.
+5.4. error trade-offs
+as an aside to our search for useful features for the segmenta-
+tion task, we observe that we can optimize any particular language
+model by trading off recall performance for false alarm rate, or vice
+versa. we did this by biasing the likelihoods of s states by some
+constant factor, causing the viterbi algorithm to choose these states
+more often. table 4 compares two bias values, and shows that the
+bias can be used to increase both recall and precision, while also
+reducing the segment error rate.
+table 4: biasing segmentation
+model recall precision fa ser
+bias = 1 76.9% 66.9% 1.8% 44.9%
+bias = 2 85.2% 69.2% 2.7% 37.4%
+6. discussion
+6.1. error analysis
+to understand what type of errors the segmenter makes, we hand-
+checked a set of 200 false alarms generated by the baseline trigram
+model. the most frequent type (34%) of false alarm corresponded
+to splitting of segments at sentence-internal clause boundaries, e.g.,
+false alarms triggered by a conjunction that would be likely to start
+a segment. for example, the <s> in the segmentation
+i'm not sure how many active volcanos
+there are now <s> and and what the amount
+of material that they do uh put into the
+atmosphere
+represents a false alarm, presumably triggered by the following co-
+ordinating conjunction "and."
+5% of the false alarms could be attributed to filled pauses at the
+end of segments, which were often attached to the following seg-
+ment. this actually reflects a labeling ambiguity that should not be
+counted as an error. another 7% of the false alarm we deemed to
+be labeling errors. thus, a total of 12% of false alarms could be
+considered to be actually correct.
+6.2. other segmentation algorithms
+our language-model-based segmentation algorithm is only one of
+many that could be used to perform the linguistic segmentation task,
+given a set of features. conceptually, segmentation is just another
+classification problem, in which each word transition must be la-
+beled as either a segment boundary or a within-segment transition.
+two natural choices for alternative approaches are decision trees
+and a transformation-based, error-driven classifier of the type de-
+veloped by eric brill for other tagging problems [2]. both of these
+methods would make it easier to combine diverse input features that
+are not readily integrated into a single probabilistic languagemodel,
+e.g., if we wanted to use both pos and word identity for each word.3
+our approach, on the other hand, has the advantage of simplicity
+and efficiency. furthermore, the language model used for segmen-
+tation can also be used for speech decoding or rescoring.
+we already mentioned that if pos information is to be used for
+segmentation, an automatic tagging step is required. this presents
+somewhat of a chicken-and-egg problem, in that taggers typically
+rely on segmentations. an appealing solution to this problem in the
+statistical tagging framework [3] would be to model both segmen-
+tation and tag assignment as a single hidden markov process.
+6.3. other features for segmentation
+all of our experiments were based on lexical information only. to
+further improve segmentation performance, and to make it less de-
+pendenton accurate speechrecognition, we plan to combine the lm
+approach with a model for various acoustic and prosodic correlates
+of segmentation. these include:
+ unfilled pause durations
+ fundamental frequency patterns
+ phone durations
+ glottalization
+our current segmentation model deals with each conversation side
+in isolation. an alternative approach is to model the two sides
+jointly, thereby allowing us to capitalize on correlations between the
+segment structure of one speaker and what is said by the other. it is
+likely, for example, that backchannel responses would be modeled
+better this way.</discussion>
+	<biblio>1. a. l. berger, s. a. della pietra, and v. j. della pietra. a max-
+imum entropy approach to natural language processing. com-
+putational linguistics, 22(1):39--71, 1996.
+2. e. brill. some advances in transformation-based part of speech
+tagging. in proceedings of the 12th national conference on
+artificial intelligence, seattle, wa, 1994. aaai press.
+3. k. w. church. a stochastic parts program and noun phrase
+parser for unrestricted text. in second conference on applied
+natural language processing, pages 136--143, austin, texas,
+1988.
+4. j. j. godfrey, e. c. holliman, and j. mcdaniel. switch-
+board: telephone speech corpus for research and develop-
+ment. in proceedings ieee conference on acoustics, speech
+and signal processing, volume i, pages 517--520, san fran-
+cisco, march 1992.
+5. f. jelinek. self-organized language modeling for speech recog-
+nition. in a. waibel and k.-f. lee, editors, readings in speech
+recognition. morgan kaufmann, san mateo, ca., 1990.
+6. s. m. katz. estimation of probabilities from sparse data for
+the language model component of a speech recognizer. ieee
+transactions on acoustics, speech, and signal processing,
+35(3):400--401, march 1987.
+7. m. meteer et al. dysfluency annotation stylebook for the
+switchboard corpus. distributed by ldc, february 1995. re-
+vised june 1995 by ann taylor.
+8. m. meteer and r. iyer. modeling conversational speech for
+speech recognition. in proceedings of the conference on em-
+pirical methods in natural languageprocessing,philadelphia,
+pa, may 1996.
+9. e. shriberg and a. stolcke. word predictability after hesi-
+tations: a corpus-based study. in proceedings international
+conferenceon spoken languageprocessing,philadelphia, pa,
+october 1996.
+10. a. stolcke and e. shriberg. statistical language modeling
+for speech disfluencies. in proceedings ieee conference on
+acoustics, speech and signal processing,volume i, pages405--</biblio>
+</article>

@@ -1,0 +1,854 @@
+<article>
+	<preamble>marcu_statistics_sentence_pass_one</preamble>
+    <titre>statistics-based summarization s step one: sentence compression</titre>
+    <auteur>Kevin Knight;Daniel Marcu </auteur>
+	<abstract> when humans produce summaries of documents, they do not simply extract sentences and concatenate them. rather, they create new sentences that are grammati- cal, that cohere with one another, and that capture the most salient pieces of information in the original doc- ument. given that large collections of text/</abstract>
+	<introduction> most of the research in automatic summarization has focused on extraction, i.e., on identifying the most important clauses/sentences/paragraphs in texts (see (mani & maybury 1999) for a representative col- lection of papers). however, determining the most im- portant textual segments is only half of what a summa- rization system needs to do because, in most cases, the simple catenation of textual segments does not yield coherent outputs. recently, a number of researchers have started to address the problem of generating co- herent summaries: mckeown et al. (1999), barzilay et al. (1999), and jing and mckeown (1999) in the context of multidocument summarization; mani et al. (1999) in the context of revising single document extracts; and witbrock and mittal (1999) in the context of headline generation. the approach proposed by witbrock and mit- tal (1999) is the only one that applies a probabilistic model trained directly on headline, document pairs. however, this model has yet to scale up to generat- ing multiple-sentence abstracts as well as well-formed, grammatical sentences. all other approaches employ sets of manually written or semi-automatically derived copyright c  2000, american association for artificial in- telligence (www.aaai.org). all rights reserved. rules for deleting information that is redundant, com- pressing long sentences into shorter ones, aggregating sentences, repairing reference links, etc. our goal is also to generate coherent abstracts. how- ever, in contrast with the above work, we intend to eventually use abstract, text tuples, which are widely available, in order to automatically learn how to rewrite texts as coherent abstracts. in the spirit of the work in the statistical mt community, which is focused on sentence-to-sentence translations, we also decided to fo- cus first on a simpler problem, that of sentence compres- sion. we chose this problem for two reasons: * first, the problem is complex enough to require the development of sophisticated compression models: determining what is important in a sentence and determining how to convey the important informa- tion grammatically, using only a few words, is just a scaled down version of the text summarization prob- lem. yet, the problem is simple enough, since we do not have to worry yet about discourse related issues, such as coherence, anaphors, etc. * second, an adequate solution to this problem has an immediate impact on several applications. for example, due to time and space constraints, the generation of tv captions often requires only the most important parts of sentences to be shown on a screen (linke-ellis 1999; robert-ribes et al. 1999). a good sentence compression module would there- fore have an impact on the task of automatic cap- tion generation. a sentence compression module can also be used to provide audio scanning ser- vices for the blind (grefenstette 1998). in gen- eral, since all systems aimed at producing coher- ent abstracts implement manually written sets of sentence compression rules (mckeown et al. 1999; mani, gates, & bloedorn 1999; barzilay, mckeown, & elhadad 1999), it is likely that a good sentence compression module would impact the overall quality of these systems as well. this becomes particularly important for text genres that use long sentences. in this paper, we present two approaches to the sen- tence compression problem. both take as input a se- quence of words w = w1, w2, . . . , wn (one sentence). from: aaai-00 proceedings. copyright  2000, aaai (www.aaai.org). all rights reserved. an algorithm may drop any subset of these words. the words that remain (order unchanged) form a compres- sion. there are 2n compressions to choose from--some are reasonable, most are not. our first approach de- velops a probabilistic noisy-channel model for sentence compression. the second approach develops a decision- based, deterministic model. a noisy-channel model for sentence compression this section describes a probabilistic approach to the compression problem. in particular, we adopt the noisy channel framework that has been relatively successful in a number of other nlp applications, including speech recognition (jelinek 1997), machine translation (brown et al. 1993), part-of-speech tagging (church 1988), transliteration (knight & graehl 1998), and informa- tion retrieval (berger & lafferty 1999). in this framework, we look at a long string and imag- ine that (1) it was originally a short string, and then (2) someone added some additional, optional text to it. compression is a matter of identifying the original short string. it is not critical whether or not the "original" string is real or hypothetical. for example, in statistical machine translation, we look at a french string and say, "this was originally english, but someone added `noise' to it." the french may or may not have been translated from english originally, but by removing the noise, we can hypothesize an english source--and thereby trans- late the string. in the case of compression, the noise consists of optional text material that pads out the core signal. for the larger case of text summarization, it may be useful to imagine a scenario in which a news editor composes a short document, hands it to a reporter, and tells the reporter to "flesh it out" . . . which results in the article we read in the newspaper. as summarizers, we may not have access to the editor's original version (which may or may not exist), but we can guess at it-- which is where probabilities come in. as in any noisy channel application, we must solve three problems: * source model. we must assign to every string s a probability p(s), which gives the chance that s is gen- erated as an "original short string" in the above hy- pothetical process. for example, we may want p(s) to be very low if s is ungrammatical. * channel model. we assign to every pair of strings s, t a probability p(t | s), which gives the chance that when the short string s is expanded, the result is the long string t. for example, if t is the same as s except for the extra word "not," then we may want p(t | s) to be very low. the word "not" is not optional, additional material. * decoder. when we observe a long string t, we search for the short string s that maximizes p(s | t). this is equivalent to searching for the s that maximizes p(s)  p(t | s). it is advantageous to break the problem down this way, as it decouples the somewhat independent goals of creating a short text that (1) looks grammatical, and (2) preserves important information. it is easier to build a channel model that focuses exclusively on the latter, without having to worry about the former. that is, we can specify that a certain substring may represent unimportant information, but we do not need to worry that deleting it will result in an ungrammatical struc- ture. we leave that to the source model, which worries exclusively about well-formedness. in fact, we can make use of extensive prior work in source language modeling for speech recognition, machine translation, and natu- ral language generation. the same goes for actual com- pression ("decoding" in noisy-channel jargon)--we can re-use generic software packages to solve problems in all these application domains. statistical models in the experiments we report here, we build very sim- ple source and channel models. in a departure from the above discussion and from previous work on statis- tical channel models, we assign probabilities ptree(s) and pexpand tree(t | s) to trees rather than strings. in decoding a new string, we first parse it into a large tree t (using collins' parser (1997)), and we then hypothesize and rank various small trees. good source strings are ones that have both (1) a normal-looking parse tree, and (2) normal-looking word pairs. ptree(s) is a combination of a standard proba- bilistic context-free grammar (pcfg) score, which is computed over the grammar rules that yielded the tree s, and a standard word-bigram score, which is com- puted over the leaves of the tree. for example, the tree s =(s (np john) (vp (vb saw) (np mary))) is assigned a score based on these factors: ptree(s) = p(top  s | top)  p(s  np vp | s)  p(np  john | np)  p(vp  vb np | vp)  p(vp  saw | vb)  p(np  mary | np)  p(john | eos)  p(saw | john)  p(mary | saw)  p(eos | mary) our stochastic channel model performs minimal op- erations on a small tree s to create a larger tree t. for each internal node in s, we probabilistically choose an expansion template based on the labels of the node and its children. for example, when processing the s node in the tree above, we may wish to add a prepositional phrase as a third child. we do this with probability p(s  np vp pp | s  np vp). or we may choose to leave it alone, with probability p(s  np vp | s  np vp). after we choose an expansion template, then for each new child node introduced (if any), we grow a new subtree rooted at that node--for example (pp (p in) (np pittsburgh)). any particular subtree is grown with probability given by its pcfg factorization, as above (no bigrams). g h a c a b b q r d e c b d e d e k b d z c (t) g h a a f g h a (s1) (s2) figure 1: examples of parse trees. example in this section, we show how to tell whether one poten- tial compression is more likely than another, according to the statistical models described above. suppose we observe the tree t in figure 1, which spans the string abcde. consider the compression s1, which is shown in the same figure. we compute the factors ptree(s1) and pexpand tree(t | s1). breaking this down further, the source pcfg and word-bigram factors, which describe ptree(s1), are: p(top  g | top) p(h  a | h) p(g  h a | g) p(c  b | c) p(a  c d | a) p(d  e | d) p(a | eos) p(e | b) p(b | a) p(eos | e) the channel expansion-template factors and the chan- nel pcfg (new tree growth) factors, which describe pexpand tree(t | s1), are: p(g  h a | g  h a) p(a  c b d | a  c d) p(b  q r | b) p(z  c | z) p(q  z | q) p(r  d | r) a different compression will be scored with a different set of factors. for example, consider a compression of t that leaves t completely untouched. in that case, the source costs ptree(t) are: p(top  g | top) p(h  a | h) p(a | eos) p(g  h a | g) p(c  b | c) p(b | a) p(a  c d | a) p(z  c | z) p(c | b) p(b  q r | b) p(r  d | r) p(d | c) p(q  z | q) p(d  e | d) p(e | d) p(eos | e) the channel costs pexpand tree(t | t) are: the documentation is typical of epson quality: excellent. documentation is excellent. all of our design goals were achieved and the delivered performance matches the speed of the underlying device. all design goals were achieved. reach's e-mail product, mailman, is a message- manage- ment system designed initially for vines lans that will eventually be operating system-independent. mailman will eventually be operating system-independent. although the modules themselves may be physically and/or electrically incompatible, the cable-specific jacks on them provide industry-standard connections. cable-specific jacks provide industry-standard connections. ingres/star prices start at $2,100. ingres/star prices start at $2,100. figure 2: examples from our parallel corpus. p(g  h a | g  h a) p(a  c b d | a  c b d) p(b  q r | b  q r) p(q  z | q  z) now we can simply compare pexpand tree(s1 | t) = ptree(s1)  pexpand tree(t | s1))/ptree(t) ver- sus pexpand tree(t | t) = ptree(t)  pexpand tree(t | t))/ptree(t) and select the more likely one. note that ptree(t) and all the pcfg factors can be canceled out, as they appear in any potential compression. therefore, we need only compare compressions of the basis of the expansion-template probabilities and the word-bigram probabilities. the quantities that differ between the two proposed compressions are boxed above. there- fore, s1 will be preferred over t if and only if: p(e | b)  p(a  c b d | a  c d) > p(b | a)  p(c | b)  p(d | c)  p(a  c b d | a  c b d)  p(b  q r | b  q r)  p(q  z | q  z) training corpus in order to train our system, we used the ziff-davis corpus, a collection of newspaper articles announcing computer products. many of the articles in the corpus are paired with human written abstracts. we automat- ically extracted from the corpus a set of 1067 sentence pairs. each pair consisted of a sentence t = t1, t2, . . . , tn that occurred in the article and a possibly compressed version of it s = s1, s2, . . . , sm, which occurred in the human written abstract. figure shows a few sentence pairs extracted from the corpus. we decided to use such a corpus because it is con- sistent with two desiderata specific to summarization work: (i) the human-written abstract sentences are grammatical; (ii) the abstract sentences represent in a compressed form the salient points of the original news- paper sentences. we decided to keep in the corpus un- compressed sentences as well, since we want to learn not only how to compress a sentence, but also when to do it. learning model parameters we collect expansion-template probabilities from our parallel corpus. we first parse both sides of the parallel corpus, and then we identify corresponding syntactic nodes. for example, the parse tree for one sentence may begin (s (np . . . ) (vp . . . ) (pp . . . )) while the parse tree for its compressed version may begin (s (np . . . ) (vp . . . )). if these two s nodes are deemed to correspond, then we chalk up one joint event (s  np vp, s  np vp pp); afterwards we normalize. not all nodes have corresponding partners; some non- correspondences are due to incorrect parses, while oth- ers are due to legitimate reformulations that are beyond the scope of our simple channel model. we use standard methods to estimate word-bigram probabilities. decoding there is a vast number of potential compressions of a large tree t, but we can pack them all efficiently into a shared-forest structure. for each node of t that has n children, we * generate 2n - 1 new nodes, one for each non-empty subset of the children, and * pack those nodes so that they are referred to as a whole. for example, consider the large tree t above. all com- pressions can be represented with the following forest: g  h a b  r a  b c h  a g  h q  z a  c c  b g  a a  c b d a  b z  c b  q r a  c b a  d r  d b  q a  c d d  e we can also assign an expansion-template probability to each node in the forest. for example, to the b  q node, we can assign p(b  q r | b  q). if the observed probability from the parallel corpus is zero, then we assign a small floor value of 10-6 . in reality, we produce forests that are much slimmer, as we only consider compressing a node in ways that are locally grammatical according to the penn treebank--if a rule of the type a  c b has never been observed, then it will not appear in the forest. at this point, we want to extract a set of high- scoring trees from the forest, taking into account both expansion-template probabilities and word-bigram probabilities. fortunately, we have such a generic ex- tractor on hand (langkilde 2000). this extractor was designed for a hybrid symbolic-statistical natural lan- guage generation system called nitrogen. in that ap- plication, a rule-based component converts an abstract semantic representation into a vast number of potential english renderings. these renderings are packed into a forest, from which the most promising sentences are extracted using statistical scoring. for our purposes, the extractor selects the trees with the best combination of word-bigram and expansion- template scores. it returns a list of such trees, one for each possible compression length. for example, for the sentence beyond that basic level, the operations of the three products vary, we obtain the following "best" compressions, with negative log-probabilities shown in parentheses (smaller = more likely): beyond that basic level, the operations of the three products vary widely (1514588) beyond that level, the operations of the three products vary widely (1430374) beyond that basic level, the operations of the three products vary (1333437) beyond that level, the operations of the three products vary (1249223) beyond that basic level, the operations of the products vary (1181377) the operations of the three products vary widely (939912) the operations of the products vary widely (872066) the operations of the products vary (748761) the operations of products vary (690915) operations of products vary (809158) the operations vary (522402) operations vary (662642) length selection it is useful to have multiple answers to choose from, as one user may seek a 20% compression, while another seeks a 60% compression. however, for purposes of evaluation, we want our system to be able to select a single compression. if we rely on the log-probabilities as shown above, we will almost always choose the short- est compression. (note above, however, how the three- word compression scores better than the two-word com- pression, as the models are not entirely happy removing the article "the"). to create a more fair competition, we divide the log-probability by the length of the com- pression, rewarding longer strings. this is commonly done in speech recognition. if we plot this normalized score against compression length, we usually observe a (bumpy) u-shaped curve, as illustrated in figure 3. in a typical more difficult case, a 25-word sentence may be optimally compressed by a 17-word version. of course, if a user requires a shorter compression than that, she may select another region of the curve and look for a local minimum. a decision-based model for sentence compression in this section, we describe a decision-based, history model of sentence compression. as in the noisy-channel approach, we again assume that we are given as input finally another advantage of broadband is distance . finally, another advantage of broadband is distance . another advantage of broadband is distance . advantage of broadband is distance . another advantage is distance . advantage is distance . 4 6 5 7 8 9 0.20 0.15 0.10 compression s at a particular length n adjusted negative log-probability of best -log p(s) p( t | s) / n compression length n figure 3: adjusted log-probabilities for top-scoring compressions at various lengths (lower is better). a parse tree t. our goal is to "rewrite" t into a smaller tree s, which corresponds to a compressed version of the original sentence subsumed by t. suppose we observe in our corpus the trees t and sin figure 1. in this model, we ask ourselves how we may go about rewriting t into sone possible solution is to decompose the rewriting operation into a sequence of shift-reduce-drop actions that are specific to an extended shift-reduce parsing paradigm. in the model we propose, the rewriting process starts with an empty stack and an input list that contains the sequence of words subsumed by the large tree t. each word in the input list is labeled with the name of all syn- tactic constituents in t that start with it (see figure 4). at each step, the rewriting module applies an opera- tion that is aimed at reconstructing the smaller tree s2. in the context of our sentence-compression module, we need four types of operations: * shift operations transfer the first word from the in- put list into the stack; * reduce operations pop the k syntactic trees located at the top of the stack; combine them into a new tree; and push the new tree on the top of the stack. reduce operations are used to derive the structure of the syntactic tree of the short sentence. * drop operations are used to delete from the input list subsequences of words that correspond to syntactic constituents. a drop x operations deletes from the g h a k b h a h a a c b d e q b d r z c a c b d e q b d r z c d e q b d r z c shift; assigntype h shift; assigntype k reduce f f k b h a q b d r z c f k b h a d e f k b h a g d e f k b h a d e d e assigntype d shift; reduce g drop b stack input list stack input list steps 1-2 steps 3-4 step 5 step 6 steps 7-8 step 9 figure 4: example of incremental tree compression. input list all words that are spanned by constituent x in t. * assigntype operations are used to change the label of trees at the top of the stack. these actions assign pos tags to the words in the compressed sentence, which may be different from the pos tags in the original sentence. the decision-based model is more flexible than the channel model because it enables the derivation of trees whose skeleton can differ quite drastically from that of the tree given as input. for example, using the channel model, we are unable to obtain tree sfrom t. however, the four operations listed above enable us to rewrite a tree t into any tree s, as long as an in-order traversal of the leaves of s produces a sequence of words that occur in the same order as the words in the tree t. for exam- ple, the tree scan be obtained from tree t by following this sequence of actions, whose effects are shown in fig- ure 4: shift; assigntype h; shift; assigntype k; reduce f; drop b; shift; assigntype d; reduce</introduction>
+    <corps></corps>
+    <conclusion></conclusion>
+	<discussion>against manual compressions and a simple baseline.
+introduction
+most of the research in automatic summarization
+has focused on extraction, i.e., on identifying the
+most important clauses/sentences/paragraphs in texts
+(see (mani & maybury 1999) for a representative col-
+lection of papers). however, determining the most im-
+portant textual segments is only half of what a summa-
+rization system needs to do because, in most cases, the
+simple catenation of textual segments does not yield
+coherent outputs. recently, a number of researchers
+have started to address the problem of generating co-
+herent summaries: mckeown et al. (1999), barzilay et
+al. (1999), and jing and mckeown (1999) in the context
+of multidocument summarization; mani et al. (1999) in
+the context of revising single document extracts; and
+witbrock and mittal (1999) in the context of headline
+generation.
+the approach proposed by witbrock and mit-
+tal (1999) is the only one that applies a probabilistic
+model trained directly on headline, document pairs.
+however, this model has yet to scale up to generat-
+ing multiple-sentence abstracts as well as well-formed,
+grammatical sentences. all other approaches employ
+sets of manually written or semi-automatically derived
+copyright c
+ 2000, american association for artificial in-
+telligence (www.aaai.org). all rights reserved.
+rules for deleting information that is redundant, com-
+pressing long sentences into shorter ones, aggregating
+sentences, repairing reference links, etc.
+our goal is also to generate coherent abstracts. how-
+ever, in contrast with the above work, we intend to
+eventually use abstract, text tuples, which are widely
+available, in order to automatically learn how to rewrite
+texts as coherent abstracts. in the spirit of the work
+in the statistical mt community, which is focused on
+sentence-to-sentence translations, we also decided to fo-
+cus first on a simpler problem, that of sentence compres-
+sion. we chose this problem for two reasons:
+* first, the problem is complex enough to require the
+development of sophisticated compression models:
+determining what is important in a sentence and
+determining how to convey the important informa-
+tion grammatically, using only a few words, is just a
+scaled down version of the text summarization prob-
+lem. yet, the problem is simple enough, since we do
+not have to worry yet about discourse related issues,
+such as coherence, anaphors, etc.
+* second, an adequate solution to this problem has
+an immediate impact on several applications. for
+example, due to time and space constraints, the
+generation of tv captions often requires only the
+most important parts of sentences to be shown on a
+screen (linke-ellis 1999; robert-ribes et al. 1999).
+a good sentence compression module would there-
+fore have an impact on the task of automatic cap-
+tion generation. a sentence compression module
+can also be used to provide audio scanning ser-
+vices for the blind (grefenstette 1998). in gen-
+eral, since all systems aimed at producing coher-
+ent abstracts implement manually written sets of
+sentence compression rules (mckeown et al. 1999;
+mani, gates, & bloedorn 1999; barzilay, mckeown,
+& elhadad 1999), it is likely that a good sentence
+compression module would impact the overall quality
+of these systems as well. this becomes particularly
+important for text genres that use long sentences.
+in this paper, we present two approaches to the sen-
+tence compression problem. both take as input a se-
+quence of words w = w1, w2, . . . , wn (one sentence).
+from: aaai-00 proceedings. copyright  2000, aaai (www.aaai.org). all rights reserved.
+an algorithm may drop any subset of these words. the
+words that remain (order unchanged) form a compres-
+sion. there are 2n
+compressions to choose from--some
+are reasonable, most are not. our first approach de-
+velops a probabilistic noisy-channel model for sentence
+compression. the second approach develops a decision-
+based, deterministic model.
+a noisy-channel model for sentence
+compression
+this section describes a probabilistic approach to the
+compression problem. in particular, we adopt the noisy
+channel framework that has been relatively successful in
+a number of other nlp applications, including speech
+recognition (jelinek 1997), machine translation (brown
+et al. 1993), part-of-speech tagging (church 1988),
+transliteration (knight & graehl 1998), and informa-
+tion retrieval (berger & lafferty 1999).
+in this framework, we look at a long string and imag-
+ine that (1) it was originally a short string, and then
+(2) someone added some additional, optional text to it.
+compression is a matter of identifying the original short
+string. it is not critical whether or not the "original"
+string is real or hypothetical. for example, in statistical
+machine translation, we look at a french string and say,
+"this was originally english, but someone added `noise'
+to it." the french may or may not have been translated
+from english originally, but by removing the noise, we
+can hypothesize an english source--and thereby trans-
+late the string. in the case of compression, the noise
+consists of optional text material that pads out the core
+signal. for the larger case of text summarization, it may
+be useful to imagine a scenario in which a news editor
+composes a short document, hands it to a reporter, and
+tells the reporter to "flesh it out" . . . which results in
+the article we read in the newspaper. as summarizers,
+we may not have access to the editor's original version
+(which may or may not exist), but we can guess at it--
+which is where probabilities come in.
+as in any noisy channel application, we must solve
+three problems:
+* source model. we must assign to every string s a
+probability p(s), which gives the chance that s is gen-
+erated as an "original short string" in the above hy-
+pothetical process. for example, we may want p(s)
+to be very low if s is ungrammatical.
+* channel model. we assign to every pair of strings
+s, t a probability p(t | s), which gives the chance
+that when the short string s is expanded, the result
+is the long string t. for example, if t is the same
+as s except for the extra word "not," then we may
+want p(t | s) to be very low. the word "not" is not
+optional, additional material.
+* decoder. when we observe a long string t, we search
+for the short string s that maximizes p(s | t). this
+is equivalent to searching for the s that maximizes
+p(s)  p(t | s).
+it is advantageous to break the problem down this
+way, as it decouples the somewhat independent goals
+of creating a short text that (1) looks grammatical,
+and (2) preserves important information. it is easier to
+build a channel model that focuses exclusively on the
+latter, without having to worry about the former. that
+is, we can specify that a certain substring may represent
+unimportant information, but we do not need to worry
+that deleting it will result in an ungrammatical struc-
+ture. we leave that to the source model, which worries
+exclusively about well-formedness. in fact, we can make
+use of extensive prior work in source language modeling
+for speech recognition, machine translation, and natu-
+ral language generation. the same goes for actual com-
+pression ("decoding" in noisy-channel jargon)--we can
+re-use generic software packages to solve problems in all
+these application domains.
+statistical models
+in the experiments we report here, we build very sim-
+ple source and channel models. in a departure from
+the above discussion and from previous work on statis-
+tical channel models, we assign probabilities ptree(s)
+and pexpand tree(t | s) to trees rather than strings. in
+decoding a new string, we first parse it into a large tree t
+(using collins' parser (1997)), and we then hypothesize
+and rank various small trees.
+good source strings are ones that have both (1) a
+normal-looking parse tree, and (2) normal-looking word
+pairs. ptree(s) is a combination of a standard proba-
+bilistic context-free grammar (pcfg) score, which is
+computed over the grammar rules that yielded the tree
+s, and a standard word-bigram score, which is com-
+puted over the leaves of the tree. for example, the
+tree s =(s (np john) (vp (vb saw) (np mary))) is
+assigned a score based on these factors:
+ptree(s) = p(top  s | top) 
+p(s  np vp | s)  p(np  john | np) 
+p(vp  vb np | vp)  p(vp  saw | vb) 
+p(np  mary | np) 
+p(john | eos)  p(saw | john) 
+p(mary | saw)  p(eos | mary)
+our stochastic channel model performs minimal op-
+erations on a small tree s to create a larger tree t. for
+each internal node in s, we probabilistically choose an
+expansion template based on the labels of the node and
+its children. for example, when processing the s node
+in the tree above, we may wish to add a prepositional
+phrase as a third child. we do this with probability
+p(s  np vp pp | s  np vp). or we may choose
+to leave it alone, with probability p(s  np vp | s 
+np vp). after we choose an expansion template, then
+for each new child node introduced (if any), we grow a
+new subtree rooted at that node--for example (pp (p
+in) (np pittsburgh)). any particular subtree is grown
+with probability given by its pcfg factorization, as
+above (no bigrams).
+g
+h a
+c
+a
+b
+b
+q r
+d
+e
+c
+b
+d
+e
+d
+e
+k
+b
+d
+z
+c
+(t)
+g
+h
+a
+a
+f
+g
+h
+a
+(s1) (s2)
+figure 1: examples of parse trees.
+example
+in this section, we show how to tell whether one poten-
+tial compression is more likely than another, according
+to the statistical models described above. suppose we
+observe the tree t in figure 1, which spans the string
+abcde. consider the compression s1, which is shown in
+the same figure.
+we compute the factors ptree(s1) and
+pexpand tree(t | s1). breaking this down further,
+the source pcfg and word-bigram factors, which
+describe ptree(s1), are:
+p(top  g | top) p(h  a | h)
+p(g  h a | g) p(c  b | c)
+p(a  c d | a) p(d  e | d)
+p(a | eos) p(e | b)
+p(b | a) p(eos | e)
+the channel expansion-template factors and the chan-
+nel pcfg (new tree growth) factors, which describe
+pexpand tree(t | s1), are:
+p(g  h a | g  h a)
+p(a  c b d | a  c d)
+p(b  q r | b) p(z  c | z)
+p(q  z | q) p(r  d | r)
+a different compression will be scored with a different
+set of factors. for example, consider a compression of
+t that leaves t completely untouched. in that case, the
+source costs ptree(t) are:
+p(top  g | top) p(h  a | h) p(a | eos)
+p(g  h a | g) p(c  b | c) p(b | a)
+p(a  c d | a) p(z  c | z) p(c | b)
+p(b  q r | b) p(r  d | r) p(d | c)
+p(q  z | q) p(d  e | d) p(e | d)
+p(eos | e)
+the channel costs pexpand tree(t | t) are:
+the documentation is typical of epson quality: excellent.
+documentation is excellent.
+all of our design goals were achieved and the delivered
+performance matches the speed of the underlying device.
+all design goals were achieved.
+reach's e-mail product, mailman, is a message- manage-
+ment system designed initially for vines lans that will
+eventually be operating system-independent.
+mailman will eventually be operating system-independent.
+although the modules themselves may be physically and/or
+electrically incompatible, the cable-specific jacks on them
+provide industry-standard connections.
+cable-specific jacks provide industry-standard connections.
+ingres/star prices start at $2,100.
+ingres/star prices start at $2,100.
+figure 2: examples from our parallel corpus.
+p(g  h a | g  h a)
+p(a  c b d | a  c b d)
+p(b  q r | b  q r)
+p(q  z | q  z)
+now we can simply compare pexpand tree(s1 |
+t) = ptree(s1)  pexpand tree(t | s1))/ptree(t) ver-
+sus pexpand tree(t | t) = ptree(t)  pexpand tree(t |
+t))/ptree(t) and select the more likely one. note that
+ptree(t) and all the pcfg factors can be canceled out,
+as they appear in any potential compression. therefore,
+we need only compare compressions of the basis of the
+expansion-template probabilities and the word-bigram
+probabilities. the quantities that differ between the
+two proposed compressions are boxed above. there-
+fore, s1 will be preferred over t if and only if:
+p(e | b)  p(a  c b d | a  c d) >
+p(b | a)  p(c | b)  p(d | c) 
+p(a  c b d | a  c b d) 
+p(b  q r | b  q r)  p(q  z | q  z)
+training corpus
+in order to train our system, we used the ziff-davis
+corpus, a collection of newspaper articles announcing
+computer products. many of the articles in the corpus
+are paired with human written abstracts. we automat-
+ically extracted from the corpus a set of 1067 sentence
+pairs. each pair consisted of a sentence t = t1, t2, . . . , tn
+that occurred in the article and a possibly compressed
+version of it s = s1, s2, . . . , sm, which occurred in the
+human written abstract. figure 2 shows a few sentence
+pairs extracted from the corpus.
+we decided to use such a corpus because it is con-
+sistent with two desiderata specific to summarization
+work: (i) the human-written abstract sentences are
+grammatical; (ii) the abstract sentences represent in a
+compressed form the salient points of the original news-
+paper sentences. we decided to keep in the corpus un-
+compressed sentences as well, since we want to learn
+not only how to compress a sentence, but also when to
+do it.
+learning model parameters
+we collect expansion-template probabilities from our
+parallel corpus. we first parse both sides of the parallel
+corpus, and then we identify corresponding syntactic
+nodes. for example, the parse tree for one sentence
+may begin (s (np . . . ) (vp . . . ) (pp . . . )) while
+the parse tree for its compressed version may begin (s
+(np . . . ) (vp . . . )). if these two s nodes are deemed
+to correspond, then we chalk up one joint event (s 
+np vp, s  np vp pp); afterwards we normalize.
+not all nodes have corresponding partners; some non-
+correspondences are due to incorrect parses, while oth-
+ers are due to legitimate reformulations that are beyond
+the scope of our simple channel model. we use standard
+methods to estimate word-bigram probabilities.
+decoding
+there is a vast number of potential compressions of a
+large tree t, but we can pack them all efficiently into a
+shared-forest structure. for each node of t that has n
+children, we
+* generate 2n
+- 1 new nodes, one for each non-empty
+subset of the children, and
+* pack those nodes so that they are referred to as a
+whole.
+for example, consider the large tree t above. all com-
+pressions can be represented with the following forest:
+g  h a b  r a  b c h  a
+g  h q  z a  c c  b
+g  a a  c b d a  b z  c
+b  q r a  c b a  d r  d
+b  q a  c d d  e
+we can also assign an expansion-template probability
+to each node in the forest. for example, to the b 
+q node, we can assign p(b  q r | b  q). if the
+observed probability from the parallel corpus is zero,
+then we assign a small floor value of 10-6
+. in reality,
+we produce forests that are much slimmer, as we only
+consider compressing a node in ways that are locally
+grammatical according to the penn treebank--if a rule
+of the type a  c b has never been observed, then it
+will not appear in the forest.
+at this point, we want to extract a set of high-
+scoring trees from the forest, taking into account
+both expansion-template probabilities and word-bigram
+probabilities. fortunately, we have such a generic ex-
+tractor on hand (langkilde 2000). this extractor was
+designed for a hybrid symbolic-statistical natural lan-
+guage generation system called nitrogen. in that ap-
+plication, a rule-based component converts an abstract
+semantic representation into a vast number of potential
+english renderings. these renderings are packed into
+a forest, from which the most promising sentences are
+extracted using statistical scoring.
+for our purposes, the extractor selects the trees with
+the best combination of word-bigram and expansion-
+template scores. it returns a list of such trees, one for
+each possible compression length. for example, for
+the sentence beyond that basic level, the operations of
+the three products vary, we obtain the following "best"
+compressions, with negative log-probabilities shown in
+parentheses (smaller = more likely):
+beyond that basic level, the operations of the three products vary
+widely (1514588)
+beyond that level, the operations of the three products vary widely
+(1430374)
+beyond that basic level, the operations of the three products vary
+(1333437)
+beyond that level, the operations of the three products vary
+(1249223)
+beyond that basic level, the operations of the products vary
+(1181377)
+the operations of the three products vary widely (939912)
+the operations of the products vary widely (872066)
+the operations of the products vary (748761)
+the operations of products vary (690915)
+operations of products vary (809158)
+the operations vary (522402)
+operations vary (662642)
+length selection
+it is useful to have multiple answers to choose from, as
+one user may seek a 20% compression, while another
+seeks a 60% compression. however, for purposes of
+evaluation, we want our system to be able to select a
+single compression. if we rely on the log-probabilities
+as shown above, we will almost always choose the short-
+est compression. (note above, however, how the three-
+word compression scores better than the two-word com-
+pression, as the models are not entirely happy removing
+the article "the"). to create a more fair competition,
+we divide the log-probability by the length of the com-
+pression, rewarding longer strings. this is commonly
+done in speech recognition.
+if we plot this normalized score against compression
+length, we usually observe a (bumpy) u-shaped curve,
+as illustrated in figure 3. in a typical more difficult
+case, a 25-word sentence may be optimally compressed
+by a 17-word version. of course, if a user requires a
+shorter compression than that, she may select another
+region of the curve and look for a local minimum.
+a decision-based model for sentence
+compression
+in this section, we describe a decision-based, history
+model of sentence compression. as in the noisy-channel
+approach, we again assume that we are given as input
+finally
+another
+advantage
+of
+broadband
+is
+distance
+.
+finally,
+another
+advantage
+of
+broadband
+is
+distance
+.
+another
+advantage
+of
+broadband
+is
+distance
+.
+advantage
+of
+broadband
+is
+distance
+.
+another
+advantage
+is
+distance
+.
+advantage
+is
+distance
+.
+4 6
+5 7 8 9
+0.20
+0.15
+0.10
+compression
+s
+at
+a
+particular
+length
+n
+adjusted
+negative
+log-probability
+of
+best
+-log
+p(s)
+p(
+t
+|
+s)
+/
+n
+compression length n
+figure 3: adjusted log-probabilities for top-scoring
+compressions at various lengths (lower is better).
+a parse tree t. our goal is to "rewrite" t into a smaller
+tree s, which corresponds to a compressed version of the
+original sentence subsumed by t. suppose we observe in
+our corpus the trees t and s2 in figure 1. in this model,
+we ask ourselves how we may go about rewriting t into
+s2. one possible solution is to decompose the rewriting
+operation into a sequence of shift-reduce-drop actions
+that are specific to an extended shift-reduce parsing
+paradigm.
+in the model we propose, the rewriting process starts
+with an empty stack and an input list that contains the
+sequence of words subsumed by the large tree t. each
+word in the input list is labeled with the name of all syn-
+tactic constituents in t that start with it (see figure 4).
+at each step, the rewriting module applies an opera-
+tion that is aimed at reconstructing the smaller tree s2.
+in the context of our sentence-compression module, we
+need four types of operations:
+* shift operations transfer the first word from the in-
+put list into the stack;
+* reduce operations pop the k syntactic trees located
+at the top of the stack; combine them into a new
+tree; and push the new tree on the top of the stack.
+reduce operations are used to derive the structure of
+the syntactic tree of the short sentence.
+* drop operations are used to delete from the input list
+subsequences of words that correspond to syntactic
+constituents. a drop x operations deletes from the
+g
+h
+a
+k
+b
+h
+a
+h
+a
+a
+c
+b
+d
+e
+q
+b
+d
+r
+z
+c
+a
+c
+b
+d
+e
+q
+b
+d
+r
+z
+c
+d
+e
+q
+b
+d
+r
+z
+c
+shift;
+assigntype h
+shift;
+assigntype k
+reduce 2 f
+f
+k
+b
+h
+a
+q
+b
+d
+r
+z
+c
+f
+k
+b
+h
+a
+d
+e
+f
+k
+b
+h
+a
+g
+d
+e
+f
+k
+b
+h
+a
+d
+e
+d
+e
+assigntype d
+shift;
+reduce 2 g
+drop b
+stack input list stack input list
+steps 1-2
+steps 3-4
+step 5
+step 6
+steps 7-8
+step 9
+figure 4: example of incremental tree compression.
+input list all words that are spanned by constituent
+x in t.
+* assigntype operations are used to change the label
+of trees at the top of the stack. these actions assign
+pos tags to the words in the compressed sentence,
+which may be different from the pos tags in the
+original sentence.
+the decision-based model is more flexible than the
+channel model because it enables the derivation of trees
+whose skeleton can differ quite drastically from that of
+the tree given as input. for example, using the channel
+model, we are unable to obtain tree s2 from t. however,
+the four operations listed above enable us to rewrite a
+tree t into any tree s, as long as an in-order traversal of
+the leaves of s produces a sequence of words that occur
+in the same order as the words in the tree t. for exam-
+ple, the tree s2 can be obtained from tree t by following
+this sequence of actions, whose effects are shown in fig-
+ure 4: shift; assigntype h; shift; assigntype k;
+reduce 2 f; drop b; shift; assigntype d; reduce
+2 g.
+to save space, we show shift and assigntype op-
+erations on the same line; however, the reader should
+understand that they correspond to two distinct ac-
+tions. as one can see, the assigntype k operation
+rewrites the pos tag of the word b; the reduce op-
+erations modify the skeleton of the tree given as input.
+to increase readability, the input list is shown in a for-
+mat that resembles as closely as possible the graphical
+representation of the trees in figure 1.
+learning the parameters of the
+decision-based model
+we associate with each configuration of our shift-
+reduce-drop, rewriting model a learning case. the cases
+are generated automatically by a program that derives
+sequences of actions that map each of the large trees in
+our corpus into smaller trees. the rewriting procedure
+simulates a bottom-up reconstruction of the smaller
+trees.
+overall, the 1067 pairs of long and short sentences
+yielded 46383 learning cases. each case was labeled
+with one action name from a set of 210 possible ac-
+tions: there are 37 distinct assigntype actions, one
+for each pos tag. there are 63 distinct drop actions,
+one for each type of syntactic constituent that can be
+deleted during compression. there are 109 distinct re-
+duce actions, one for each type of reduce operation that
+is applied during the reconstruction of the compressed
+sentence. and there is one shift operation. given a
+tree t and an arbitrary configuration of the stack and
+input list, the purpose of the decision-based classifier
+is to learn what action to choose from the set of 210
+possible actions.
+to each learning example, we associated a set of 99
+features from the following two classes:
+operational features reflect the number of trees
+in the stack, the input list, and the types of
+the last five operations. they also encode infor-
+mation that denote the syntactic category of the
+root nodes of the partial trees built up to a cer-
+tain time. examples of such features are: num-
+bertreesinstack, waspreviousoperationshift, syn-
+tacticlabeloftreeatthetopofstack, etc.
+original-tree-specific features denote the syntac-
+tic constituents that start with the first unit in the
+input list. examples of such features are: inputlist-
+startswitha cc, inputliststartswitha pp, etc.
+the decision-based compression module uses the
+c4.5 program (quinlan 1993) in order to learn deci-
+sion trees that specify how large syntactic trees can
+be compressed into shorter trees. a ten-fold cross-
+validation evaluation of the classifier yielded an accu-
+racy of 87.16% ( 0.14). a majority baseline classi-
+fier that chooses the action shift has an accuracy of
+28.72%.
+employing the decision-based model
+to compress sentences, we apply the shift-reduce-drop
+model in a deterministic fashion. we parse the sentence
+to be compressed (collins 1997) and we initialize the
+input list with the words in the sentence and the syn-
+tactic constituents that "begin" at each word, as shown
+in figure 4. we then incrementally inquire the learned
+classifier what action to perform, and we simulate the
+execution of that action. the procedure ends when the
+input list is empty and when the stack contains only
+one tree. an inorder traversal of the leaves of this tree
+produces the compressed version of the sentence given
+as input.
+since the model is deterministic, it produces only one
+output. the advantage is that the compression is very
+fast: it takes only a few milliseconds per sentence. the
+disadvantage is that it does not produce a range of
+compressions, from which another system may subse-
+quently choose. it is straightforward though to extend
+the model within a probabilistic framework by applying,
+for example, the techniques used by magerman (1995).
+evaluation
+to evaluate our compression algorithms, we randomly
+selected 32 sentence pairs from our parallel corpus,
+which we will refer to as the test corpus. we used the
+other 1035 sentence pairs for training. figure 5 shows
+three sentences from the test corpus, together with the
+compressions produced by humans, our compression al-
+gorithms, and a baseline algorithm that produces com-
+pressions with highest word-bigram scores. the exam-
+ples are chosen so as to reflect good, average, and bad
+performance cases. the first sentence is compressed in
+the same manner by humans and our algorithms (the
+baseline algorithm chooses though not to compress this
+sentence). for the second example, the output of the
+decision-based algorithm is grammatical, but the se-
+mantics is negatively affected. the noisy-channel al-
+gorithm deletes only the word "break", which affects
+the correctness of the output less. in the last example,
+the noisy-channel model is again more conservative and
+decides not to drop any constituents. in constrast, the
+decision-based algorithm compresses the input substan-
+tially, but it fails to produce a grammatical output.
+we presented each original sentence in the test cor-
+pus to four judges, together with four compressions of it:
+the human generated compression, the outputs of the
+noisy-channel and decision-based algorithms, and the
+output of the baseline algorithm. the judges were told
+that all outputs were generated automatically. the or-
+der of the outputs was scrambled randomly across test
+cases.
+to avoid confounding, the judges participated in two
+experiments. in the first experiment, they were asked
+to determine on a scale from 1 to 5 how well the systems
+did with respect to selecting the most important words
+in the original sentence. in the second experiment, they
+were asked to determine on a scale from 1 to 5 how
+grammatical the outputs were.
+we also investigated how sensitive our algorithms are
+with respect to the training data by carrying out the
+same experiments on sentences of a different genre, the
+scientific one. to this end, we took the first sentence of
+the first 26 articles made available in 1999 on the cmplg
+archive. we created a second parallel corpus, which
+we will refer to as the cmplg corpus, by generating
+by ourselves compressed grammatical versions of these
+sentences. since some of the sentences in this corpus
+were extremely long, the baseline algorithm could not
+produce compressed versions in reasonable time.
+the results in table 1 show compression rates, and
+mean and standard deviation results across all judges,
+for each algorithm and corpus. the results show that
+the decision-based algorithm is the most aggressive:
+on average, it compresses sentences to about half of
+their original size. the compressed sentences produced
+by both algorithms are more "grammatical" and con-
+tain more important words than the sentences pro-
+duced by the baseline. t-test experiments showed these
+differences to be statistically significant at p < 0.01
+both for individual judges and for average scores across
+original: beyond the basic level, the operations of the three products vary widely.
+baseline: beyond the basic level, the operations of the three products vary widely.
+noisy-channel: the operations of the three products vary widely.
+decision-based: the operations of the three products vary widely.
+humans: the operations of the three products vary widely.
+original: arborscan is reliable and worked accurately in testing, but it produces very large dxf files.
+baseline: arborscan and worked in, but it very large dxf.
+noisy-channel: arborscan is reliable and worked accurately in testing, but it produces very large dxf files.
+decision-based: arborscan is reliable and worked accurately in testing very large dxf files.
+humans: arborscan produces very large dxf files.
+original: many debugging features, including user-defined break points and variable-watching and
+message-watching windows, have been added.
+baseline: debugging, user-defined and variable-watching and message-watching, have been.
+noisy-channel: many debugging features, including user-defined points and variable-watching and
+message-watching windows, have been added.
+decision-based: many debugging features.
+humans: many debugging features have been added .
+figure 5: compression examples
+corpus avg. orig. sent. length baseline noisy-channel decision-based humans
+test 21 words compression 63.70% 70.37% 57.19% 53.33%
+grammaticality 1.781.19 4.341.02 4.301.33 4.920.18
+importance 2.170.89 3.380.67 3.541.00 4.24 0.52
+cmplg 26 words compression -- 65.68% 54.25% 65.68%
+grammaticality -- 4.220.99 3.721.53 4.970.08
+importance -- 3.420.97 3.240.68 4.320.54</discussion>
+	<biblio>barzilay, r.; mckeown, k.; and elhadad, m. 1999.
+information fusion in the context of multi-document
+summarization. in proceedings of the 37th annual
+meeting of the association for computational linguis-
+tics (acl--99), 550--557.
+berger, a., and lafferty, j. 1999. information retrieval
+as statistical translation. in proceedings of the 22nd
+conference on research and development in informa-
+tion retrieval (sigir--99), 222--229.
+brown, p.; della pietra, s.; della pietra, v.; and mer-
+cer, r. 1993. the mathematics of statistical ma-
+chine translation: parameter estimation. computa-
+tional linguistics 19(2):263--311.
+church, k. 1988. a stochastic parts program and noun
+phrase parser for unrestricted text. in proceedings of
+the second conference on applied natural language
+processing, 136--143.
+collins, m. 1997. three generative, lexicalized mod-
+els for statistical parsing. in proceedings of the 35th
+annual meeting of the association for computational
+linguistics (acl--97), 16--23.
+grefenstette, g. 1998. producing intelligent tele-
+graphic text reduction to provide an audio scanning
+service for the blind. in working notes of the aaai
+spring symposium on intelligent text summarization,
+111--118.
+jelinek, f. 1997. statistical methods for speech recog-
+nition. the mit press.
+jing, h., and mckeown, k. 1999. the decomposition
+of human-written summary sentences. in proceedings
+of the 22nd conference on research and development
+in information retrieval (sigir--99).
+knight, k., and graehl, j. 1998. machine transliter-
+ation. computational linguistics 24(4):599--612.
+langkilde, i. 2000. forest-based statistical sentence
+generation. in proceedings of the 1st annual meeting
+of the north american chapter of the association for
+computational linguistics.
+linke-ellis, n. 1999. closed captioning in amer-
+ica: looking beyond compliance. in proceedings of
+the tao workshop on tv closed captions for the
+hearing impaired people, 43--59.
+magerman, d. 1995. statistical decision-tree models
+for parsing. in proceedings of the 33rd annual meeting
+of the association for computational linguistics, 276--
+283.
+mani, i., and maybury, m., eds. 1999. advances in
+automatic text summarization. the mit press.
+mani, i.; gates, b.; and bloedorn, e. 1999. improving
+summaries by revising them. in proceedings of the 37th
+annual meeting of the association for computational
+linguistics, 558--565.
+mckeown, k.; klavans, j.; hatzivassiloglou, v.;
+barzilay, r.; and eskin, e. 1999. towards multidoc-
+ument summarization by reformulation: progress and
+prospects. in proceedings of the sixteenth national
+conference on artificial intelligence (aaai--99).
+quinlan, j. 1993. c4.5: programs for machine learn-
+ing. san mateo, ca: morgan kaufmann publishers.
+robert-ribes, j.; pfeiffer, s.; ellison, r.; and burn-
+ham, d. 1999. semi-automatic captioning of tv pro-
+grams, an australian perspective. in proceedings of
+the tao workshop on tv closed captions for the
+hearing impaired people, 87--100.
+witbrock, m., and mittal, v. 1999. ultra-
+summarization: a statistical approach to generating
+highly condensed non-extractive summaries. in pro-
+ceedings of the 22nd international conference on re-
+search and development in information retrieval (si-</biblio>
+</article>

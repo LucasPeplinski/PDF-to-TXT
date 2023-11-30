@@ -1,0 +1,1229 @@
+<article>
+	<preamble>compression_phrases_Prog-Linear-jair</preamble>
+    <titre></titre>
+    <auteur> jclarke@ed.ac.uk mlap@inf.ed.ac.uk </auteur>
+	<abstract> sentence compression holds promise for many applications ranging from summarization to subtitle generation. our work views sentence compression as an optimization problem and uses integer linear programming (ilp) to infer globally optimal compressions in the presence of linguistically motivated constraints. we show how previous formulations of sentence compression can be recast as ilps and extend these models with novel global constraints. experimental results on written and spoken texts demonstrate improvements over state-of-the-art models. </abstract>
+	<introduction> the computational treatment of sentence compression has recently attracted much attention in the literature. the task can be viewed as producing a summary of a single sentence that retains the most important information and remains grammatical (jing, 2000). a sentence compression mechanism would greatly benefit a wide range of applications. for example, in summarization, it could improve the conciseness of the generated summaries (jing, 2000; lin, 2003; zajic, door, lin, & schwartz, 2007). other examples include compressing text to be displayed on small screens such as mobile phones or pdas (corston-oliver, 2001), subtitle generation from spoken transcripts (vandeghinste & pan, 2004), and producing audio scanning devices for the blind (grefenstette, 1998). sentence compression is commonly expressed as a word deletion problem: given an in- put source sentence of words x = x1, x2, . . . , xn, the aim is to produce a target compression by removing any subset of these words (knight & marcu, 2002). the compression prob- lem has been extensively studied across different modeling paradigms, both supervised and unsupervised. supervised models are typically trained on a parallel corpus of source sen- tences and target compressions and come in many flavors. generative models aim to model the probability of a target compression given the source sentence either directly (galley & mckeown, 2007) or indirectly using the noisy-channel model (knight & marcu, 2002; turner & charniak, 2005), whereas discriminative formulations attempt to minimize error rate on a training set. these include decision-tree learning (knight & marcu, 2002), maxi- mum entropy (riezler, king, crouch, & zaenen, 2003), support vector machines (nguyen, shimazu, horiguchi, ho, & fukushi, 2004), and large-margin learning (mcdonald, 2006). c 2008 ai access foundation. all rights reserved. clarke & lapata unsupervised methods dispense with the parallel corpus and generate compressions either using rules (turner & charniak, 2005) or a language model (hori & furui, 2004). despite differences in formulation, all these approaches model the compression process using local information. for instance, in order to decide which words to drop, they exploit information about adjacent words or constituents. local models can do a good job at producing grammatical compressions, however they are somewhat limited in scope since they cannot incorporate global constraints on the compression output. such constraints consider the sentence as a whole instead of isolated linguistic units (words or constituents). to give a concrete example we may want to ensure that each target compression has a verb, provided that the source had one in the first place. or that verbal arguments are present in the compression. or that pronouns are retained. such constraints are fairly intuitive and can be used to instill not only linguistic but also task specific information into the model. for instance, an application which compresses text to be displayed on small screens would presumably have a higher compression rate than a system generating subtitles from spoken text. a global constraint could force the former system to generate compressions with a fixed rate or a fixed number of words. existing approaches do not model global properties of the compression problem for a good reason. finding the best compression for a source sentence given the space of all possible compressions1 (this search process is often referred to as decoding or inference) can become intractable for too many constraints and overly long sentences. typically, the decoding problem is solved efficiently using dynamic programming often in conjunction with heuristics that reduce the search space (e.g., turner & charniak, 2005). dynamic programming guarantees we will find the global optimum provided the principle of optimal- ity holds. this principle states that given the current state, the optimal decision for each of the remaining stages does not depend on previously reached stages or previously made decisions (winston & venkataramanan, 2003). however, we know this to be false in the case of sentence compression. for example, if we have included modifiers to the left of a noun in a compression then we should probably include the noun too or if we include a verb we should also include its arguments. with a dynamic programming approach we cannot easily guarantee such constraints hold. in this paper we propose a novel framework for sentence compression that incorporates constraints on the compression output and allows us to find an optimal solution. our formulation uses integer linear programming (ilp), a general-purpose exact framework for np-hard problems. specifically, we show how previously proposed models can be recast as integer linear programs. we extend these models with constraints which we express as linear inequalities. decoding in this framework amounts to finding the best solution given a linear (scoring) function and a set of linear constraints that can be either global or local. although ilp has been previously used for sequence labeling tasks (roth & yih, 2004; punyakanok, roth, yih, & zimak, 2004), its application to natural language generation is less widespread. we present three compression models within the ilp framework, each representative of an unsupervised (knight & marcu, 2002), semi-supervised (hori & furui, 2004), and fully supervised modeling approach (mcdonald, 2006). we propose a small number of constraints ensuring that the compressions are structurally and semantically 1. there are 2n possible compressions where n is the number of words in a sentence. 400 global inference for sentence compression valid and experimentally evaluate their impact on the compression task. in all cases, we show that the added constraints yield performance improvements. the remainder of this paper is organized as follows. section provides an overview of related work. in section 3 we present the ilp framework and the compression models we employ in our experiments. our constraints are introduced in section 3.5. section 4.3 discusses our experimental set-up and section 5 presents our results. discussion of future work concludes the paper. related work in this paper we develop several ilp-based compression models. before presenting these models, we briefly summarize previous work addressing sentence compression with an em- phasis on data-driven approaches. next, we describe how ilp techniques have been used in the past to solve other inference problems in natural language processing (nlp). 2.1 sentence compression jing (2000) was perhaps the first to tackle the sentence compression problem. her approach uses multiple knowledge sources to determine which phrases in a sentence to remove. central to her system is a grammar checking module that specifies which sentential constituents are grammatically obligatory and should therefore be present in the compression. this is achieved using simple rules and a large-scale lexicon. other knowledge sources include wordnet and corpus evidence gathered from a parallel corpus of source-target sentence pairs. a phrase is removed only if it is not grammatically obligatory, not the focus of the local context and has a reasonable deletion probability (estimated from a parallel corpus). in contrast to jing (2000), the bulk of the research on sentence compression relies ex- clusively on corpus data for modeling the compression process without recourse to exten- sive knowledge sources (e.g., wordnet). a large number of approaches are based on the noisy-channel model (knight & marcu, 2002). these approaches consist of a language model p(y) (whose role is to guarantee that compression output is grammatical), a channel model p(x|y) (capturing the probability that the source sentence x is an expansion of the target compression y), and a decoder (which searches for the compression y that maximizes p(y)p(x|y)). the channel model is acquired from a parsed version of a parallel corpus; it is essentially a stochastic synchronous context-free grammar (aho & ullman, 1969) whose rule probabilities are estimated using maximum likelihood. modifications of this model are presented by turner and charniak (2005) and galley and mckeown (2007) with improved results. in discriminative models (knight & marcu, 2002; riezler et al., 2003; mcdonald, 2006; nguyen et al., 2004) sentences are represented by a rich feature space (also induced from parse trees) and the goal is to learn which words or word spans should be deleted in a given context. for instance, in knight and marcu's (2002) decision-tree model, compression is performed deterministically through a tree rewriting process inspired by the shift-reduce parsing paradigm. nguyen et al. (2004) render this model probabilistic through the use of support vector machines. mcdonald (2006) formalizes sentence compression in a large- margin learning framework without making reference to shift-reduce parsing. in his model compression is a classification task: pairs of words from the source sentence are classified 401 clarke & lapata as being adjacent or not in the target compression. a large number of features are defined over words, parts-of-speech, phrase structure trees and dependencies. these features are gathered over adjacent words in the compression and the words in-between which were dropped (see section 3.4.3 for a more detailed account). while most compression models have been developed with written text in mind, hori and furui (2004) propose a model for automatically transcribed spoken text. their model generates compressions through word deletion without using parallel data or syntactic in- formation in any way. assuming a fixed compression rate, it searches for the compression with the highest score using a dynamic programming algorithm. the scoring function con- sists of a language model responsible for producing grammatical output, a significance score indicating whether a word is topical or not, and a score representing the speech recognizer's confidence in transcribing a given word correctly. 2.integer linear programming in nlp ilps are constrained optimization problems where both the objective function and the constraints are linear equations with integer variables (see section 3.1 for more details). ilp techniques have been recently applied to several nlp tasks, including relation extraction (roth & yih, 2004), semantic role labeling (punyakanok et al., 2004), the generation of route directions (marciniak & strube, 2005), temporal link analysis (bramsen, deshpande, lee, & barzilay, 2006), set partitioning (barzilay & lapata, 2006), syntactic parsing (riedel & clarke, 2006), and coreference resolution (denis & baldridge, 2007). most of these approaches combine a local classifier with an inference procedure based on ilp. the classifier proposes possible answers which are assessed in the presence of global constraints. ilp is used to make a final decision that is consistent with the constraints and likely according to the classifier. for example, the semantic role labeling task involves identifying the verb-argument structure for a given sentence. punyakanok et al. (2004) first use snow, a multi-class classifier(roth, 1998), to identify and label candidate arguments. they observe that the labels assigned to arguments in a sentence often contradict each other. to resolve these conflicts they propose global constraints (e.g., each argument should be instantiated once for a given verb, every verb should have at least one argument) and use ilp to reclassify the output of snow. dras (1999) develops a document paraphrasing model using ilp. the key premise of his work is that in some cases one may want to rewrite a document so as to conform to some global constraints such as length, readability, or style. the proposed model has three ingredients: a set of sentence-level paraphrases for rewriting the text, a set of global con- straints, and an objective function which quantifies the effect incurred by the paraphrases. under this formulation, ilp can be used to select which paraphrases to apply so that the global constraints are satisfied. paraphrase generation falls outside the scope of the ilp model -- sentence rewrite operations are mainly syntactic and provided by a module based on synchronous tree adjoining grammar (s-tag, shieber & schabes, 1990). unfortunately, only a proof-of-concept is presented; implementation and evaluation of this module are left to future work. snow's learning algorithm is a variation of the winnow update rule. 402 global inference for sentence compression our work models sentence compression as an optimization problem. we show how pre- viously proposed models can be reformulated in the context of integer linear programming which allows us to easily incorporate constraints during the decoding process. our con- straints are linguistically and semantically motivated and are designed to bring less local syntactic knowledge into the model and help preserve the meaning of the source sentence. previous work has identified several important features for the compression task (knight & marcu, 2002; mcdonald, 2006); however, the use of global constraints is novel to our knowledge. although sentence compression has not been explicitly formulated in terms of optimization, previous approaches rely on some optimization procedure for generating the best compression. the decoding process in the noisy-channel model searches for the best compression given the source and channel models. however, the compression found is usu- ally sub-optimal as heuristics are used to reduce the search space or is only locally optimal due to the search method employed. for example, in the work of turner and charniak (2005) the decoder first searches for the best combination of rules to apply. as it traverses the list of compression rules, it removes sentences outside the 100 best compressions (ac- cording to the channel model). this list is eventually truncated to 25 compressions. in other models (hori & furui, 2004; mcdonald, 2006) the compression score is maximized using dynamic programming which however can yield suboptimal results (see the discussion in section 1). contrary to most other nlp work using ilp (a notable exception is roth & yih, 2005), we do not view compression generation as a two stage process where learning and inference are carried out sequentially (i.e., first a local classifier hypothesizes a list of possible an- swers and then the best answer is selected using global constraints). our models integrate learning with inference in a unified framework where decoding takes place in the presence of all available constraints, both local and global. moreover, we investigate the influence of our constraint set across models and learning paradigms. previous work typically for- mulates constraints for a single model (e.g., the snow classifier) and learning paradigm (e.g., supervised). we therefore assess how the constraint-based framework advocated in this article influences the performance of expressive models (which require large amounts of parallel data) and non-expressive ones (which use very little parallel data or none at all). in other words, we are able to pose and answer the following question: what kinds of models benefit most from constraint-based inference? our work is close in spirit but rather different in content to dras (1999). we concentrate on compression, a specific paraphrase type, and apply our models on the sentence-level. our constraints thus do not affect the document as a whole but individual sentences. further- more, compression generation is an integral part of our ilp models, whereas dras assumes that paraphrases are generated by a separate process. 3. framework in this section we present the details of the proposed framework for sentence compression. as mentioned earlier, our work models sentence compression directly as an optimization problem. there are 2n possible compressions for each source sentence and while many of these will be unreasonable, it is unlikely that only one compression will be satisfac- tory (knight & marcu, 2002). ideally, we require a function that captures the operations 403 clarke & lapata (or rules) that can be performed on a sentence to create a compression while at the same time factoring how desirable each operation makes the resulting compression. we can then perform a search over all possible compressions and select the best one, as determined by how desirable it is. a wide range of models can be expressed under this framework. the prerequisites for implementing these are fairly low, we only require that the decoding pro- cess be expressed as a linear function with a set of linear constraints. in practice, many models rely on a markov assumption for factorization which is usually solved with a dy- namic programming-based decoding process. such algorithms can be formulated as integer linear programs with little effort. we first give a brief </introduction>
+    <corps>programming for readers unfamiliar with mathematical programming. Our compression
+models are next described in Section 3.4 and constraints in Section 3.5.
+3.1 Linear Programming
+Linear programming (LP) problems are optimization problems with constraints. They
+consist of three parts:
+* Decision variables. These are variables under our control which we wish to assign
+optimal values to.
+* A linear function (the objective function). This is the function we wish to minimize or
+maximize. This function is influences by the values assigned to the decision variables.
+* Constraints. Most problems will only allow the decision variables to take certain
+values. These restrictions are the constraints.
+These terms are best demonstrated with a simple example taken from Winston and
+Venkataramanan (2003). Imagine a manufacturer of tables and chairs which we shall call
+the Telfa Corporation. To produce a table, 1 hour of labor and 9 square board feet of wood
+is required. Chairs require 1 hour of labor and 5 square board feet of wood. Telfa have
+6 hours of labor and 45 square board feet of wood available. The profit made from each
+table is 8 GBP and 5 GBP for chairs. We wish to determine the number of tables and
+chairs that should be manufactured to maximize Telfa's profit.
+First, we must determine the decision variables. In our case we define:
+x1 = number of tables manufactured
+x2 = number of chairs manufactured
+Our objective function is the value we wish to maximize, namely the profit.
+Profit = 8x1 + 5x2
+There are two constraints in this problem: we must not exceed 6 hours of labor and no
+more than 45 square board feet of wood must be used. Also, we cannot create a negative
+amount of chairs or tables:
+404
+Global Inference for Sentence Compression
+Labor constraint x1 + x2  6
+Wood constraint 9x1 + 5x2  45
+Variable constraints x1  0
+x2  0
+Once the decision variables, objective function and constraints have been determined we
+can express the LP model:
+max z = 8x1 + 5x2 (Objective function)
+subject to (s.t.)
+x1 + x2  6 (Labor constraint)
+9x1 + 5x2  45 (Wood constraint)
+x1  0
+x2  0
+Two of the most basic concepts involved in solving LP problems are the feasibility region
+and optimal solution. The optimal solution is one in which all constraints are satisfied
+and the objective function is minimized or maximized. A specification of the value for
+each decision variable is referred to as a point. The feasibility region for a LP is a region
+consisting of the set of all points that satisfy all the LP's constraints. The optimal solution
+lies within this feasibility region, it is the point with the minimum or maximum objective
+function value.
+A set of points satisfying a single linear inequality is a half-space. The feasibility region
+is defined by a the intersection of m half-spaces (for m linear inequalities) and forms a
+polyhedron. Our Telfa example forms a polyhedral set (a polyhedral convex set) from
+the intersection of our four constraints. Figure 1a shows the feasible region for the Telfa
+example. To find the optimal solution we graph a line (or hyperplane) on which all points
+have the same objective function value. In maximization problems it is called the isoprofit
+line and in minimization problems the isocost line. One isoprofit line is represented by the
+dashed black line in Figure 1a. Once we have one isoprofit line we can find all other isoprofit
+lines by moving parallel to the original isoprofit line.
+The extreme points of the polyhedral set are defined as the intersections of the lines
+that form the boundaries of the polyhedral set (points A B C and D in Figure 1a). It can
+be shown that any LP that has an optimal solution, has an extreme point that is globally
+optimal. This reduces the search space of the optimization problem to finding the extreme
+point with the highest or lowest value. The simplex algorithm (Dantzig, 1963) solves LPs
+by exploring the extreme points of a polyhedral set. Specifically, it moves from one extreme
+point to an adjacent extreme point (extreme points that lie on the same line segment) until
+an optimal extreme point is found. Although the simplex algorithm has an exponential
+worst-case complexity, in practice the algorithm is very efficient.
+The optimal solution for the Telfa example is z = 165
+4 , x1 = 15
+4 , x2 = 9
+4 . Thus, to
+achieve a maximum profit of 41.25 GBP they must build 3.75 tables and 2.25 chairs. This
+is obviously impossible as we would not expect people to buy fractions of tables and chairs.
+Here, we want to be able to constrain the problem such that the decision variables can only
+take integer values. This can be done with Integer Linear Programming.
+405
+Clarke & Lapata
+a.
+0 1 2 3 4 5 6 7
+x1
+0
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+x2
+Optimal LP solution
+9x1
++ 5x2
+= 45
+x1
++ x2
+= 6
+= LP's feasible region
+A
+B
+C
+D
+b.
+1
+0 1 2 3 4 5 6 7
+x1
+0
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+x2
+Optimal LP solution
+9x1
++ 5x2
+= 45
+x1
++ x2
+= 6
+= IP feasible point
+= IP relaxation's feasible region
+Figure 1: Feasible region for the Telfa example using linear (graph (a)) and integer linear
+(graph (b)) programming
+3.2 Integer Linear Programming
+Integer linear programming (ILP) problems are LP problems in which some or all of the
+variables are required to be non-negative integers. They are formulated in a similar manner
+to LP problems with the added constraint that all decision variables must take non-negative
+integer values.
+To formulate the Telfa problem as an ILP model we merely add the constraints that x1
+and x2 must be integer. This gives:
+max z = 8x1 + 5x2 (Objective function)
+subject to (s.t.)
+x1 + x2  6 (Labor constraint)
+9x1 + 5x2  45 (Wood constraint)
+x1  0; x1 integer
+x2  0; x2 integer
+For LP models, it can be proved that the optimal solution lies on an extreme point of
+the feasible region. In the case of integer linear programs, we only wish to consider points
+that are integer values. This is illustrated in Figure 1b for the Telfa problem. In contrast to
+linear programming, which can be solved efficiently in the worst case, integer programming
+problems are in many practical situations NP-hard (Cormen, Leiserson, & Rivest, 1992).
+406
+Global Inference for Sentence Compression
+Fortunately, ILPs are a well studied optimization problem and a number of techniques have
+been developed to find the optimal solution. Two such techniques are the cutting planes
+method (Gomory, 1960) and the branch-and-bound method (Land & Doig, 1960). We
+briefly discuss these methods here. For a more detailed treatment we refer the interested
+reader to Winston and Venkataramanan (2003) or Nemhauser and Wolsey (1988).
+The cutting planes method adds extra constraints to slice parts of the feasible region
+until it contains only integer extreme points. However, this process can be difficult or
+impossible (Nemhauser & Wolsey, 1988). The branch-and-bound method enumerates all
+points in the ILP's feasible region but prunes those sections in the region which are known
+to be sub-optimal. It does this by relaxing the integer constraints and solving the resulting
+LP problem (known as the LP relaxation). If the solution of the LP relaxation is integral,
+then it is the optimal solution. Otherwise, the resulting solution provides an upper bound
+on the solution for the ILP. The algorithm proceeds by creating two new sub-problems based
+on the non-integer solution for one variable at a time. These are solved and the process
+repeats until the optimal integer solution is found.
+Using the branch-and-bound method, we find that the optimal solution to the Telfa
+problem is z = 40, x1 = 5, x2 = 0; thus, to achieve a maximum profit of 40 GBP, Telfa
+must manufacture 5 tables and 0 chairs. This is a relatively simple problem, which could be
+solved merely by inspection. Most ILP problems will involve many variables and constraints
+resulting in a feasible region with a large number of integer points. The branch-and-bound
+procedure can efficiently solve such ILPs in a matter of seconds and forms part of many
+commercial ILP solvers. In our experiments we use lp solve3, a free optimization package
+which relies on the simplex algorithm and brand-and-bound methods for solving ILPs.
+Note that under special circumstances other solving methods may be applicable. For
+example, implicit enumeration can be used to solve ILPs where all the variables are binary
+(also known as pure 0-1 problems). Implicit enumeration is similar to the branch-and-
+bound method, it systematically evaluates all possible solutions, without however explicitly
+solving a (potentially) large number of LPs derived from the relaxation. This removes
+much of the computational complexity involved in determining if a sub-problem is infea-
+sible. Furthermore, for a class of ILP problems known as minimum cost network flow
+problems (MCNFP), the LP relaxation always yields an integral solution. These problems
+can therefore be treated as LP problems.
+In general, a model will yield an optimal solution in which all variables are integers if
+the constraint matrix has a property known as total unimodularity. A matrix A is totally
+unimodular if every square sub-matrix of A has its determinant equal to 0, +1 or -1.
+It is the case that the more the constraint matrix looks totally unimodular, the easier
+the problem will be to solve by branch-and-bound methods. In practice it is good to
+formulate ILPs where as many variables as possible have coefficients of 0, +1 or -1 in the
+constraints (Winston & Venkataramanan, 2003).
+3.3 Constraints and Logical Conditions
+Although integer variables in ILP problems may take arbitrary values, these are frequently
+are restricted to 0 and 1. Binary variables (0-1 variables) are particularly useful for rep-
+3. The software is available from http://lpsolve.sourceforge.net/.
+407
+Clarke & Lapata
+Condition Statement Constraint
+Implication if a then b b - a  0
+Iff a if and only if b a - b = 0
+Or a or b or c a + b + c  1
+Xor a xor b xor c a + b + c = 1
+And a and b a = 1; b = 1
+Not not a 1 - a = 1
+Table 1: How to represent logical conditions using binary variables and constraints in ILP.
+resenting a variety of logical conditions within the ILP framework through the use of con-
+straints. Table 1 lists several logical conditions and their equivalent constraints.
+We can also express transitivity, i.e., "c if and only if a and b". Although it is of-
+ten thought that transitivity can only be expressed as a polynomial expression of binary
+variables (i.e., ab = c), it is possible to replace the latter by the following linear inequali-
+ties (Williams, 1999):
+(1 - c) + a  1
+(1 - c) + b  1
+c + (1 - a) + (1 - b)  1
+This can be easily extended to model indicator variables representing whether a set of binary
+variables can take certain values.
+3.4 Compression Models
+In this section we describe three compression models which we reformulate as integer linear
+programs. Our first model is a simple language model which has been used as a baseline in
+previous research (Knight & Marcu, 2002). Our second model is based on the work of Hori
+and Furui (2004); it combines a language model with a corpus-based significance scoring
+function (we omit here the confidence score derived from the speech recognizer since our
+models are applied to text only). This model requires a small amount of parallel data to
+learn weights for the language model and the significance score.
+Our third model is fully supervised, it uses a discriminative large-margin framework
+(McDonald, 2006), and is trained trained on a larger parallel corpus. We chose this model
+instead of the more popular noisy-channel or decision-tree models, for two reasons, a practi-
+cal one and a theoretical one. First, McDonald's (2006) model delivers performance superior
+to the decision-tree model (which in turn performs comparably to the noisy-channel). Sec-
+ond, the noisy channel is not an entirely appropriate model for sentence compression. It
+uses a language model trained on uncompressed sentences even though it represents the
+probability of compressed sentences. As a result, the model will consider compressed sen-
+tences less likely than uncompressed ones (a further discussion is provided by Turner &
+Charniak, 2005).
+408
+Global Inference for Sentence Compression
+3.4.1 Language Model
+A language model is perhaps the simplest model that springs to mind. It does not require
+a parallel corpus (although a relatively large monolingual corpus is necessary for training),
+and will naturally prefer short sentences to longer ones. Furthermore, a language model can
+be used to drop words that are either infrequent or unseen in the training corpus. Knight
+and Marcu (2002) use a bigram language model as a baseline against their noisy-channel
+and decision-tree models.
+Let x = x1, x2, . . . , xn denote a source sentence for which we wish to generate a target
+compression. We introduce a decision variable for each word in the source and constrain it
+to be binary; a value of 0 represents a word being dropped, whereas a value of 1 includes
+the word in the target compression. Let:
+i =
+(
+1 if xi is in the compression
+0 otherwise
+i  [1 . . . n]
+If we were using a unigram language model, our objective function would maximize the
+overall sum of the decision variables (i.e., words) multiplied by their unigram probabilities
+(all probabilities throughout this paper are log-transformed):
+max
+n
+X
+i=1
+i  P(xi) (1)
+Thus, if a word is selected, its corresponding i is given a value of 1, and its probability
+P(xi) according to the language model will be counted in our total score.
+A unigram language model will probably generate many ungrammatical compressions.
+We therefore use a more context-aware model in our objective function, namely a trigram
+model. Dynamic programming would be typically used to decode a language model by
+traversing the sentence in a left-to-right manner. Such an algorithm is efficient and provides
+all the context required for a conventional language model. However, it can be difficult
+or impossible to incorporate global constraints into such a model as decisions on word
+inclusion cannot extend beyond a three word window. By formulating the decoding process
+for a trigram language model as an integer linear program we are able to take into account
+constraints that affect the compressed sentence more globally. This process is a much more
+involved task than in the unigram case where there is no context, instead we must now
+make decisions based on word sequences rather than isolated words. We first create some
+additional decision variables:
+i =
+(
+1 if xi starts the compression
+0 otherwise
+i  [1 . . . n]
+ij =
+
+
+
+
+
+1 if sequence xi, xj ends
+the compression i  [0 . . . n - 1]
+0 otherwise j  [i + 1 . . . n]
+ijk =
+
+
+
+
+
+1 if sequence xi, xj, xk i  [0 . . . n - 2]
+is in the compression j  [i + 1 . . . n - 1]
+0 otherwise k  [j + 1 . . . n]
+409
+Clarke & Lapata
+Our objective function is given in Equation (2). This is the sum of all possible trigrams
+that can occur in all compressions of the source sentence where x0 represents the `start'
+token and xi is the ith word in sentence x. Equation (3) constrains the decision variables
+to be binary.
+max z =
+n
+X
+i=1
+i  P(xi|start)
++
+n-2
+X
+i=1
+n-1
+X
+j=i+1
+n
+X
+k=j+1
+ijk  P(xk|xi, xj)
++
+n-1
+X
+i=0
+n
+X
+j=i+1
+ij  P(end|xi, xj) (2)
+subject to:
+i, i, ij, ijk = 0 or 1 (3)
+The objective function in (2) allows any combination of trigrams to be selected. This
+means that invalid trigram sequences (e.g., two or more trigrams containing the `end' token)
+could appear in the target compression. We avoid this situation by introducing sequential
+constraints (on the decision variables i, ijk, i, and ij) that restrict the set of allowable
+trigram combinations.
+Constraint 1 Exactly one word can begin a sentence.
+n
+X
+i=1
+i = 1 (4)
+Constraint 2 If a word is included in the sentence it must either start the sentence or be
+preceded by two other words or one other word and the `start' token x0.
+k - k -
+k-2
+X
+i=0
+k-1
+X
+j=1
+ijk = 0 (5)
+k : k  [1 . . . n]
+Constraint 3 If a word is included in the sentence it must either be preceded by one
+word and followed by another or it must be preceded by one word and end the sentence.
+j -
+j-1
+X
+i=0
+n
+X
+k=j+1
+ijk -
+j-1
+X
+i=0
+ij = 0 (6)
+j : j  [1 . . . n]
+Constraint 4 If a word is in the sentence it must be followed by two words or followed
+by one word and then the end of the sentence or it must be preceded by one word and end
+the sentence.
+i -
+n-1
+X
+j=i+1
+n
+X
+k=j+1
+ijk -
+n
+X
+j=i+1
+ij -
+i-1
+X
+h=0
+hi = 0 (7)
+i : i  [1 . . . n]
+410
+Global Inference for Sentence Compression
+Constraint 5 Exactly one word pair can end the sentence.
+n-1
+X
+i=0
+n
+X
+j=i+1
+ij = 1 (8)
+The sequential constraints described above ensure that the second order factorization (for
+trigrams) holds and are different from our compression-specific constraints which are pre-
+sented in Section 3.5.
+Unless normalized by sentence length, a language model will naturally prefer one-word
+output. This normalization is however non-linear and cannot be incorporated into our ILP
+formulation. Instead, we impose a constraint on the length of the compressed sentence.
+Equation (9) below forces the compression to contain at least b tokens.
+n
+X
+i=1
+i  b (9)
+Alternatively, we could force the compression to be exactly b tokens (by substituting the
+inequality with an equality in (9)) or to be less than b tokens (by replacing  with ).4
+The constraint in (9) is language model-specific and is not used elsewhere.
+3.4.2 Significance Model
+The language model just described has no notion of which content words to include in the
+compression and thus prefers words it has seen before. But words or constituents will be of
+different relative importance in different documents or even sentences.
+Inspired by Hori and Furui (2004), we add to our objective function (see Equation (2))
+a significance score designed to highlight important content words. In Hori and Furui's
+original formulation each word is weighted by a score similar to un-normalized tf idf . The
+significance score is not applied indiscriminately to all words in a sentence but solely to
+topic-related words, namely nouns and verbs. Our score differs in one respect. It combines
+document-level with sentence-level significance. So in addition to tf  idf , each word is
+weighted by its level of embedding in the syntactic tree.
+Intuitively, in a sentence with multiply nested clauses, more deeply embedded clauses
+tend to carry more semantic content. This is illustrated in Figure 2 which depicts the
+clause embedding for the sentence "Mr Field has said he will resign if he is not reselected,
+a move which could divide the party nationally". Here, the most important information is
+conveyed by clauses S3 (he will resign) and S4 (if he is not reselected) which are embedded.
+Accordingly, we should give more weight to words found in these clauses than in the main
+clause (S1 in Figure 2). A simple way to enforce this is to give clauses weight proportional
+to the level of embedding. Our modified significance score becomes:
+I(xi) =
+l
+N
+ fi log
+Fa
+Fi
+(10)
+where xi is a topic word, fi and Fi are the frequency of xi in the document and corpus
+respectively, Fa is the sum of all topic words in the corpus, l is the number of clause
+4. Compression rate can be also limited to a range by including two inequality constraints.
+411
+Clarke & Lapata
+S1
+S2
+Mr Field has said
+S3
+he will resign
+S4
+if he is not reselected
+, a move
+SBAR
+which could divide the party nationally
+Figure 2: The clause embedding of the sentence "Mr Field has said he will resign if he is
+not reselected, a move which could divide the party nationally"; nested boxes
+correspond to nested clauses.
+constituents above xi, and N is the deepest level of clause embedding. Fa and Fi are
+estimated from a large document collection, fi is document-specific, whereas l
+N is sentence-
+specific. So, in Figure 2 the term l
+N is 1.0 (4/4) for clause S4, 0.75 (3/4) for clause S3, and
+so on. Individual words inherit their weight from their clauses.
+The modified objective function with the significance score is given below:
+max z =
+n
+X
+i=1
+i  I(xi) +
+n
+X
+i=1
+i  P(xi|start)
++
+n-2
+X
+i=1
+n-1
+X
+j=i+1
+n
+X
+k=j+1
+ijk  P(xk|xi, xj)
++
+n-1
+X
+i=0
+n
+X
+j=i+1
+ij  P(end|xi, xj) (11)
+We also add a weighting factor () to the objective, in order to counterbalance the impor-
+tance of the language model and the significance score. The weight is tuned on a small
+parallel corpus. The sequential constraints from Equations (4)--(8) are again used to ensure
+that the trigrams are combined in a valid way.
+3.4.3 Discriminative Model
+As a fully supervised model, we used the discriminative model presented by McDonald
+(2006). This model uses a large-margin learning framework coupled with a feature set
+defined on compression bigrams and syntactic structure.
+Let x = x1, . . . , xn denote a source sentence with a target compression y = y1, . . . , ym
+where each yj occurs in x. The function L(yi)  {1 . . . n} maps word yi in the target com-
+412
+Global Inference for Sentence Compression
+pression to the index of the word in the source sentence, x. We also include the constraint
+that L(yi) < L(yi+1) which forces each word in x to occur at most once in the compression
+y. Let the score of a compression y for a sentence x be:
+s(x, y) (12)
+This score is factored using a first-order Markov assumption on the words in the target
+compression to give:
+s(x, y) =
+|y|
+X
+j=2
+s(x, L(yj-1), L(yj)) (13)
+The score function is defined to be the dot product between a high dimensional feature
+representation and a corresponding weight vector:
+s(x, y) =
+|y|
+X
+j=2
+w  f(x, L(yj-1), L(yj)) (14)
+Decoding in this model amounts to finding the combination of bigrams that maximizes
+the scoring function in (14). McDonald (2006) uses a dynamic programming approach
+where the maximum score is found in a left-to-right manner. The algorithm is an extension
+of Viterbi for the case in which scores factor over dynamic sub-strings (Sarawagi & Cohen,
+2004; McDonald, Crammer, & Pereira, 2005a). This allows back-pointers to be used to
+reconstruct the highest scoring compression as well as the k-best compressions.
+Again this is similar to the trigram language model decoding process (see Section 3.4.1),
+except that here a bigram model is used. Consequently, the ILP formulation is slightly
+simpler than that of the trigram language model. Let:
+i =
+(
+1 if xi is in the compression
+0 otherwise
+(1  i  n)
+We then introduce some more decision variables:
+i =
+(
+1 if xi starts the compression
+0 otherwise
+i  [1 . . . n]
+i =
+(
+1 if word xi ends the compression
+0 otherwise i  [1 . . . n]
+ij =
+(
+1 if sequence xi, xj is in the compression i  [1 . . . n - 1]
+0 otherwise j  [i + 1 . . . n]
+The discriminative model can be now expressed as:
+max z =
+n
+X
+i=1
+i  s(x, 0, i)
++
+n-1
+X
+i=1
+n
+X
+j=i+1
+ij  s(x, i, j)
++
+n
+X
+i=1
+i  s(x, i, n + 1) (15)
+413
+Clarke & Lapata
+Constraint 1 Exactly one word can begin a sentence.
+n
+X
+i=1
+i = 1 (16)
+Constraint 2 If a word is included in the sentence it must either start the compression
+or follow another word.
+j - j -
+j
+X
+i=1
+ij = 0 (17)
+j : j  [1 . . . n]
+Constraint 3 If a word is included in the sentence it must be either followed by another
+word or end the sentence.
+i -
+n
+X
+j=i+1
+ij - i = 0 (18)
+i : i  [1 . . . n]
+Constraint 4 Exactly one word can end a sentence.
+n
+X
+i=1
+i = 1 (19)
+Again, the sequential constraints in Equations (16)--(19) are necessary to ensure that the
+resulting combination of bigrams are valid.
+The current formulation provides a single optimal compression given the model. How-
+ever, McDonald's (2006) dynamic programming algorithm is capable of returning the k-best
+compressions; this is useful for their learning algorithm described later. In order to produce
+k-best compressions, we must rerun the ILP with extra constraints which forbid previous
+solutions. In other words, we first formulate the ILP as above, solve it, add its solution to
+the k-best list, and then create a set of constraints that forbid the configuration of i decision
+variables which form the current solution. The procedure is repeated until k compressions
+are found.
+The computation of the compression score crucially relies on the dot product between
+a high dimensional feature representation and a corresponding weight vector (see Equa-
+tion (14)). McDonald (2006) employs a rich feature set defined over adjacent words and
+individual parts-of-speech, dropped words and phrases from the source sentence, and de-
+pendency structures (also of the source sentence). These features are designed to mimic the
+information presented in the previous noisy-channel and decision-tree models of Knight and
+Marcu (2002). Features over adjacent words are used as a proxy to the language model of
+the noisy channel. Unlike other models, which treat the parses as gold standard, McDonald
+uses the dependency information as another form of evidence. Faced with parses that are
+noisy the learning algorithm can reduce the weighting given to those features if they prove
+414
+Global Inference for Sentence Compression
+poor discriminators on the training data. Thus, the model should be much more robust
+and portable across different domains and training corpora.
+The weight vector, w is learned using the Margin Infused Relaxed Algorithm (MIRA,
+Crammer & Singer, 2003) a discriminative large-margin online learning technique (McDon-
+ald, Crammer, & Pereira, 2005b). This algorithm learns by compressing each sentence and
+comparing the result with the gold standard. The weights are updated so that the score of
+the correct compression (the gold standard) is greater than the score of all other compres-
+sions by a margin proportional to their loss. The loss function is the number of words falsely
+retained or dropped in the incorrect compression relative to the gold standard. A source
+sentence will have exponentially many compressions and thus exponentially many margin
+constraints. To render learning computationally tractable, McDonald et al. (2005b) create
+constraints only on the k compressions that currently have the highest score, bestk(x; w).
+3.5 Constraints
+We are now ready to describe our compression-specific constraints. The models presented
+in the previous sections contain only sequential constraints and are thus equivalent to their
+original formulation. Our constraints are linguistically and semantically motivated in a
+similar fashion to the grammar checking component of Jing (2000). However, they do
+not rely on any additional knowledge sources (such as a grammar lexicon or WordNet)
+beyond the parse and grammatical relations of the source sentence. We obtain these from
+RASP (Briscoe & Carroll, 2002), a domain-independent, robust parsing system for English.
+However, any other parser with broadly similar output (e.g., Lin, 2001) could also serve our
+purposes. Our constraints revolve around modification, argument structure, and discourse
+related factors.
+Modifier Constraints Modifier constraints ensure that relationships between head words
+and their modifiers remain grammatical in the compression:
+i - j  0 (20)
+i, j : xj  xi's ncmods
+i - j  0 (21)
+i, j : xj  xi's detmods
+Equation (20) guarantees that if we include a non-clausal modifier5 (ncmod) in the compres-
+sion (such as an adjective or a noun) then the head of the modifier must also be included;
+this is repeated for determiners (detmod) in (21). In Table 2 we illustrate how these con-
+straints disallow the deletion of certain words (starred sentences denote compressions that
+would not be possible given our constraints). For example, if the modifier word Pasok from
+sentence (1a) is in the compression, then its head Party will also included (see (1b)).
+We also want to ensure that the meaning of the source sentence is preserved in the
+compression, particularly in the face of negation. Equation (22) implements this by forcing
+not in the compression when the head is included (see sentence (2b) in Table 2). A similar
+constraint is added for possessive modifiers (e.g., his, our), including genitives (e.g., John's
+5. Clausal modifiers (cmod) are adjuncts modifying entire clauses. In the example "he ate the cake because
+he was hungry", the because-clause is a modifier of the sentence "he ate the cake".
+415
+Clarke & Lapata
+1a. He became a power player in Greek Politics in 1974, when he founded the
+socialist Pasok Party.
+1b. *He became a power player in Greek Politics in 1974, when he founded the
+Pasok.
+2a. We took these troubled youth who don't have fathers, and brought them into
+a room to Dads who don't have their children.
+2b. *We took these troubled youth who do have fathers, and brought them into a
+room to Dads who do have their children.
+2c. *We took these troubled youth who don't have fathers, and brought them into
+a room to Dads who don't have children.
+3a. The chain stretched from Uganda to Grenada and Nicaragua, since the 1970s.
+3b. *Stretched from Uganda to Grenada and Nicaragua, since the 1970s.
+3c. *The chain from Uganda to Grenada and Nicaragua, since the 1970s.
+3d. *The chain stretched Uganda to Grenada and Nicaragua, since the 1970s.
+3e. *The chain stretched from to Grenada and Nicaragua, since the 1970s.
+3f. *The chain stretched from Uganda to Grenada Nicaragua, since the 1970s.
+Table 2: Examples of compressions disallowed by our set of constraints.
+gift), as shown in Equation (23). An example of the possessive constraint is given in
+sentence (2c) in Table 2.
+i - j = 0 (22)
+i, j : xj  xi's ncmods  xj = not
+i - j = 0 (23)
+i, j : xj  xi's possessive mods
+Argument Structure Constraints We also define a few intuitive constraints that take
+the overall sentence structure into account. The first constraint (Equation (24)) ensures
+that if a verb is present in the compression then so are its arguments, and if any of the
+arguments are included in the compression then the verb must also be included. We thus
+force the program to make the same decision on the verb, its subject, and object (see
+sentence (3b) in Table 2).
+i - j = 0 (24)
+i, j : xj  subject/object of verb xi
+Our second constraint forces the compression to contain at least one verb provided the
+source sentence contains one as well:
+X
+i:xiverbs
+i  1 (25)
+The constraint entails that it is not possible to drop the main verb stretched from sen-
+tence (3a) (see also sentence (3c) in Table 2).
+416
+Global Inference for Sentence Compression
+Other sentential constraints include Equations (26) and (27) which apply to prepo-
+sitional phrases and subordinate clauses. These constraints force the introducing term
+(i.e., the preposition, or subordinator) to be included in the compression if any word from
+within the syntactic constituent is also included. By subordinator we mean wh-words
+(e.g., who, which, how, where), the word that, and subordinating conjunctions (e.g., after,
+although, because). The reverse is also true, i.e., if the introducing term is included, at
+least one other word from the syntactic constituent should also be included.
+i - j  0 (26)
+i, j : xj  PP/SUB
+xi starts PP/SUB
+X
+i:xiPP/SUB
+i - j  0 (27)
+j : xj starts PP/SUB
+As an example consider sentence (3d) from Table 2. Here, we cannot drop the preposition
+from if Uganda is in the compression. Conversely, we must include from if Uganda is in the
+compression (see sentence (3e)).
+We also wish to handle coordination. If two head words are conjoined in the source
+sentence, then if they are included in the compression the coordinating conjunction must
+also be included:
+(1 - i) + j  1 (28)
+(1 - i) + k  1 (29)
+i + (1 - j) + (1 - k)  1 (30)
+i, j, k : xj  xk conjoined by xi
+Consider sentence (3f) from Table 2. If both Uganda and Nicaragua are present in the
+compression, then we must include the conjunction and.
+Finally, Equation (31) disallows anything within brackets in the source sentence from
+being included in the compression. This is a somewhat superficial attempt at excluding
+parenthetical and potentially unimportant material from the compression.
+i = 0 (31)
+i : xi  bracketed words (inc parentheses)
+Discourse Constraints Our discourse constraint concerns personal pronouns. Specif-
+ically, Equation (32) forces personal pronouns to be included in the compression. The
+constraint is admittedly more important for generating coherent documents (as opposed to
+individual sentences). It nevertheless has some impact on sentence-level compressions, in
+particular when verbal arguments are missed by the parser. When these are pronominal,
+constraint (32) will result in more grammatical output since some of the argument structure
+of the source sentence will be preserved in the compression.
+i = 1 (32)
+i : xi  personal pronouns
+417
+Clarke & Lapata
+We should note that some of the constraints described above would be captured by
+models that learn synchronous deletion rules from a corpus. For example, the noisy-channel
+model of Knight and Marcu (2002) learns not to drop the head when the latter is modified
+by an adjective or a noun, since the transformations DT NN  DT or AJD NN  ADJ are
+almost never seen in the data. Similarly, the coordination constraint (Equations (28)--(30))
+would be enforced using Turner and Charniak's (2005) special rules -- they enhance their
+parallel grammar with rules modeling more structurally complicated deletions than those
+attested in their corpus. In designing our constraints we aimed at capturing appropriate
+deletions for many possible models, including those that do not rely on a training corpus
+or do not have an explicit notion of a parallel grammar (e.g., McDonald, 2006). The
+modification constraints would presumably be redundant for the noisy-channel model, which
+could otherwise benefit from more specialized constraints, e.g., targeting sparse rules or
+noisy parse trees, however we leave this to future work.
+Another feature of the modeling framework presented here is that deletions (or non-
+deletions) are treated as unconditional decisions. For example, we require not to drop the
+noun in adjective-noun sequences if the adjective is not deleted as well. We also require to
+always include a verb in the compression if the source sentence has one. These hardwired de-
+cisions could in some cases prevent valid compressions from being considered. For instance,
+it is not possible to compress the sentence "this is not appropriate behavior" to "this is
+not appropriate" or"Bob loves Mary and John loves Susan" to "Bob loves Mary and John
+Susan". Admittedly we lose some expressive power, yet we ensure that the compressions
+will be broadly grammatically, even for unsupervised or semi-supervised models. Further-
+more, in practice we find that our models consistently outperform non-constraint-based
+alternatives, without extensive constraint engineering.
+3.6 Solving the ILP
+As we mentioned earlier (Section 3.1), solving ILPs is NP-hard. In cases where the co-
+efficient matrix is unimodular, it can be shown that the optimal solution to the linear
+program is integral. Although the coefficient matrix in our problems is not unimodular, we
+obtained integral solutions for all sentences we experimented with (approximately 3,000,
+see Section 4.1 for details). We conjecture that this is due to the fact that all of our vari-
+ables have 0, +1 or -1 coefficients in the constraints and therefore our constraint matrix
+shares many properties of a unimodular matrix. We generate and solve an ILP for every
+sentence we wish to compress. Solve times are less than a second per sentence (including
+input-output overheads) for all models presented here.
+4. Experimental Set-up
+Our evaluation experiments were motivated by three questions: (1) Do the constraint-
+based compression models deliver performance gains over non-constraint-based ones? We
+expect better compressions for the model variants which incorporate compression-specific
+constraints. (2) Are there differences among constraint-based models? Here, we would like
+to investigate how much modeling power is gained by the addition of the constraints. For
+example, it may be the case that a state-of-the-art model like McDonald's (2006) does not
+benefit much from the addition of constraints. And that their effect is much bigger for less
+418
+Global Inference for Sentence Compression
+sophisticated models. (3) How do the models reported in this paper port across domains?
+In particular, we are interested in assessing whether the models and proposed constraints
+are general and robust enough to produce good compressions for both written and spoken
+texts.
+We next describe the data sets on which our models were trained and tested (Section 4.1),
+explain how model parameters were estimated (Section 4.2) and present our evaluation setup
+(Section 4.3). We discuss our results in Section 5.
+4.1 Corpora
+Our intent was to assess the performance of the models just described on written and spoken
+text. The appeal of written text is understandable since most summarization work today
+focuses on this domain. Speech data not only provides a natural test-bed for compression
+applications (e.g., subtitle generation) but also poses additional challenges. Spoken utter-
+ances can be ungrammatical, incomplete, and often contain artefacts such as false starts,
+interjections, hesitations, and disfluencies. Rather than focusing on spontaneous speech
+which is abundant in these artefacts, we conduct our study on the less ambitious domain
+of broadcast news transcripts. This lies in-between the extremes of written text and spon-
+taneous speech as it has been scripted beforehand and is usually read off on autocue.
+Previous work on sentence compression has almost exclusively used the Ziff-Davis corpus
+for training and testing purposes. This corpus originates from a collection of news articles
+on computer products. It was created automatically by matching sentences that occur in
+an article with sentences that occur in an abstract (Knight & Marcu, 2002). The abstract
+sentences had to contain a subset of the source sentence's words and the word order had
+to remain the same. In earlier work (Clarke & Lapata, 2006) we have argued that the
+Ziff-Davis corpus is not ideal for studying compression for several reasons. First, we showed
+that human-authored compressions differ substantially from the Ziff-Davis which tends to
+be more aggressively compressed. Second, humans are more likely to drop individual words
+than lengthy constituents. Third, the test portion of the Ziff-Davis contains solely 32 sen-
+tences. This is an extremely small data set to reveal any statistically significant differences
+among systems. In fact, previous studies relied almost exclusively on human judgments for
+assessing the well-formedness of the compressed output, and significance tests are reported
+for by-subjects analyses only.
+We thus focused in the present study on manually created corpora. Specifically, we
+asked annotators to perform sentence compression by removing tokens on a sentence-by-
+sentence basis. Annotators were free to remove any words they deemed superfluous provided
+their deletions: (a) preserved the most important information in the source sentence, and
+(b) ensured the compressed sentence remained grammatical. If they wished, they could leave
+a sentence uncompressed by marking it as inappropriate for compression. They were not
+allowed to delete whole sentences even if they believed they contained no information content
+with respect to the story as this would blur the task with abstracting. Following these
+guidelines, our annotators produced compressions of 82 newspaper articles (1,433 sentences)
+from the British National Corpus (BNC) and the American News Text corpus (henceforth
+written corpus) and 50 stories (1,370 sentences) from the HUB-4 1996 English Broadcast
+News corpus (henceforth spoken corpus). The written corpus contains articles from The LA
+419
+Clarke & Lapata
+Times, Washington Post, Independent, The Guardian and Daily Telegraph. The spoken
+corpus contains broadcast news from a variety of networks (CNN, ABC, CSPAN and NPR)
+which have been manually transcribed and segmented at the story and sentence level. Both
+corpora have been split into training, development and testing sets6 randomly on article
+boundaries (with each set containing full stories) and are publicly available from http:
+//homepages.inf.ed.ac.uk/s0460084/data/.
+4.2 Parameter Estimation
+In this work we present three compression models ranging from unsupervised to semi-
+supervised, and fully supervised. The unsupervised model simply relies on a trigram lan-
+guage model for driving compression (see Section 3.4.1). This was estimated from 25 mil-
+lion tokens of the North American corpus using the CMU-Cambridge Language Modeling
+Toolkit (Clarkson & Rosenfeld, 1997) with a vocabulary size of 50,000 tokens and Good-
+Turing discounting. To discourage one-word output we force the ILP to generate compres-
+sions whose length is no less than 40% of the source sentence (see the constraint in (9)).
+The semi-supervised model is the weighted combination of a word-based significance score
+with a language model (see Section 3.4.2). The significance score was calculated using
+25 million tokens from the American News Text corpus. We optimized its weight (see
+Equation (11)) on a small subset of the training data (three documents in each case) us-
+ing Powell's method (Press, Teukolsky, Vetterling, & Flannery, 1992) and a loss function
+based on the F-score of the grammatical relations found in the gold standard compression
+and the system's best compression (see Section 4.3 for details). The optimal weight was
+approximately 1.8 for the written corpus and 2.2 for the spoken corpus.
+McDonald's (2006) supervised model was trained on the written and spoken training
+sets. Our implementation used the same feature sets as McDonald, the only difference
+being that our phrase structure and dependency features were extracted from the output of
+Roark's (2001) parser. McDonald uses Charniak's (2000) parser which performs comparably.
+The model was learnt using k-best compressions. On the development data, we found that
+k = 10 provided the best performance.
+4.3 Evaluation
+Previous studies have relied almost exclusively on human judgments for assessing the well-
+formedness of automatically derived compressions. These are typically rated by naive sub-
+jects on two dimensions, grammaticality and importance (Knight & Marcu, 2002). Although
+automatic evaluation measures have been proposed (Riezler et al., 2003; Bangalore, Ram-
+bow, & Whittaker, 2000) their use is less widespread, we suspect due to the small size of
+the test portion of the Ziff-Davis corpus which is commonly used in compression work.
+We evaluate the output of our models in two ways. First, we present results using
+an automatic evaluation measure put forward by Riezler et al. (2003). They compare
+the grammatical relations found in the system compressions against those found in a gold
+standard. This allows us to measure the semantic aspects of summarization quality in terms
+of grammatical-functional information and can be quantified using F-score. Furthermore,
+6. The splits are 908/63/462 sentences for the written corpus and 882/78/410 sentences for the spoken
+corpus.
+420
+Global Inference for Sentence Compression
+in Clarke and Lapata (2006) we show that relations-based F-score correlates reliably with
+human judgments on compression output. Since our test corpora are larger than Ziff-
+Davis (by more than a factor of ten), differences among systems can be highlighted using
+significance testing.
+Our implementation of the F-score measure used the grammatical relations annotations
+provided by RASP (Briscoe & Carroll, 2002). This parser is particularly appropriate for the
+compression task since it provides parses for both full sentences and sentence fragments and
+is generally robust enough to analyze semi-grammatical sentences. We calculated F-score
+over all the relations provided by RASP (e.g., subject, direct/indirect object, modifier; 15
+in total).
+In line with previous work we also evaluate our models by eliciting human judgments.
+Following the work of Knight and Marcu (2002), we conducted two separate experiments.
+In the first experiment participants were presented with a source sentence and its target
+compression and asked to rate how well the compression preserved the most important
+information from the source sentence. In the second experiment, they were asked to rate
+the grammaticality of the compressed outputs. In both cases they used a five point rating
+scale where a high number indicates better performance. We randomly selected 21 sentences
+from the test portion of each corpus. These sentences were compressed automatically by
+the three models presented in this paper with and without constraints. We also included
+gold standard compressions. Our materials thus consisted of 294 (21  2  7) source-
+target sentences. A Latin square design ensured that subjects did not see two different
+compressions of the same sentence. We collected ratings from 42 unpaid volunteers, all self
+reported native English speakers. Both studies were conducted over the Internet using a
+custom build web interface. Examples of our experimental items are given in Table 3.
+</corps>
+    <conclusion>In this paper we have presented a novel method for automatic sentence compression. A key
+aspect of our approach is the use of integer linear programming for inferring globally optimal
+compressions in the presence of linguistically motivated constraints. We have shown how
+previous formulations of sentence compression can be recast as ILPs and extended these
+models with local and global constraints ensuring that the compressed output is structurally
+and semantic well-formed. Contrary to previous work that has employed ILP solely for
+decoding, our models integrate learning with inference in a unified framework.
+Our experiments have demonstrated the advantages of the approach. Constraint-based
+models consistently bring performance gains over models without constraints. These im-
+provements are more impressive for models that require little or no supervision. A case
+in point here is the significance model discussed above. The no-constraints incarnation of
+this model performs poorly and considerably worse than McDonald's (2006) state-of-the-art
+model. The addition of constraints improves the output of this model so that its perfor-
+mance is indistinguishable from McDonald. Note that the significance model requires a
+small amount of training data (50 parallel sentences), whereas McDonald is trained on hun-
+dreds of sentences. It also presupposes little feature engineering, whereas McDonald utilizes
+thousands of features. Some effort is associated with framing the constraints, however these
+are created once and are applied across models and corpora. We have also observed small
+performance gains for McDonald's system when the latter is supplemented with constraints.
+Larger improvements are possible with more sophisticated constraints, however our intent
+was to devise a set of general constraints that are not tuned to the mistakes of any specific
+system in particular.
+Future improvements are many and varied. An obvious extension concerns our con-
+straint set. Currently our constraints are mostly syntactic and consider each sentence in
+isolation. By incorporating discourse constraints we could highlight words that are impor-
+tant at the document-level. Presumably words topical in a document should be retained in
+the compression. Other constraints could manipulate the compression rate. For example,
+we could encourage a higher compression rate for longer sentences. Another interesting
+direction includes the development of better objective functions for the compression task.
+The objective functions presented so far rely on first or second-order Markov assumptions.
+Alternative objectives could take into account the structural similarity between the source
+425
+Clarke & Lapata
+sentence and its target compression; or whether they share the same content which could
+be operationalized in terms of entropy.
+Beyond the task and systems presented in this paper, we believe the approach holds
+promise for other generation applications using decoding algorithms for searching the space
+of possible outcomes. Examples include sentence-level paraphrasing, headline generation,
+and summarization.
+</conclusion>
+	<discussion>let us first discuss our results when compression output is evaluated in terms of f-score.
+tables 4 and 5 illustrate the performance of our models on the written and spoken corpora,
+respectively. we also present the compression rate7 for each system. in all cases the
+constraint-based models (+constr) yield better f-scores than the non-constrained ones.
+the difference is starker for the semi-supervised model (sig). the constraints bring an
+improvement of 17.2% on the written corpus and 18.3% on the spoken corpus. we further
+examined whether performance differences among models are statistically significant, using
+the wilcoxon test. on the written corpus all constraint models significantly outperform the
+models without constraints. the same tendency is observed on the spoken corpus except for
+the model of mcdonald (2006) which performs comparably with and without constraints.
+we also wanted to establish which is the best constraint model. on both corpora we
+find that the language model performs worst, whereas the significance model and mcdonald
+perform comparably (i.e., the f-score differences are not statistically significant). to get
+a feeling for the difficulty of the task, we calculated how much our annotators agreed in
+their compression output. the inter-annotator agreement (f-score) on the written corpus
+was 65.8% and on the spoken corpus 73.4%. the agreement is higher on spoken texts since
+they consists of many short utterances (e.g., okay, that's it for now, good night) that can
+7. the term refers to the percentage of words retained from the source sentence in the compression.
+421
+clarke & lapata
+source the aim is to give councils some control over the future growth of second
+homes.
+gold the aim is to give councils control over the growth of homes.
+lm the aim is to the future.
+lm+constr the aim is to give councils control.
+sig the aim is to give councils control over the future growth of homes.
+sig+constr the aim is to give councils control over the future growth of homes.
+mcd the aim is to give councils.
+mcd+constr the aim is to give councils some control over the growth of homes.
+source the clinton administration recently unveiled a new means to encourage
+brownfields redevelopment in the form of a tax incentive proposal.
+gold the clinton administration unveiled a new means to encourage brown-
+fields redevelopment in a tax incentive proposal.
+lm the clinton administration in the form of tax.
+lm+constr the clinton administration unveiled a means to encourage redevelop-
+ment in the form.
+sig the clinton administration unveiled a encourage brownfields redevelop-
+ment form tax proposal.
+sig+constr the clinton administration unveiled a means to encourage brownfields
+redevelopment in the form of tax proposal.
+mcd the clinton unveiled a means to encourage brownfields redevelopment
+in a tax incentive proposal.
+mcd+constr the clinton administration unveiled a means to encourage brownfields
+redevelopment in the form of a incentive proposal.
+table 3: example compressions produced by our systems (source: source sentence, gold:
+gold-standard compression, lm: language model compression, lm+constr: lan-
+guage model compression with constraints, sig: significance model, sig+constr:
+significance model with constraints, mcd: mcdonald's (2006) compression model,
+mcd+constr: mcdonald's (2006) compression model with constraints).
+be compressed only very little or not all. note that there is a marked difference between the
+automatic and human compressions. our best performing systems are inferior to human
+output by more than 20 f-score percentage points.
+differences between the automatic systems and the human output are also observed
+with respect to the compression rate. as can be seen the language model compresses most
+aggressively, whereas the significance model and mcdonald tend to be more conservative
+and closer to the gold standard. interestingly, the constraints do not necessarily increase
+the compression rate. the latter increases for the significance model but decreases for
+the language model and remains relatively constant for mcdonald. it is straightforward to
+impose the same compression rate for all constraint-based models (e.g., by forcing the model
+to retain b tokens
+pn
+i=1 i = b). however, we refrained from doing this since we wanted our
+422
+global inference for sentence compression
+models compr f-score
+lm 46.2 18.4
+sig 60.6 23.3
+mcd 60.1 36.0
+lm+constr 41.2 28.2
+sig+constr 72.0 40.5
+mcd+constr 63.7 40.8
+gold 70.3 --
+table 4: results on the written corpus; compression rate (compr) and grammatical re-
+lation f-score (f-score); : +constr model is significantly different from model
+without constraints; : significantly different from lm+constr.
+models compr f-score
+lm 52.0 25.4
+sig 60.9 30.4
+mcd 68.6 47.6
+lm+constr 49.5 34.8
+sig+constr 78.4 48.7
+mcd+constr 68.5 50.1
+gold 76.1 --
+table 5: results on the spoken corpus; compression rate (compr) and grammatical rela-
+tion f-score (f-score); : +constr model is significantly different from without
+constraints; : significantly different from lm+constr.
+models to regulate the compression rate for each sentence individually according to its
+specific information content and structure.
+we next consider the results of our human study which assesses in more detail the quality
+of the generated compressions on two dimensions, namely grammaticality and information
+content. f-score conflates these two dimensions and therefore in theory could unduly reward
+a system that produces perfectly grammatical output without any information loss. tables 6
+and 7 show the mean ratings8 for each system (and the gold standard) on the written and
+spoken corpora, respectively. we first performed an analysis of variance (anova) to
+examine the effect of different system compressions. the anova revealed a reliable effect
+on both grammaticality and importance for each corpus (the effect was significant by both
+subjects and items (p < 0.01)).
+we next examine the impact of the constraints (+constr in the tables). in most cases
+we observe an increase in ratings for both grammaticality and importance when a model
+is supplemented constraints. post-hoc tukey tests reveal that the grammaticality and
+importance ratings of the language model and significance model significantly improve with
+8. all statistical tests reported subsequently were done using the mean ratings.
+423
+clarke & lapata
+models grammar importance
+lm 2.25$ 1.82$
+sig 2.26$ 2.99$
+mcd 3.05 2.84
+lm+constr 3.47 2.37$
+sig+constr 3.76 3.53
+mcd+constr 3.50 3.17
+gold 4.25 3.98
+table 6: results on the written text corpus; average grammaticality score (grammar) and
+average importance score (importance) for human judgments; : +constr model
+is significantly different from model without constraints; : significantly different
+from gold standard; $: significantly different from mcd+constr.
+models grammar importance
+lm 2.20$ 1.56
+sig 2.29$ 2.64
+mcd 3.33 3.32
+lm+constr 3.18 2.49$
+sig+constr 3.80 3.69
+mcd+constr 3.60 3.31
+gold 4.45 4.25
+table 7: results on the spoken text corpus; average grammaticality score (grammar) and
+average importance score (importance) for human judgments; : +constr model
+is significantly different from model without constraints; : significantly different
+from gold standard; $: significantly different from mcd+constr.
+the constraints ( < 0.01). in contrast, mcdonald's system sees a numerical improvement
+with the additional constraints, but this difference is not statistically significant. these
+tendencies are observed on the spoken and written corpus.
+upon closer inspection, we can see that the constraints influence considerably the
+grammaticality of the unsupervised and semi-supervised systems. tukey tests reveal that
+lm+constr and sig+constr are as grammatical as mcd+constr. in terms of importance,
+sig+constr and mcd+constr are significantly better than lm+constr ( < 0.01). this
+is not surprising given that lm+constr is a very simple model without a mechanism for
+highlighting important words in a sentence. interestingly, sig+constr performs as well
+as mcd+constr in retaining the most important words, despite the fact that it requires
+minimal supervision. although constraint-based models overall perform better than mod-
+els without constraints, they receive lower ratings (for grammaticality and importance) in
+comparison to the gold standard. and the differences are significant in most cases.
+424
+global inference for sentence compression
+in summary, we observe that the constraints boost performance. this is more pro-
+nounced for compression models that are either unsupervised or use small amounts of
+parallel data. for example, a simple model like sig yields performance comparable to
+mcdonald (2006) when constraints are taken into account. this is an encouraging result
+suggesting that ilp can be used to create good compression models with relatively little
+effort (i.e., without extensive feature engineering or elaborate knowledge sources). per-
+formance gains are also obtained for competitive models like mcdonald's that are fully
+supervised. but these gains are smaller, presumably because the initial model contains a
+rich feature representation consisting of syntactic information and generally does a good job
+at producing grammatical output. finally, our improvements are consistent across corpora
+and evaluation paradigms.</discussion>
+	<biblio>aho, a. v., & ullman, j. d. (1969). syntax directed translations and the pushdown assem-
+bler. journal of computer and system sciences, 3, 37--56.
+bangalore, s., rambow, o., & whittaker, s. (2000). evaluation metrics for generation.
+in proceedings of the first international conference on natural language generation,
+pp. 1--8, mitzpe ramon, israel.
+barzilay, r., & lapata, m. (2006). aggregation via set partitioning for natural language
+generation. in proceedings of the human language technology conference of the
+north american chapter of the association for computational linguistics, pp. 359--
+366, new york, ny, usa.
+bramsen, p., deshpande, p., lee, y. k., & barzilay, r. (2006). inducing temporal graphs.
+in proceedings of the 2006 conference on empirical methods in natural language
+processing, pp. 189--198, sydney, australia.
+briscoe, e. j., & carroll, j. (2002). robust accurate statistical annotation of general text. in
+proceedings of the third international conference on language resources and eval-
+uation, pp. 1499--1504, las palmas, gran canaria.
+charniak, e. (2000). a maximum-entropy-inspired parser. in proceedings of the 1st north
+american annual meeting of the association for computational linguistics, pp. 132--
+139, seattle, wa, usa.
+clarke, j., & lapata, m. (2006). models for sentence compression: a comparison across
+domains, training requirements and evaluation measures. in proceedings of the 21st
+international conference on computational linguistics and 44th annual meeting of
+the association for computational linguistics, pp. 377--384, sydney, australia.
+clarkson, p., & rosenfeld, r. (1997). statistical language modeling using the cmu--
+cambridge toolkit. in proceedings of eurospeech'97, pp. 2707--2710, rhodes, greece.
+426
+global inference for sentence compression
+cormen, t. h., leiserson, c. e., & rivest, r. l. (1992). intoduction to algorithms. the
+mit press.
+corston-oliver, s. (2001). text compaction for display on very small screens. in proceed-
+ings of the workshop on automatic summarization at the 2nd meeting of the north
+american chapter of the association for computational linguistics, pp. 89--98, pitts-
+burgh, pa, usa.
+crammer, k., & singer, y. (2003). ultraconservative online algorithms for multiclass prob-
+lems. journal of machine learning research, 3, 951--991.
+dantzig, g. b. (1963). linear programming and extensions. princeton university press,
+princeton, nj, usa.
+denis, p., & baldridge, j. (2007). joint determination of anaphoricity and coreference
+resolution using integer programming. in human language technologies 2007: the
+conference of the north american chapter of the association for computational lin-
+guistics; proceedings of the main conference, pp. 236--243, rochester, ny.
+dras, m. (1999). tree adjoining grammar and the reluctant paraphrasing of text. ph.d.
+thesis, macquarie university.
+galley, m., & mckeown, k. (2007). lexicalized markov grammars for sentence compression.
+in in proceedings of the north american chapter of the association for computational
+linguistics, pp. 180--187, rochester, ny, usa.
+gomory, r. e. (1960). solving linear programming problems in integers. in bellman,
+r., & hall, m. (eds.), combinatorial analysis, proceedings of symposia in applied
+mathematics, vol. 10, providence, ri, usa.
+grefenstette, g. (1998). producing intelligent telegraphic text reduction to provide an
+audio scanning service for the blind. in hovy, e., & radev, d. r. (eds.), proceedings
+of the aaai symposium on intelligent text summarization, pp. 111--117, stanford,
+ca, usa.
+hori, c., & furui, s. (2004). speech summarization: an approach through word extraction
+and a method for evaluation. ieice transactions on information and systems, e87-
+d(1), 15--25.
+jing, h. (2000). sentence reduction for automatic text summarization. in proceedings of
+the 6th applied natural language processing conference, pp. 310--315, seattle,wa,
+usa.
+knight, k., & marcu, d. (2002). summarization beyond sentence extraction: a probabilistic
+approach to sentence compression. artificial intelligence, 139(1), 91--107.
+land, a. h., & doig, a. g. (1960). an automatic method for solving discrete programming
+problems. econometrica, 28, 497--520.
+lin, c.-y. (2003). improving summarization performance by sentence compression -- a pilot
+study. in proceedings of the 6th international workshop on information retrieval with
+asian languages, pp. 1--8, sapporo, japan.
+lin, d. (2001). latat: language and text analysis tools. in proceedings of the first human
+language technology conference, pp. 222--227, san francisco, ca, usa.
+427
+clarke & lapata
+marciniak, t., & strube, m. (2005). beyond the pipeline: discrete optimization in nlp. in
+proceedings of the ninth conference on computational natural language learning,
+pp. 136--143, ann arbor, mi, usa.
+mcdonald, r. (2006). discriminative sentence compression with soft syntactic constraints.
+in proceedings of the 11th conference of the european chapter of the association for
+computational linguistics, trento, italy.
+mcdonald, r., crammer, k., & pereira, f. (2005a). flexible text segmentation with struc-
+tured multilabel classification. in proceedings of human language technology con-
+ference and conference on empirical methods in natural language processing, pp.
+987--994, vancouver, bc, canada.
+mcdonald, r., crammer, k., & pereira, f. (2005b). online large-margin training of de-
+pendency parsers. in 43rd annual meeting of the association for computational
+linguistics, pp. 91--98, ann arbor, mi, usa.
+nemhauser, g. l., & wolsey, l. a. (1988). integer and combinatorial optimization. wiley-
+interscience series in discrete mathematicals and opitmization. wiley, new york, ny,
+usa.
+nguyen, m. l., shimazu, a., horiguchi, s., ho, t. b., & fukushi, m. (2004). probabilistic
+sentence reduction using support vector machines. in proceedings of the 20th inter-
+national conference on computational linguistics, pp. 743--749, geneva, switzerland.
+press, w. h., teukolsky, s. a., vetterling, w. t., & flannery, b. p. (1992). numerical
+recipes in c: the art of scientific computing. cambridge university press, new
+york, ny, usa.
+punyakanok, v., roth, d., yih, w., & zimak, d. (2004). semantic role labeling via inte-
+ger linear programming inference. in proceedings of the international conference on
+computational linguistics, pp. 1346--1352, geneva, switzerland.
+riedel, s., & clarke, j. (2006). incremental integer linear programming for non-projective
+dependency parsing. in proceedings of the 2006 conference on empirical methods in
+natural language processing, pp. 129--137, sydney, australia.
+riezler, s., king, t. h., crouch, r., & zaenen, a. (2003). statistical sentence condensation
+using ambiguity packing and stochastic disambiguation methods for lexical-functional
+grammar. in human language technology conference and the 3rd meeting of the
+north american chapter of the association for computational linguistics, pp. 118--
+125, edmonton, canada.
+roark, b. (2001). probabilistic top-down parsing and language modeling. computational
+linguistics, 27(2), 249--276.
+roth, d. (1998). learning to resolve natural language ambiguities: a unified approach. in
+in proceedings of the 15th of the american association for artificial intelligence, pp.
+806--813, madison, wi, usa.
+roth, d., & yih, w. (2004). a linear programming formulation for global inference in
+natural language tasks. in proceedings of the annual conference on computational
+natural language learning, pp. 1--8, boston, ma, usa.
+428
+global inference for sentence compression
+roth, d., & yih, w. (2005). integer linear programming inference for conditional random
+fields. in proceedings of the international conference on machine learning, pp. 737--
+744, bonn.
+sarawagi, s., & cohen, w. w. (2004). semi-markov conditional random fields for informa-
+tion extraction. in advances in neural information processing systems, vancouver,
+bc, canada.
+shieber, s., & schabes, y. (1990). synchronous tree-adjoining grammars. in proceed-
+ings of the 13th international conference on computational linguistics, pp. 253--258,
+helsinki, finland.
+turner, j., & charniak, e. (2005). supervised and unsupervised learning for sentence
+compression. in proceedings of the 43rd annual meeting of the association for com-
+putational linguistics, pp. 290--297, ann arbor, mi, usa.
+vandeghinste, v., & pan, y. (2004). sentence compression for automated subtitling: a
+hybrid approach. in marie-francine moens, s. s. (ed.), text summarization branches
+out: proceedings of the acl-04 workshop, pp. 89--95, barcelona, spain.
+williams, h. p. (1999). model building in mathematical programming (4th edition). wiley.
+winston, w. l., & venkataramanan, m. (2003). introduction to mathematical program-
+ming: applications and algorithms (4th edition). duxbury.
+zajic, d., door, b. j., lin, j., & schwartz, r. (2007). multi-candidate reduction: sentence
+compression as a tool for document summarization tasks. information processing
+management special issue on summarization, 43(6), 1549--1570.</biblio>
+</article>

@@ -1,0 +1,447 @@
+<article>
+	<preamble>Dynamical_Models_Explaining_Socia_Balance_and_Evolution_of_Cooperation</preamble>
+    <titre>pone.0060063 1..7</titre>
+    <auteur> Vincent.Traag@uclouvain.be </auteur>
+	<abstract> social networks with positive and negative links often split into two antagonistic factions. examples of such a split abound: revolutionaries versus an old regime, republicans versus democrats, axis versus allies during the second world war, or the western versus the eastern bloc during the cold war. although this structure, known as social balance, is well understood, it is not clear how such factions emerge. an earlier model could explain the formation of such factions if reputations were assumed to be symmetric. we show this is not the case for non-symmetric reputations, and propose an alternative model which (almost) always leads to social balance, thereby explaining the tendency of social networks to split into two factions. in addition, the alternative model may lead to cooperation when faced with defectors, contrary to the earlier model. the difference between the two models may be understood in terms of the underlying gossiping mechanism: whereas the earlier model assumed that an individual adjusts his opinion about somebody by gossiping about that person with everybody in the network, we assume instead that the individual gossips with that person about everybody. it turns out that the alternative model is able to lead to cooperative behaviour, unlike the previous model. citation: traag va, van dooren p, de leenheer p (2013) dynamical models explaining social balance and evolution of cooperation. plos one 8(4): e60063. doi:10.1371/journal.pone.0060063 editor: renaud lambiotte, university of namur, belgium received september 28, 2012; accepted february 25, 2013; published april 2 , 2013 copyright:  2013 traag et al. this is an open-access article distributed under the terms of the creative commons attribution license, which permits unrestricted use, distribution, and reproduction in any medium, provided the original author and source are credited. funding: this research received support from a grant ``actions de recherche concertees -- large graphs and networks'' of the ``communaute francaise de belgique'' and from the belgian network dysco (dynamical systems, control, and optimization, http://sites.uclouvain.be/dysco/), funded by the interuniversity attraction poles programme, initiated by the belgian state, science policy office. pdl was provided a research fellowship by vlac (vlaams academisch centrum) and was hosted by universite catholique de louvain as a visiting professor during sabbatical leave from the university of florida, from which he received a faculty enhancement opportunity. the funders had no role in study design, data collection and analysis, decision to publish, or preparation of the manuscript. competing interests: the authors have declared that no competing interests exist. * e-mail: vincent.traag@uclouvain.be </abstract>
+	<introduction> why do two antagonistic factions emerge so frequently in social networks? this question was already looming in the 1940s, when heider [1] examined triads of individuals in networks, and postulated that only balanced triads are stable. a triad is balanced when friends agree in their opinion of a third party, while foes disagree, see fig. 1. the individuals in an unbalanced triad have an incentive to adjust their opinions so as to reduce the stress experienced in such a situation [2]. once an adjustment is made, the triad becomes balanced, and the stress disappears. a decade later, harary [3] showed that a complete social network splits in at most two factions if and only if all its triads are balanced, see also [4]. such networks are called (socially) balanced as well. since then, the focus of much of the research has been on detecting such factions in signed networks [5,6]. many signed networks show evidence of social balance, although the split into factions might not be exact, that is, they are only nearly socially balanced [7--10]. what has been lacking until fairly recently, are dynamical models that explain how social balance emerges. the purpose of this paper is to analyse two such models. one of these models, proposed first in [11], was proved to exhibit social balance in [12]. however, this was done under a restrictive symmetry assumption for the reputation matrix. here, we continue the analysis of this model and show that it generically does not lead to social balance when the symmetry assumption is dropped. in contrast, we propose a second model that is based on a different underlying gossiping mechanism, and show that it generically does lead to social balance, even when reputations are not symmetric. moreover, there is a natural connection between negative links and the evolution of cooperation: we consider positive links as indicating cooperation and negative links as defection. we will show that our alternative model is able to lead to cooperation, whereas the earlier model cannot. earlier model certain discrete-time, stochastic dynamics have been investi- gated [13,14], but they exhibit so-called jammed states [15]: no change in the sign of a reputation improves the degree of social balance, as measured by the total number of balanced triads in the network. a surprisingly simple continuous-time model [11] was proved to converge to social balance for certain symmetric initial conditions [12]. the authors assume that the social network is described by a complete graph (everybody is connected to everybody), with weighted links representing reputations that change continuously in time. let x denote the real-valued matrix of the reputations, so that xij represents the opinion i has about j. it is positive whenever i considers j a friend, and negative if i thinks of j as an enemy. the network is balanced, if, up to a possible relabelling of the individuals, the sign structure of x takes one of two possible block forms: plos one | www.plosone.org 1 april 2013 | volume 8 | issue 4 | e60063 5 2 z  or z { { z   : 1 changes in the reputations are modelled as follows: _ x x~x2 , or _ x xij~ x k xikxkj, 2 where _ x x denotes the derivative with respect to time of the matrix x. the idea behind this model is that reputations are adjusted based on the outcome of a particular gossiping process. more specifically, suppose that bob (individual i) wants to revise his opinion about john (individual j). bob then asks everybody else in the network what they think of john. if one such opinion xkj has the same sign as the opinion bob has about his gossiping partner, i.e. as xik, then bob will increase his opinion about john. but if these opinions differ in sign, then bob will decrease his opinion about john. the analysis for symmetric initial conditions x(0) = xt (0) was carried out in [12]: first, x(0) is diagonalized by an orthogonal transformation x(0) = ul(0)ut , where the columns of u are orthonormal eigenvectors u1,...,un of x(0) so that uut = in, and l(0) is a diagonal matrix whose diagonal entries are the corresponding real eigenvalues l1(0) $ l2(0)$ ? $ ln(0) of x(0). direct substitution of the matrix function ul(t)ut shows that it is the solution of eq. with initial condition x(0). here, l(t) is a diagonal matrix, solving the uncoupled matrix equation : l~l2 with initial condition l(0). the diagonal entries of l(t) are obtained by integrating the scalar first order equations l : i~l2 i : li t  ~ li 0   1{li 0  t , t [ 0,z?  if li 0  0 0,1=li 0    if li 0  w0  3 hence, the solution x(t) blows up in finite time if and only if l1(0) .0. moreover, if l1(0) .0 is a simple eigenvalue, then the solution x(t), normalized by its frobenius norm, satisfies: lim t?1=l1 0   x t   dx t  df ~u1ut 1 : 4 assuming that u1 has no zero entries, and up to a suitable permutation of its components, the latter limit takes one of the forms in eq. 1. in other words, if the initial reputation matrix is symmetric and has a simple, positive eigenvalue, then the normalized reputation matrix becomes balanced in finite time. our first main result is that this conclusion remains valid for normal initial conditions, i.e. for initial conditions that satisfy the equality x(0)xt (0) = xt (0)x(0), see si text s1, theorem 2. whereas the real eigenvalues behave similar to the symmetric case, the complex eigenvalues show circular behaviour, which results in small ``bumps'' in the dynamics as shown in fig. (see si fig. s1 for more detail). more precisely, if x(0) is normal and if l1(0) is a real, positive and simple eigenvalue which is larger than every other real eigenvalue (if any), then the solution x(t) of eq. 2 satisfies eq. 4. hence, once again, the normalized reputation matrix converges to a balanced state. our second main result is that this conclusion does not carry over to the case where x(0) is not normal, see si text s1, theorem 3. this general case is analysed by first transforming x(0) into its real jordan-canonical form j(0): x(0) = tj(0)t--1 , where t consists of a basis of (the real and imaginary parts of) generalized eigenvectors of x(0). it can then be shown that the solution x(t) of eq. is given by tj(t)t--1 , where j(t) solves the matrix equation _ j j~j2 , an equation which can still be solved explicitly. hence, x(t) can still be determined. it turns out that if x(0) has a real, positive and simple eigenvalue l1(0) which is larger than every other real eigenvalue (if any), then the normalized reputation matrix satisfies: lim t?1=l1 0   x t   dx t  df ~ u1vt 1 du1vt 1 df , 5 where u1 and vt 1 are left and right eigenvectors of x(0) respectively, that correspond to the eigenvalue l1(0). if we assume that none of the entries of u1 and v1 are zero, then we can always find a suitable permutation of the components of u1 and v1 such that they have the following sign structure: u1~ z z { { 0 b b b @ 1 c c c a and vt 1 ~ z { d z {   consequently, in general, the matrix limit in eq. 5 has the sign structure: z { { z d z { { z   , as illustrated in fig. clearly, this configuration doesn't correspond to social balance any longer. figure 1. social balance. the two upper triads are balanced, while the two lower triads are unbalanced. according to the structure theorem [3], a complete graph can be split into (at most) two opposing factions, if and only if all triads are balanced. this is represented by the coloured matrix on the right, where blue indicates positive entries, and red negative entries. doi:10.1371/journal.pone.0060063.g001 dynamical models explaining social balance plos one | www.plosone.org april 2013 | volume 8 | issue 4 | e60063 alternative model let us briefly reconsider the gossiping process underlying model _ x x~x2 . in our example of bob and john, the following happens. bob asks others what they think of john. bob takes into account what he thinks of the people he talks to, and adjusts his opinion of john accordingly. an alternative approach is to consider a type of homophily process [16--18]: people tend to befriend people who think alike. when bob seeks to revise his opinion of john, he talks to john about everybody else (instead of talking to everybody else about john). for example, suppose that bob likes alice, but that john dislikes her. when bob and john talk about alice, they notice they have opposing views about her, and as a result the relationship between bob and john deteriorates. on the other hand, should they share similar opinions about alice, their relationship will improve. thus, our alternative model for the update law of the reputations is: _ x x~xxt , or _ x xij~ x k xikxjk: 6 although there apparently is only a subtle difference in the gossiping processes underlying the models in eq. and 6, these models turn out to behave quite differently, as we discuss next. our third main result is that for generic initial conditions, the normalized solution of system eq. 6 converges to a socially balanced state in finite time. to show this, we decompose the solution x(t) into its symmetric and skew-symmetric parts: x(t) = s(t)+ a(t), where s(t) = st (t) and a(t) = --at (t). since _ x x~ _ x x t , the skew-symmetric part remains constant, and therefore a(t) = a(0) ; a0. the symmetric part then obeys the matrix riccati differential equation _ s s~ sza0   s{a0  . we introduce z t  ~e{a0t s t  ea0t to eliminate the linear terms in this equation, and obtain _ z z~z2 za0at 0 : 7 the latter matrix riccati differential equation can be integrat- ed, yielding the solution z(t) explicitly, and hence s(t), as well as x(t), can be calculated. it turns out that if a0 ? 0, then x(t) always blows up in finite time. moreover, using a perturbation argument, it can be shown there is a dense set of initial conditions x(0) such that the normalized solution of eq. 6 converges to lim t?t x t   dx t  df ~wwt , 8 for some vector w, as t approaches the blow-up time t*, see si text s1, theorem 5. if w has no zero entries, this implies that the normalized solution becomes balanced in finite time. hence, the alternative model in eq. 6 generically evolves to social balance, see fig. 2. evolution of cooperation positive and negative links have a natural interpretation in the light of cooperation: positive links indicate cooperation and negative links indicate defection. there is then also a natural motivation for the alternative model in terms of cooperation. again, suppose bob wants to revise his opinion of john. for bob it is important to know whether john is cooperative in order to determine whether he should cooperate with john or not. so, instead of asking alice whether she has cooperated with john, bob would like to know whether john has cooperated with her. in other words, bob is not interested in xkj but in xjk, consistent with figure the two models compared. the first row illustrates what happens generically for the model _ x x~x2 , while the second row displays the results for _ x x~xxt . each row contains from left to right: (1) an illustration of the model; (2) the random initial state; (3) the dynamics of the model; and (4) the final state to which the dynamics converge. blue indicates positive entries, and red negative entries. although the first model converges to a rank one matrix, it is not socially balanced. the second model does converge generically to social balance. the small bumps in the dynamics for _ x x~x2 are due to complex eigenvalues that show circular behaviour (see fig. s1). doi:10.1371/journal.pone.0060063.g002 dynamical models explaining social balance plos one | www.plosone.org 3 april 2013 | volume 8 | issue 4 | e60063 eq. 6, illustrated in fig. this is also what is observed in studies on gossip: it often concerns what others did, not what one thinks of others [19,20]. indeed gossiping seems crucial in explaining the evolution of human cooperation through indirect reciprocity [21]. it has even been suggested that humans developed larger brains in order to gossip, so as to control the problem of cooperation through social interaction [22]. in general, the problem is that if defection allows individuals to gain more, why then do individuals cooperate? this is usually modelled in the form of a prisoner's dilemma, in which each agent has the possibility to give his partner some benefit b at some cost c,b. so, if an agent's partner cooperates (he gives the agent b) but the agent doesn't cooperate (he doesn't pay the cost c) his total payoff will be b. considering the other possibilities results in the payoff matrix detailed in fig. 3. irrespective of the choice of the other player, it is better to defect in a single game. suppose that the second player cooperates. then if the first player cooperates he gains b -- c, while if he defects he gains b, so defecting is preferable. now suppose that the second player defects. the first player then has to pay c, but doesn't have to pay anything when defecting. so indeed, in a single game, it is always better to defect, yet the payoff is higher if both cooperate, whence the dilemma. in reality, we do observe cooperation, and various mechanisms for explaining the evolution of cooperation have been suggested [23], such as kin selection [24,25], reciprocity [26] or group selection [27]. humans have a tendency however to also cooperate in contexts beyond kin, group or repeated interactions. it is believed that some form of indirect reciprocity can explain the breadth of human cooperation [21]. whereas in direct reciprocity the favour is returned by the interaction partner, in indirect reciprocity the favour is returned by somebody else, which usually involves some reputation. it has been theorized that such a mechanism could even form the basis of morality [28]. addition- ally, reputation (and the fear of losing reputation) seems to play an important role in maintaining social norms [29--31]. in general, the idea is the following: agents obtain some good reputation by helping others, and others help those with a good reputation. initially a strategy known as image scoring was introduced [32]. shortly after, it was argued that a different strategy, known as the standing strategy, should actually perform better [33], although experiments showed people tend to prefer the simpler image scoring strategy [34]. this led to more systematic studies of how different reputation schemes would perform [35--37]. although much research has been done on indirect reciprocity, only few theoretical works actually study how gossiping shapes reputations [38,39]. nonetheless, most studies (tacitly) assume that reputations are shaped through gossip. additionally, it was observed experimentally that gossiping is an effective mechanism for promoting cooperation [40--42]. moreover, these reputations are usually considered as objective. that is, all agents know the reputation xj of some agent j, and all agents have the same view of agent j. private reputations--so that we have xij, the reputation of j in the eyes of i--have usually been considered by allowing a part of the population to ``observe'' an interaction, and update the reputation accordingly. if too few agents are allowed to ``observe'' an interaction, the reputations xij tend to become uncorrelated and incoherent. this makes reputation unreliable for deciding whether to cooperate or defect. the central question thus becomes how to model private reputations such that they remain coherent and reliable for deciding whether to cooperate or not. dynamical models of social balance might provide an answer to this question. although it allows to have private reputations--that is xij--the dynamics could also lead to some coherence in the form of social balance. in addition, it models more explicitly the gossiping process, commonly suggested to be the foundation upon which reputations are forged. simulation results the reputations of the agents are determined by the dynamics of the two models. we call agents using _ x x~x2 dynamics type a, and those using _ x x~xxt dynamics type b. we assume that agent i cooperates with j whenever xij .0 and defects otherwise. agents reproduce proportional to their fitness, determined by their payoff. agents that do well (have a high payoff) have a higher chance of reproduction, and we are interested in knowing the probability that a certain type becomes fixated in the population (i.e. takes over the whole population), known as the fixation probability r. all simulations start off with an equal amount of agents, so if some type wins more often than his initial relative frequency, it indicates it has an evolutionary advantage. for the results presented here this comes down to r .1/more details on the simulations are provided in the materials and methods section at the end of the paper. the results are displayed in fig. 4 using a normalized cost of c = 1 (the ratio b/c drives the evolutionary dynamics, see materials and methods and [23]). when directly competing against each other, type b has an evolutionary advantage (its fixation probability rb .1/2) compared to type a, already for relatively small benefits. when each type is playing against defectors (agents that always defect), type a seems unable to defeat defectors (ra ,1/2) for any b ,20, while type b performs quite well against them. when all three types are playing against each other results are similar (see si fig. s2). when varying the number of agents, the critical benefit b* at which type b starts to have an evolutionary advantage changes (i.e. where the fixation probability rb = 1/2). for b.b* agents using the model _ x x~xxt have a higher chance to become fixated, while for b,b* defectors tend to win. the inequality for type b to have an evolutionary advantage can be relatively accurately approximated by bwb  ~c ffiffiffi n p where c is estimated to be around c < 1.7260.037 (95% confidence interval). varying the intensity of selection does not alter the results qualitatively (see si fig. s3). summarizing, type b is able to lead to cooperation and defeats type a. based on these results, if a gossiping process evolved during the course of human history in order to maintain cooperation, the model _ x x~xxt seems more likely to have evolved than _ x x~x2 . for smaller groups a smaller benefit is needed for the model _ x x~xxt to become fixated. this figure 3. prisoner's dilemma. both players have the option to either cooperate or defect. whenever an agent cooperates, it costs him c while his partners receives a benefit b.c, leading to the indicated payoffs. doi:10.1371/journal.pone.0060063.g003 dynamical models explaining social balance plos one | www.plosone.org 4 april 2013 | volume 8 | issue 4 | e60063 dependence seems to scale only as ffiffiffi n p , so that larger groups only need a marginally larger benefit in order to develop cooperation. conclusion to conclude, we have shown that the alternative model _ x x~xxt generically converges to social balance, whereas the model _ x x~x2 did not. the current models exhibit several unrealistic features, we would like to address: (1) an all-to-all topology; (2) dynamics that blow-up in finite time; and (3) homogeneity of all agents. although most of these issues can be addressed by specifying different dynamics, the resulting models are much more difficult to analyse, thereby limiting our understanding. although the two models are somewhat simple, they are also tractable, and what we lose in truthfulness, we gain in deeper insights: in simplicity lies progress. our current analysis offers a quite complete understanding, and we hope it provides a stepping stone to more realistic models, which we would like to analyse in the future. the difference between the two models can be understood in terms of gossiping: we assume that people who wish to revise their opinion about someone talk to that person about everybody else, while the earlier model assumed that people talk about that person to everybody else. both gossiping and social balance are at the centre of many social phenomena [22,29,43,44], such as norm maintenance [30], stereotype formation [45] and social conflict [46]. for example, a classic work [29] on the established and outsiders found that gossiping was the fundamental driving force for the maintenance of the cohesive network of the established at the exclusion of the outsiders. understanding how social balance may emerge might help to understand the intricacies of these social phenomena. moreover, in light of the evolution of cooperation it appears that agents using _ x x~xxt dynamics perform well against defectors, and have an evolutionary advantage compared to agents using _ x x~x2 dynamics. contrary to other models of indirect reciprocity, not everybody might end up cooperating with everybody, and the population may split into two groups. this provides an interesting connection between social balance theory, gossiping and the evolution of cooperation. our results improve our understanding of gossiping as a mechanism for group formation and cooperation, and as such contributes to the study of indirect reciprocity. materials and methods in the simulations of the evolution of cooperation, the dynamics consist of two parts: (1) the interaction dynamics within each generation; and (2) the dynamics prescribing how the population evolves from generation to generation. interaction dynamics we include three possible types of agents in our simulations: type a uses _ x x~x2 dynamics, type b uses _ x x~xxt dynamics, and defectors have trivial reputation dynamics _ x x~0, with negative constant reputations. we can decompose the reputation matrix x(t) accordingly into three parts: x t  ~ xa t   xb t   xd t   0 b @ 1 c a, where xa(t) are the reputations of all agents in the eyes of agents of type a, xb(t) for type b and xd(t) for defectors. the reputations xa(0) and xb(0) are initialized from a standard gaussian distribution. the initial reputation for xd(0) will be set to a fixed negative value. to be clear, xd(0) is the reputation of all other agents in the eyes of defectors, which is negative initially. the initial reputation of the defectors themselves is of course not necessarily negative initially. for the results displayed here we have used xd(0) = 210, but results remain by and large the same when varying this parameter, as long as it remains sufficiently negative. since we are dealing with continuous dynamics in this paper, we assume all agents are involved in infinitesimally short games at each time instance t. each agent i may choose to either cooperate or defect with another agent j, and this decision may vary from one agent to the next. for agents of type a and type b the decision to figure 4. evolution of cooperation. (a) the fixation probability (probability to be the sole surviving species) is higher for model _ x x~xxt than _ x x~x2 . this implies that the model _ x x~xxt is more viable against defectors, and has an evolutionary advantage compared to _ x x~x2 . (b) the point b* at which the model _ x x~xxt has an evolutionary advantage against defectors (i.e. the fixation probability r .1/2) depends on the number of agents n. the condition for the model _ x x~xxt to defeat defectors can be approximated by bwb  ~b ffiffiffi n p , with b < 1.72. doi:10.1371/journal.pone.0060063.g004 dynamical models explaining social balance plos one | www.plosone.org 5 april 2013 | volume 8 | issue 4 | e60063 cooperate is based on the reputation: they defect whenever xij(t) # 0 and cooperate whenever xij(t) .0. we define the cooperation matrix c(t) accordingly. cij t  ~ 0 if xij0 1 if xijw0  defectors will simply always defect. whenever an agent i cooperates with j the latter receives a payoff of b at a cost of c to agent i. we integrate this payoff over all infinitesimally short games from time 0 to time t*, which can be represented as p g  ~ 1 n t 0 bc t  t e{cc t  edt, where e = (1,...,1) the vector of all ones for a certain generation g. evolutionary dynamics we have simulated the evolution of cooperation for n = 10,20,...,60 agents, which stays constant throughout evolution. we consider four different schemes for initializing the first generation: pa(0) pb(0) pd(0) 1. type a vs type b 1/1/- type a vs defectors 1/- 1/2 3. type b vs defectors - 1/1/2 4. type a,b and defectors 1/3 1/3 1/3 here pa(0),pb(0) and pd(0) are respectively the proportion of agents of type a, type b and defectors in the first generation. we use the vector ti(g) m {a, b, d} to denote the type of agent i in generation g, so that ti(g) = a if agent i is a type a player, ti(g) = b for a type b player, and ti(g) = d for a defector. we are interested in estimating the probability that a single type takes over the whole population, known as the fixation probability ra, rb and rd for the three different types. if a type has no evolutionary advantage, it is said to be evolutionary neutral, and in that case its fixation probability is equal to its initial frequency, e.g. for type a ra = pa(0). we will keep the population constant at the initial n, and simply choose n new agents according to their payoff for the next generation. this can be thought of as choosing n times one of the n agents in the old generation for reproduction. let wi denote the probability that an agent is selected for reproduction, which we define as wi~ ebpi g   p i ebpi g   : since we are only interested in the number of agents of a certain type, we can also gather all payoffs for the same type of agents, and write wq~ x i:ti g  ~q wi, where q m {a, b, d} represents the type of agent. the probability to select a type a agent, a type b agent or a defector is then respectively wa, wb and wd. in the next generation, the probability that agent i is of a specific type q can then be written as pr ti gz1  ~q  ~wq: this evolutionary mechanism can be seen as a wright-fisher process [47] with fitnesses ebpi g   . it is well known that this process converges faster than a moran birth-death process, since it essentially takes n time steps in a moran process to reproduce the effect of one time step in a wright-fisher process [47]. because of the high computational costs (solving repeatedly a non-linear system of differential equations of size n2 ), this process is preferable. higher b signifies higher selective pressure, and leads to a higher reproduction of those with a high payoff, and in the case that b r ` only those with the maximum payoff reproduce. on the other hand, for b r 0 this tends to the uniform distribution wi = 1/n, where payoffs no longer play any role. we have used b = 0.5 for the low selective pressure, b = 5 for the high selective pressure, reported in si fig. s3. for the results in the main text we have used b = 1. for an evolutionary neutral selection in where all pi(g) = p are effectively the same, b has no effect, and wi = 1/n. notice that if we rescale pi(g) by 1/c so that the payoff effectively becomes 1 c pi g  ~ 1 n t 0 b c c t   t e{c t  edt, and we rescale b by c, then the reproduction probabilities remain unchanged. hence, only the ratio b/c effectively plays a role up to a rescaling of the intensity of selection. since the point at which the evolution is neutral (i.e. r equals the initial proportional frequency), is independent of b, this point will only depend on the ratio b/c. so, we normalized the cost c = 1. to verify this, we also ran additional simulations with different costs, which indeed gave the same results. we stop the simulation whenever one of the types becomes fixated in the population. with fixation we mean that all other types have gone extinct, and only a single type remains. if no type has become fixated after 1,000 generations, we terminate the simulation and count as winner the most frequent type. this almost never happens, and the simulation usually stops after a relatively small number of generations. in total, we repeat this process 1,000 times for the results in the main text, and for the low (b = 0.5) and high (b = 5) selective pressure 100 times. this means that we run the evolutionary dynamics until one of the types has become fixated, and we record which type has ``won''. after that, we again start from the first generation, and run until fixation, and repeat this. finally, we calculate how many rounds a type has ``won'' compared to the total number of rounds, which yields the fixation probability r. supporting information figure s1 phase portrait of system s12-s13. circular orbits in the upper half plane (a .0) are traversed counter clockwise, whereas circular orbits in the lower half plane (a ,0) are traversed clockwise. (tiff) figure sresults including type a, b and defectors. (tiff) dynamical models explaining social balance plos one | www.plosone.org 6 april 2013 | volume 8 | issue 4 | e60063 figure s3 results different intensities of selection. (tiff) text s1 proofs and details of statements in the main paper. (pdf) author contributions conceived and designed the experiments: vat. performed the experi- ments: vat. analyzed the data: vat pvd pdl. contributed reagents/ materials/analysis tools: vat pvd pdl. wrote the paper: vat pvd pdl. references 1. heider f (1946) attitudes and cognitive organization. j psychol 21: 107--112. bearman ps, moody j (2004) suicide and friendships among american adolescents. am j public health 94: 89--95. 3. harary f (1953) on the notion of balance of a signed graph. the michigan mathematical journal 2: 143--146. 4. cartwright d, harary f (1956) structural balance: a generalization of heider's theory. psychol rev 63: 277--293. 5. doreian p, mrvar a (1996) a partitioning approach to structural balance. soc networks 18: 149--168. 6. traag va, bruggeman j (2009) community detection in networks with positive and negative links. phys rev e 80: 036115. 7. szell m, lambiotte r, thurner s (2010) multirelational organization of large- scale social networks in an online world. proc natl acad sci u s a 107: 13636-- 41. 8. leskovec j, huttenlocher d, kleinberg j (2010) predicting positive and negative links in online social networks. in: www 2010. 9. facchetti g, iacono g, altafini c (2011) computing global structural balance in large-scale signed social networks. proc natl acad sci u s a 108: 20953--20958. 10. kunegis j, lommatzsch a, bauckhage c (2009) the slashdot zoo. in: proceedings of the 18th international conference on world wide web - www '09. new york, new york, usa: acm press, p. 741. 11. kulakowski k, gawronski p, gronek p (2005) the heider balance - a continuous approach. int j mod phys c 16: 707--716. 1marvel sa, kleinberg j, kleinberg rd, strogatz sh (2011) continuous-time model of structural balance. proc natl acad sci u s a 108: 1771--6. 13. antal t, krapivsky pl, redner s (2005) dynamics of social balance on networks. phys rev e 72: 36121. 14. radicchi f, vilone d, yoon s, meyer-ortmanns h (2007) social balance as a satisfiability problem of computer science. phys rev e 75: 026106. 15. marvel s, strogatz s, kleinberg j (2009) energy landscape of social balance. phys rev lett 103: 198701. 16. mcpherson m, smith-lovin l, cook jm (2001) birds of a feather: homophily in social networks. annu rev sociol 27: 415--444. 17. durrett r, levin sa (2005) can stable social groups be maintained by homophilous imitation alone? j econ behav organ 57: 267--286. 18. fu f, nowak ma, christakis na, fowler jh (2012) the evolution of homophily. scientific reports 2. 19. mcandrew ft, bell ek, garcia cm (2007) who do we tell and whom do we tell on? gossip as a strategy for status enhancement. j appl soc psychol 37: 1562--1577. 20. paine r (1967) what is gossip about? an alternative hypothesis. man 2: 278-- 285. 21. nowak ma, sigmund k (2005) evolution of indirect reciprocity. nature 437: 1291--1298. 2dunbar rim (1998) grooming, gossip, and the evolution of language. cambridge: harvard university press, 24pp. 23. nowak ma (2006) five rules for the evolution of cooperation. science (new york, ny) 314: 1560--3. 24. smith jm, maynard smith j (1982) evolution and the theory of games. cambridge: cambridge university press, 226 pp. 25. hamilton w (1964) the genetical evolution of social behaviour i. j theor biol 7: 1--16. 26. axelrod r, hamilton w (1985) the evolution of cooperation, volume 211. new york: basic books, 1390--1396 pp. 27. wilson ds (1975) a theory of group selection. proc natl acad sci u s a 72: 143--146. 28. alexander rd (1987) the biology of moral systems. new york: aldine de gruyter. 29. elias n, scotson jl (1994) the established and the outsiders. london: sage publications. 30. friedkin ne (2001) norm formation in social influence networks. soc networks 23: 167--189. 31. fehr e, fischbacher u (2004) third-party punishment and social norms. evolution and human behavior 25: 63--87. 3nowak ma, sigmund k (1998) evolution of indirect reciprocity by image scoring. nature 393: 573--7. 33. leimar o, hammerstein p (2001) evolution of cooperation through indirect reciprocity. proc biol sci 268: 745--753. 34. milinski m, semmann d, bakker tc, krambeck hj (2001) cooperation through indirect reciprocity: image scoring or standing strategy? proc biol sci 268: 2495--2501. 35. ohtsuki h, iwasa y (2006) the leading eight: social norms that can maintain cooperation by indirect reciprocity. j theor biol 239: 435--44. 36. brandt h, sigmund k (2004) the logic of reprobation: assessment and action rules for indirect reciprocation. j theor biol 231: 475--486. 37. ohtsuki h, iwasa y (2004) how should we define goodness?--reputation dynamics in indirect reciprocity. j theor biol 231: 107--120. 38. nakamaru m, kawata m (2004) evolution of rumours that discriminate lying defectors. evol ecol res 6: 261--283. 39. traag va, van dooren p, nesterov y (2011) indirect reciprocity through gossiping can lead to cooperative clusters. in: ieee symposium on artificial life 2011. piscataway: ieee, pp.154--161. 40. piazza j, bering jm (2008) concerns about reputation via gossip promote generous allocations in an economic game. evolution and human behavior 29: 172--178. 41. sommerfeld rd, krambeck hj, milinski m (2008) multiple gossip statements and their effect on reputation and trustworthiness. proc biol sci 275: 2529-- 2536. 4sommerfeld rd, krambeck hj, semmann d, milinski m (2007) gossip as an alternative for direct observation in games of indirect reciprocity. proc natl acad sci u s a 104: 17435--17440. 43. gluckman m (1963) gossip and scandal. curr anthropol 4: 307--316. 44. foster ek (2004) research on gossip: taxonomy, methods, and future directions. rev gen psychol 8: 78--99. 45. wert sr, salovey p (2004) a social comparison account of gossip. rev gen psychol 8: 122--137. 46. labianca g, brass d, gray b (1998) social networks and perceptions of intergroup conflict: the role of negative relationships and third parties. academy of management journal 41: 55--67. 47. gillespie jh (2004) population genetics: a concise guide. baltimore: the john hopkins university press. dynamical models explaining social balance plos one | www.plosone.org 7 april 2013 | volume 8 | issue 4 | e60063 </introduction>
+    <corps></corps>
+    <conclusion>To conclude, we have shown that the alternative model
+_
+X
+X~XXT
+generically converges to social balance, whereas the
+model _
+X
+X~X2
+did not. The current models exhibit several
+unrealistic features, we would like to address: (1) an all-to-all
+topology; (2) dynamics that blow-up in finite time; and (3)
+homogeneity of all agents. Although most of these issues can be
+addressed by specifying different dynamics, the resulting models
+are much more difficult to analyse, thereby limiting our
+understanding. Although the two models are somewhat simple,
+they are also tractable, and what we lose in truthfulness, we gain in
+deeper insights: in simplicity lies progress. Our current analysis
+offers a quite complete understanding, and we hope it provides a
+stepping stone to more realistic models, which we would like to
+analyse in the future.
+The difference between the two models can be understood in
+terms of gossiping: we assume that people who wish to revise their
+opinion about someone talk to that person about everybody else,
+while the earlier model assumed that people talk about that person
+to everybody else. Both gossiping and social balance are at the
+centre of many social phenomena [22,29,43,44], such as norm
+maintenance [30], stereotype formation [45] and social conflict
+[46]. For example, a classic work [29] on the established and
+outsiders found that gossiping was the fundamental driving force
+for the maintenance of the cohesive network of the established at
+the exclusion of the outsiders. Understanding how social balance
+may emerge might help to understand the intricacies of these
+social phenomena.
+Moreover, in light of the evolution of cooperation it appears
+that agents using _
+X
+X~XXT
+dynamics perform well against
+defectors, and have an evolutionary advantage compared to
+agents using _
+X
+X~X2
+dynamics. Contrary to other models of
+indirect reciprocity, not everybody might end up cooperating with
+everybody, and the population may split into two groups. This
+provides an interesting connection between social balance theory,
+gossiping and the evolution of cooperation. Our results improve
+our understanding of gossiping as a mechanism for group
+formation and cooperation, and as such contributes to the study
+of indirect reciprocity.
+Materials and Methods
+In the simulations of the evolution of cooperation, the dynamics
+consist of two parts: (1) the interaction dynamics within each
+generation; and (2) the dynamics prescribing how the population
+evolves from generation to generation.
+Interaction Dynamics
+We include three possible types of agents in our simulations:
+Type A uses _
+X
+X~X2
+dynamics,
+Type B uses _
+X
+X~XXT
+dynamics, and
+Defectors have trivial reputation dynamics _
+X
+X~0, with
+negative constant reputations.
+We can decompose the reputation matrix X(t) accordingly into
+three parts:
+X t
+ ~
+XA t
+ 
+XB t
+ 
+XD t
+ 
+0
+B
+@
+1
+C
+A,
+where XA(t) are the reputations of all agents in the eyes of agents of
+type A, XB(t) for type B and XD(t) for defectors. The reputations
+XA(0) and XB(0) are initialized from a standard Gaussian
+distribution. The initial reputation for XD(0) will be set to a fixed
+negative value. To be clear, XD(0) is the reputation of all other
+agents in the eyes of defectors, which is negative initially. The
+initial reputation of the defectors themselves is of course not
+necessarily negative initially. For the results displayed here we
+have used XD(0) = 210, but results remain by and large the same
+when varying this parameter, as long as it remains sufficiently
+negative.
+Since we are dealing with continuous dynamics in this paper, we
+assume all agents are involved in infinitesimally short games at
+each time instance t. Each agent i may choose to either cooperate
+or defect with another agent j, and this decision may vary from one
+agent to the next. For agents of type A and type B the decision to
+Figure 4. Evolution of Cooperation. (A) The fixation probability (probability to be the sole surviving species) is higher for model _
+X
+X~XXT
+than
+_
+X
+X~X2
+. This implies that the model _
+X
+X~XXT
+is more viable against defectors, and has an evolutionary advantage compared to _
+X
+X~X2
+. (B) The point
+b* at which the model _
+X
+X~XXT
+has an evolutionary advantage against defectors (i.e. the fixation probability r .1/2) depends on the number of
+agents n. The condition for the model _
+X
+X~XXT
+to defeat defectors can be approximated by bwb  ~b
+ffiffiffi
+n
+p
+, with b < 1.72.
+doi:10.1371/journal.pone.0060063.g004
+Dynamical Models Explaining Social Balance
+PLOS ONE | www.plosone.org 5 April 2013 | Volume 8 | Issue 4 | e60063
+cooperate is based on the reputation: they defect whenever Xij(t) #
+0 and cooperate whenever Xij(t) .0. We define the cooperation
+matrix C(t) accordingly.
+Cij t
+ ~
+0 if Xij0
+1 if Xijw0
+
+Defectors will simply always defect. Whenever an agent i
+cooperates with j the latter receives a payoff of b at a cost of c to
+agent i. We integrate this payoff over all infinitesimally short
+games from time 0 to time t*, which can be represented as
+p g
+ ~
+1
+n
+t
+0
+bC t
+ T
+e{cC t
+ edt,
+where e = (1,...,1) the vector of all ones for a certain generation g.
+Evolutionary Dynamics
+We have simulated the evolution of cooperation for n
+= 10,20,...,60 agents, which stays constant throughout evolution.
+We consider four different schemes for initializing the first
+generation:
+pA(0) pB(0) pD(0)
+1. Type A vs Type B 1/2 1/2 -
+2. Type A vs Defectors 1/2 - 1/2
+3. Type B vs Defectors - 1/2 1/2
+4. Type A,B and Defectors 1/3 1/3 1/3
+Here pA(0),pB(0) and pD(0) are respectively the proportion of
+agents of type A, type B and defectors in the first generation. We
+use the vector Ti(g) M {A, B, D} to denote the type of agent i in
+generation g, so that Ti(g) = A if agent i is a type A player, Ti(g) = B
+for a type B player, and Ti(g) = D for a defector. We are interested
+in estimating the probability that a single type takes over the whole
+population, known as the fixation probability rA, rB and rD for the
+three different types. If a type has no evolutionary advantage, it is
+said to be evolutionary neutral, and in that case its fixation
+probability is equal to its initial frequency, e.g. for type A
+rA = pA(0).
+We will keep the population constant at the initial n, and simply
+choose n new agents according to their payoff for the next
+generation. This can be thought of as choosing n times one of the n
+agents in the old generation for reproduction. Let wi denote the
+probability that an agent is selected for reproduction, which we
+define as
+wi~
+ebPi g
+ 
+P
+i ebPi g
+ 
+:
+Since we are only interested in the number of agents of a certain
+type, we can also gather all payoffs for the same type of agents, and
+write
+Wq~
+X
+i:Ti g
+ ~q
+wi,
+where q M {A, B, D} represents the type of agent. The probability
+to select a type A agent, a type B agent or a defector is then
+respectively WA, WB and WD. In the next generation, the probability
+that agent i is of a specific type q can then be written as
+Pr Ti gz1
+ ~q
+ ~Wq:
+This evolutionary mechanism can be seen as a Wright-Fisher
+process [47] with fitnesses ebPi g
+ 
+. It is well known that this process
+converges faster than a Moran birth-death process, since it
+essentially takes n time steps in a Moran process to reproduce the
+effect of one time step in a Wright-Fisher process [47]. Because of
+the high computational costs (solving repeatedly a non-linear
+system of differential equations of size n2
+), this process is
+preferable.
+Higher b signifies higher selective pressure, and leads to a
+higher reproduction of those with a high payoff, and in the case
+that b R ` only those with the maximum payoff reproduce. On
+the other hand, for b R 0 this tends to the uniform distribution wi
+= 1/n, where payoffs no longer play any role. We have used b
+= 0.5 for the low selective pressure, b = 5 for the high selective
+pressure, reported in SI Fig. S3. For the results in the main text we
+have used b = 1.
+For an evolutionary neutral selection in where all Pi(g) = P are
+effectively the same, b has no effect, and wi = 1/n. Notice that if
+we rescale Pi(g) by 1/c so that the payoff effectively becomes
+1
+c
+Pi g
+ ~
+1
+n
+t
+0
+b
+c
+C t
+ 
+T
+e{C t
+ edt,
+and we rescale b by c, then the reproduction probabilities remain
+unchanged. Hence, only the ratio b/c effectively plays a role up to
+a rescaling of the intensity of selection. Since the point at which the
+evolution is neutral (i.e. r equals the initial proportional
+frequency), is independent of b, this point will only depend on
+the ratio b/c. So, we normalized the cost c = 1. To verify this, we
+also ran additional simulations with different costs, which indeed
+gave the same results.
+We stop the simulation whenever one of the types becomes
+fixated in the population. With fixation we mean that all other types
+have gone extinct, and only a single type remains. If no type has
+become fixated after 1,000 generations, we terminate the
+simulation and count as winner the most frequent type. This
+almost never happens, and the simulation usually stops after a
+relatively small number of generations.
+In total, we repeat this process 1,000 times for the results in the
+main text, and for the low (b = 0.5) and high (b = 5) selective
+pressure 100 times. This means that we run the evolutionary
+dynamics until one of the types has become fixated, and we record
+which type has ``won''. After that, we again start from the first
+generation, and run until fixation, and repeat this. Finally, we
+calculate how many rounds a type has ``won'' compared to the
+total number of rounds, which yields the fixation probability r.
+Supporting Information
+Figure S1 Phase portrait of system S12-S13. Circular
+orbits in the upper half plane (a .0) are traversed counter
+clockwise, whereas circular orbits in the lower half plane (a ,0) are
+traversed clockwise.
+(TIFF)
+Figure S2 Results including type A, B and defectors.
+(TIFF)
+Dynamical Models Explaining Social Balance
+PLOS ONE | www.plosone.org 6 April 2013 | Volume 8 | Issue 4 | e60063
+Figure S3 Results different intensities of selection.
+(TIFF)
+Text S1 Proofs and details of statements in the main
+paper.
+(PDF)
+Author Contributions
+Conceived and designed the experiments: VAT. Performed the experi-
+ments: VAT. Analyzed the data: VAT PVD PDL. Contributed reagents/
+materials/analysis tools: VAT PVD PDL. Wrote the paper: VAT PVD
+PDL.
+</conclusion>
+	<discussion>in the payoff matrix detailed in fig. 3.
+irrespective of the choice of the other player, it is better to defect
+in a single game. suppose that the second player cooperates. then
+if the first player cooperates he gains b -- c, while if he defects he
+gains b, so defecting is preferable. now suppose that the second
+player defects. the first player then has to pay c, but doesn't have
+to pay anything when defecting. so indeed, in a single game, it is
+always better to defect, yet the payoff is higher if both cooperate,
+whence the dilemma.
+in reality, we do observe cooperation, and various mechanisms
+for explaining the evolution of cooperation have been suggested
+[23], such as kin selection [24,25], reciprocity [26] or group
+selection [27]. humans have a tendency however to also cooperate
+in contexts beyond kin, group or repeated interactions. it is
+believed that some form of indirect reciprocity can explain the
+breadth of human cooperation [21]. whereas in direct reciprocity
+the favour is returned by the interaction partner, in indirect
+reciprocity the favour is returned by somebody else, which usually
+involves some reputation. it has been theorized that such a
+mechanism could even form the basis of morality [28]. addition-
+ally, reputation (and the fear of losing reputation) seems to play an
+important role in maintaining social norms [29--31].
+in general, the idea is the following: agents obtain some good
+reputation by helping others, and others help those with a good
+reputation. initially a strategy known as image scoring was
+introduced [32]. shortly after, it was argued that a different
+strategy, known as the standing strategy, should actually perform
+better [33], although experiments showed people tend to prefer
+the simpler image scoring strategy [34]. this led to more
+systematic studies of how different reputation schemes would
+perform [35--37]. although much research has been done on
+indirect reciprocity, only few theoretical works actually study how
+gossiping shapes reputations [38,39]. nonetheless, most studies
+(tacitly) assume that reputations are shaped through gossip.
+additionally, it was observed experimentally that gossiping is an
+effective mechanism for promoting cooperation [40--42].
+moreover, these reputations are usually considered as objective.
+that is, all agents know the reputation xj of some agent j, and all
+agents have the same view of agent j. private reputations--so that
+we have xij, the reputation of j in the eyes of i--have usually been
+considered by allowing a part of the population to ``observe'' an
+interaction, and update the reputation accordingly. if too few
+agents are allowed to ``observe'' an interaction, the reputations xij
+tend to become uncorrelated and incoherent. this makes
+reputation unreliable for deciding whether to cooperate or defect.
+the central question thus becomes how to model private
+reputations such that they remain coherent and reliable for
+deciding whether to cooperate or not.
+dynamical models of social balance might provide an answer to
+this question. although it allows to have private reputations--that is
+xij--the dynamics could also lead to some coherence in the form of
+social balance. in addition, it models more explicitly the gossiping
+process, commonly suggested to be the foundation upon which
+reputations are forged.</discussion>
+	<biblio>1. heider f (1946) attitudes and cognitive organization. j psychol 21: 107--112.
+2. bearman ps, moody j (2004) suicide and friendships among american
+adolescents. am j public health 94: 89--95.
+3. harary f (1953) on the notion of balance of a signed graph. the michigan
+mathematical journal 2: 143--146.
+4. cartwright d, harary f (1956) structural balance: a generalization of heider's
+theory. psychol rev 63: 277--293.
+5. doreian p, mrvar a (1996) a partitioning approach to structural balance. soc
+networks 18: 149--168.
+6. traag va, bruggeman j (2009) community detection in networks with positive
+and negative links. phys rev e 80: 036115.
+7. szell m, lambiotte r, thurner s (2010) multirelational organization of large-
+scale social networks in an online world. proc natl acad sci u s a 107: 13636--
+41.
+8. leskovec j, huttenlocher d, kleinberg j (2010) predicting positive and negative
+links in online social networks. in: www 2010.
+9. facchetti g, iacono g, altafini c (2011) computing global structural balance in
+large-scale signed social networks. proc natl acad sci u s a 108: 20953--20958.
+10. kunegis j, lommatzsch a, bauckhage c (2009) the slashdot zoo. in:
+proceedings of the 18th international conference on world wide web - www
+'09. new york, new york, usa: acm press, p. 741.
+11. kulakowski k, gawronski p, gronek p (2005) the heider balance - a
+continuous approach. int j mod phys c 16: 707--716.
+12. marvel sa, kleinberg j, kleinberg rd, strogatz sh (2011) continuous-time
+model of structural balance. proc natl acad sci u s a 108: 1771--6.
+13. antal t, krapivsky pl, redner s (2005) dynamics of social balance on
+networks. phys rev e 72: 36121.
+14. radicchi f, vilone d, yoon s, meyer-ortmanns h (2007) social balance as a
+satisfiability problem of computer science. phys rev e 75: 026106.
+15. marvel s, strogatz s, kleinberg j (2009) energy landscape of social balance.
+phys rev lett 103: 198701.
+16. mcpherson m, smith-lovin l, cook jm (2001) birds of a feather: homophily
+in social networks. annu rev sociol 27: 415--444.
+17. durrett r, levin sa (2005) can stable social groups be maintained by
+homophilous imitation alone? j econ behav organ 57: 267--286.
+18. fu f, nowak ma, christakis na, fowler jh (2012) the evolution of
+homophily. scientific reports 2.
+19. mcandrew ft, bell ek, garcia cm (2007) who do we tell and whom do
+we tell on? gossip as a strategy for status enhancement. j appl soc psychol
+37: 1562--1577.
+20. paine r (1967) what is gossip about? an alternative hypothesis. man 2: 278--
+285.
+21. nowak ma, sigmund k (2005) evolution of indirect reciprocity. nature 437:
+1291--1298.
+22. dunbar rim (1998) grooming, gossip, and the evolution of language.
+cambridge: harvard university press, 242 pp.
+23. nowak ma (2006) five rules for the evolution of cooperation. science (new
+york, ny) 314: 1560--3.
+24. smith jm, maynard smith j (1982) evolution and the theory of games.
+cambridge: cambridge university press, 226 pp.
+25. hamilton w (1964) the genetical evolution of social behaviour i. j theor biol 7:
+1--16.
+26. axelrod r, hamilton w (1985) the evolution of cooperation, volume 211.
+new york: basic books, 1390--1396 pp.
+27. wilson ds (1975) a theory of group selection. proc natl acad sci u s a 72:
+143--146.
+28. alexander rd (1987) the biology of moral systems. new york: aldine de
+gruyter.
+29. elias n, scotson jl (1994) the established and the outsiders. london: sage
+publications.
+30. friedkin ne (2001) norm formation in social influence networks. soc networks
+23: 167--189.
+31. fehr e, fischbacher u (2004) third-party punishment and social norms.
+evolution and human behavior 25: 63--87.
+32. nowak ma, sigmund k (1998) evolution of indirect reciprocity by image
+scoring. nature 393: 573--7.
+33. leimar o, hammerstein p (2001) evolution of cooperation through indirect
+reciprocity. proc biol sci 268: 745--753.
+34. milinski m, semmann d, bakker tc, krambeck hj (2001) cooperation
+through indirect reciprocity: image scoring or standing strategy? proc biol sci
+268: 2495--2501.
+35. ohtsuki h, iwasa y (2006) the leading eight: social norms that can maintain
+cooperation by indirect reciprocity. j theor biol 239: 435--44.
+36. brandt h, sigmund k (2004) the logic of reprobation: assessment and action
+rules for indirect reciprocation. j theor biol 231: 475--486.
+37. ohtsuki h, iwasa y (2004) how should we define goodness?--reputation
+dynamics in indirect reciprocity. j theor biol 231: 107--120.
+38. nakamaru m, kawata m (2004) evolution of rumours that discriminate lying
+defectors. evol ecol res 6: 261--283.
+39. traag va, van dooren p, nesterov y (2011) indirect reciprocity through
+gossiping can lead to cooperative clusters. in: ieee symposium on artificial life
+2011. piscataway: ieee, pp.154--161.
+40. piazza j, bering jm (2008) concerns about reputation via gossip promote
+generous allocations in an economic game. evolution and human behavior 29:
+172--178.
+41. sommerfeld rd, krambeck hj, milinski m (2008) multiple gossip statements
+and their effect on reputation and trustworthiness. proc biol sci 275: 2529--
+2536.
+42. sommerfeld rd, krambeck hj, semmann d, milinski m (2007) gossip as an
+alternative for direct observation in games of indirect reciprocity. proc natl acad
+sci u s a 104: 17435--17440.
+43. gluckman m (1963) gossip and scandal. curr anthropol 4: 307--316.
+44. foster ek (2004) research on gossip: taxonomy, methods, and future
+directions. rev gen psychol 8: 78--99.
+45. wert sr, salovey p (2004) a social comparison account of gossip. rev gen
+psychol 8: 122--137.
+46. labianca g, brass d, gray b (1998) social networks and perceptions of
+intergroup conflict: the role of negative relationships and third parties.
+academy of management journal 41: 55--67.
+47. gillespie jh (2004) population genetics: a concise guide. baltimore: the john
+hopkins university press.
+dynamical models explaining social balance</biblio>
+</article>

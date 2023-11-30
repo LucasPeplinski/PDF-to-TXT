@@ -1,0 +1,222 @@
+<article>
+	<preamble>An_Improved_Branch-and-Cut_Code_for_the_Maximum_Balanced_Subgraph_of_a_Signed_Graph</preamble>
+    <titre></titre>
+    <auteur> rosa.figueiredo@ua.pt yuri@ic.uff.br rosa.figueiredo@ua.pt </auteur>
+	<abstract> the maximum balanced subgraph problem (mbsp) is the problem of finding a subgraph of a signed graph that is balanced and maximizes the cardinality of its vertex set. we are interested in the exact solution of the problem: an improved version of a branch-and-cut algorithm is proposed. extensive computational experiments are carried out on a set of instances from three applications previ- ously discussed in the literature as well as on a set of random instances. keywords: balanced signed graph; branch-and-cut; portfolio analysis; net- work matrix; community structure. corresponding author. fax number: +35234370066 email: rosa.figueiredo@ua.pt rosa figueiredo is supported by feder founds through compete-operational programme factors of competitiveness and by portuguese founds through the cidma (university of aveiro) and fct, within project pest-c/mat/ui4106/201with compete number fcomp-01-0124-feder-022690. preprint submitted to elsevier december 17, 2013 arxiv:1312.4345v1 [cs.dm] 16 dec 2013 </abstract>
+	<introduction> let g = (v, e) be an undirected graph where v = {1, 2, . . . , n} is the set of vertices and e is the set of edges connecting pairs of vertices. consider a function s : e  {+, -} that assigns a sign to each edge in e. an undirected graph g together with a function s is called a signed graph. an edge e  e is called negative if s(e) = - and positive if s(e) = +. in the last decades, signed graphs have shown to be a very attractive discrete structure for social network researchers [1, 8, 9, 16, 21] and for researchers in other scientific areas, including portfolio analysis in risk management [14, 15], biological systems [7, 15], efficient document classification [3], detection of embedded matrix structures [12] and community structure [17, 20]. the common element among all these applications is that all of them are defined in a collaborative vs. conflicting environment represented over a signed graph. we refer the reader to [22] for a bibliography of signed graphs. is this work we consider the maximum balanced subgraph problem (mbsp) defined next. let g = (v, e, s) denote a signed graph and let e- and e+ denote, respec- tively, the set of negative and positive edges in g. also, for a vertex set s  v , let e[s] = {(i, j)  e | i, j  s} denote the subset of edges induced by s. a signed graph g = (v, e, s) is balanced if its vertex set can be partitioned into sets w (possibly empty) and v \w in such a way that e[w]e[v \w] = e+ . given a signed graph g = (v, e, s), the mbsp is the problem of finding a subgraph h = (v 0 , e0 , s) of g such that h is balanced and maximizes the cardinality of v 0 . the mbsp is known to be an np-hard problem [6] although the problem of detecting balance in signed graphs can be solved in polynomial time [13]. in the literature, the mbsp has already been applied in the detection of embedded matrix structures [10, 11, 12], in portfolio analysis in risk management [10] and community structure [10]. the problem of detecting a maximum embedded reflected network (dmern) is reduced to the mbsp in [12]. most of the existing solution approaches to the mbsp were in fact proposed for the solution of the dmern problem. the literature proposes various heuristics for the solution of the dmern problem (for references see [12]). lately, figueiredo et al. [11] developed the first ex- act solution approach for the mbsp: a branch-and-cut algorithm based on the signed graph reformulation from gulpinar et al. [12] for the dmern problem. computational experiments were carried out over a set of instances found in the literature as a test set for the dmern problem. almost all these instances were solved to optimality in a few seconds showing that they were not appropri- ate for assessing the quality of a heuristic approach to the problem. recently, figueiredo et al. [10] introduced applications of the mbsp in other two different research areas: portfolio analysis in risk management and community structure. these authors also provided a new set of benchmark instances of the mbsp (including a set of difficult instances for the dmern problem) and contributed to the efficient solution of the problem by developing a pre-processing routine, an efficient grasp metaheuristic, and improved versions of a greedy heuristic 2 proposed in [12]. in this work we contribute to the efficient solution of the mbsp by developing an improved version of the branch-and-cut algorithm proposed by figueiredo et al. [11]. we introduce a new branching rule to the problem based on the odd negative cycle inequalities. moreover, we improve the cut generation component of the branch-and-cut algorithm by implementing new separation routines and by using a cut pool separation strategy. the remainder of the paper is structured as follows. the integer program- ming formulation and the branch-and-cut algorithm proposed in [11] to the mbsp are outlined in section the improved version of the branch-and-cut algorithm is described in section 3. in section 4, computational results are reported for random instances as well as for instances of the three applications previously mentioned. in section 5 we present concluding remarks. we next give some notations and definitions to be used throughout the paper. for an edge set b  e, let g[b] denote the subgraph of g induced by b. a set k  v is called a clique if each pair of vertices in k is joined by an edge. a set i  v is called a stable set if no pair of vertices in i is joined by an edge. we represent a cycle by its vertex set c  v . in this text, a signed graph is allowed to have parallel edges but no loops. also, we assume that parallel edges have always opposite signs. integer programming formulation and branch-and-cut the integer programming formulation and the branch-and-cut algorithm in- troduced in [11] are described next. 2.1. integer programming formulation it is well known that a signed graph is balanced if and only if it does not contain a parallel edge or a cycle with an odd number of negative edges [5, 12, 22]. let co (e) be the set of all odd negative cycles in g, i.e., cycles with no parallel edges and with an odd number of negative edges. throughout this text, a cycle c  co (e) is called an odd negative cycle. the formulation uses binary decision variables y  {0, 1}|v | defined in the following way. for all i  v , yi is equal to 1 if vertex i  v belongs to the balanced subgraph, and is equal to 0 otherwise. we use the vector notation y = (yi), i  v , and the notation y(v 0 ) = p iv 0 yi for v 0  v . the formulation follows. maximize y(v ) (1) subject to yi + yj  1,  (i, j)  e-  e+ , (2) y(c)  |c| - 1,  c  co (e), (3) yi  {0, 1},  i  v. (4) consider a parallel edge (i, j)  e-  e+ . constraints (2) ensure vertices i and j cannot belong together to the balanced subgraph. constraints (3), called odd negative cycle inequalities, forbid cycles with an odd number of negative edges 3 in the subgraph described by variables y. these constraints force variables y to define a balanced subgraph. finally, the objective function (1) looks for a maximum balanced subgraph. the formulation has n variables and, due to constraints (3), might have an exponential number of constraints. let us refer to this formulation as y (g, s). by changing the integrality constraints (4) in formulation y (g, s) by the set of trivial inequalities 0  yi  1, i  v , we obtain a linear relaxation to the mbsp. 2.a branch-and-cut algorithm the branch-and-cut algorithm developed in [11] is based on formulation y (g, s), uses a standard 0--1 branching rule and has three basic components: the initial formulation, the cut generation and the primal heuristic. initial formulation. the initial formulation is defined as maximize y(v ) subject to y(k)  1,  k  l, (5) y(c)  |c| - 1,  c  m  co (e), (6) y(k)  2,  k  n, (7) 0  yi  1,  i  v, (8) where (5) are clique inequalities from the stable set problem [19] defined over a set of cliques l in g[e+  e- ]; (6) is a subset of inequalities (3) defined over a set of odd negative cycles m; (7) is a subset of inequalities from a family of negative clique inequalities introduced in [11] for the mbsp and defined over a set of cliques n in g[e- ]; (8) is the set of trivial inequalities. greedy procedures described in [11] are used to generate sets l, m and n. cut generation. after an lp has been solved in the branch-and-cut tree, the algorithm check if the solution is integer feasible. if this is not the case, the cut generation procedure is called and a set of separation routines is executed (a limit of 100 cuts per iteration is set). if no violated inequality is found or if a limit of 10 cut generations rounds is reached, the algorithm enter in the branching phase. the cut generation component described in [11] has two separation procedures. an exact separation procedure is used to generate violated odd negative cycle inequalities (3). this separation routine is based on a polynomial algorithm described in [4] to solve the separation problem for cut inequalities. a heuristic separation procedure defined in [11] is used to generate violated clique inequalities also introduced in [11]. primal heuristic and branching rule. a rounding primal heuristic is exe- cuted in [11] every time a fractional solution is found. moreover, a standard 0--1 branching rule is used with the same branching priority assigned to each variable and the branch-and-cut tree is investigated with the best-bound-first strategy. the authors reported they have also implemented a version of the branching 4 rule proposed in [2]. although this branching rule has been successfully applied to solve the stable set problem, they obtained better results with the standard 0--1 branching rule. 3. an improved branch-and-cut code in this work, the following new routines were added to the branch-and-cut algorithm described in section 2. branching on the odd negative cycle inequalities. our branching rule is based on the odd negative cycle inequalities (3). the intuition behind this cycle based branching is the attempt to generate more balanced enumerative trees. the standard 0--1 branching rule can be very asymmetrical producing unbalanced enumerative trees. let y  r be the optimal fractional solution of a node in the search tree. let c0  co (e) be the subset of odd negative cycles such that each cycle c  c0 satisfy the following conditions: * constraint (3) defined by c0 is a binding one in the current formulation, * there exists a vertex i  c0 such that yi is fractional. the standard 0--1 branching rule is used whenever c0 is an empty set. if it is not the case, let c be the smallest cycle in c0 . split c into the sets c1 and c2 such that c = c1  c2 , c1  c2 =  and y(c1 ) is fractional. we create three branches in the search tree: (i) y(c1 )  |c1 | - 1 and y(c2 ) = |c2 |; (ii) y(c1 ) = |c1 | and y(c2 )  |c2 | - 1; (iii) y(c1 )  |c1 | - 1 and y(c2 )  |c2 | - 1. separation routines. in this work, we introduce two new separation pro- cedures to the cut generation component of the branch-and-cut algorithm de- scribed in section 2. the authors in [11] proved that lifted odd hole inequalities (from the stable set problem) defined over the set of parallel edges e+  e- are valid inequal- ities for the mbsp. they have also proved that, if the support graph of these inequalities satisfy certain conditions they are facet defining inequalities to the problem. we implemented a separation procedure described in [18] to the lifted odd hole inequalities. also, the authors indicated in [11] that a very similar lift- ing procedure could be applied to strengthen constraints (3). we implemented this lifting procedure to the odd negative cycle inequalities satisfying |c|  20. in both cases, a very small instance of the mbsp must be solved at each it- eration of the lifting procedures. in our implementation, these small problems were solved by simple enumerative algorithms. 5 moreover, we added a cut pool to the branch-and-cut code: any violated inequality included to the active formulation of a node in the branch-and-cut tree is also included to the cut pool. as we have mentioned in section 2, after an lp has been solved in the branch-and-cut tree, we check if the solution is integer feasible. if this is not the case, the cut generation procedure is then called. before running any separation routine from our cut generation procedure, we check if there are violated cuts in the cut pool. in positive case, no separation routine is called and the violated cuts (limited to 100 cuts) are immediately added to the active formulation. 4. computational experiments we implemented the improved branch-and-cut algorithm described in sec- tion 3 using the formulation defined by (5)-(8). both branch-and-cuts (bc), the previous one and the improved version, were implemented in c++ running on a intel(r) pentium(r) 4 cpu 3.06 ghz, equipped with 3 gb of ram. we use xpress-optimizer 20.00.21 to implement the components of these enumerative algorithms. the maximum running time per instance was set at 3600 seconds. the same instance classes reported in [10] were tested here to allow for a better comparison of the performances of the improved bc and the bc algorithm pro- posed earlier. the class random consists of 216 randomized instances divided into two groups: group 1 without parallel edges and group with parallel edges. the class unga is composed of 63 instances derived from the com- munity structure of networks representing voting on resolutions in the united nations general assembly. the class new dmern consists of 316 signed graphs coming from a set of general mixed integer programs. finally, the class porti- folio is composed by 850 instances generated from market graphs. the entire benchmark is available for download in www.ic.uff.br/yuri/mbsp.html. we first investigate the behavior of the random instances, the results ob- tained by the two methods are summarized in table 1. this table exhibits, for both groups, average times per | v |, and percentage gaps per | v |, d (density of the graph) and the rates | e- | / | e+ | and | e+  e- |. multicolumn time, gives us average times (in seconds) spent to solve instances to optimal- ity; the values in brackets show the number of instances solved to optimality ("-" means no instance was solved within the time limit). multicolumn %gap presents the average of percentage gaps calculated over the set of unsolved in- stances. the percentage gap of each instance is calculated between the best integer solution found and the final upper bound. for each group of instances, the first and the second lines present, respectively, the results obtained with the original and the improved code of the branch-and-cut algorithm. the results obtained with the improved version are slightly better: six more instances were solved to optimality and all the average gaps were reduced. in the second experiment, we analyze the performance of the portifolio in- stances. table reports the obtained results. the first two columns give the number of vertices and a threshold value t used to generate the instances [10]. the next three columns give the average time, the average of percentage gaps 6 (as defined in table 1) and the number of evaluated nodes in the original bc tree, respectively. the last three columns give the same data for the improved bc. algorithm improved bc solved 227 out of 850 instances within 1 hour of processing time, while the original bc managed to solve only 217 instances. the average gap for the original bc over the set of unsolved instances is 17.91%, while the same value for the improved version is 9.41%. furthermore, figure 1 shows that the improved bc presents tighter gaps for almost the entire set of portifolio instances than the original one. in the third experiment, we investigate the behavior of the unga instances. we notice that these instances are extremely easy to solve. no matter the number of vertices or the parameters used to compose the instance, both bc codes were always able to solve all of them in a few seconds and in the root of the branch-and-bound tree. so, we could not draw any conclusion from this class of instance. in our last experiment, both methods were applied to each one of the 316 new dmern instances [10]. table 3 shows the results for the instances remaining unsolved and the instances solved to optimality in more than one minute. the first three columns in this table give us information about the instances: the netlib instance name, the number of vertices and the number of edges. the next three columns give the number of negative, positive and parallel edges, respectively. similarly to the previous table, the next set of three columns gives us information about the solution obtained with the original bc code: the time, the percentage gap, and the total number of nodes in the branch-and-bound tree. the last three columns give the same data for the improved bc. from this set of instances, we can extract 25 instances not solved to optimality by the original bc code with average gap of 11.42% of unsolved instances, while the improved bc could not solve 21 instances but with a much tighter average gap of 4.85%. one can notice that the implementation of new separation routines and a new branching rule used in the improved bc led to a better performance and a high number of evaluated nodes within the time limit. 5. final remarks in this work, we proposed an improved branch-and-cut algorithm based on the integer programming formulation and the bc algorithm proposed in [11], together with a new branching rule based on the odd negative cycle inequalities and improved cutting plane routines and strategies. the instance classes re- ported in [10] were used to compare the performances of the improved bc and the original bc algorithm proposed in [11]. the results obtained by the new ap- proach were superior to those given by the previously existing branch-and-cut. the new method solved 431 out of 1445 instances within 1 hour of processing time, while the original algorithm managed to solve only 410 instances. more- over, as we saw in section 4, considering only the set of unsolved instances, the average gap obtained with the improved bc was smaller than the average gap obtained with the original bc from [11]. 7 instances time %gap |v | |v | d |e - |/|e + | (|e -  e + |)/|e| 50 100 150 200 50 100 150 200 .25 .50 .75 .50 1 2 .25 .50 .75 group 1 24.22(27) 2578.00(3) - - 0 37.05 104.55 153.42 75.48 88.03 82.83 75.84 86.01 80.31 - - - 10.63(27) 1728.33(9) - - 0 26.62 92.09 144.34 65.26 81.27 76.36 67.16 76.48 74.27 - - - group 2 2.41(27) 473.90(21) 1277.67(9) - 0 6.17 49.08 111.83 33.48 56.28 65.78 - - - 68.69 42.22 21.35 2.37(27) 323.33(21) 910.78(9) - 0 4.84 44.07 104.36 30.74 50.92 61.97 - - - 63.84 38.71 18.74 table 1: results obtained on random instances in group 1 (e -  e + = ) and in group 2 (e -  e + 6 = ). 8 figure 1: results obtained on portfolio instances. instance original bc improved bc |v | t time %gap nodes time %gap nodes 330 0.300 25.00(2) 10.66 890.70 183.33(3) 4.56 933.50 0.325 295.25(8) 4.61 467.40 83.13(8) 2.8431.60 0.350 13.00(10) - 13.60 21.30(10) - 34.80 0.375 1.50(10) - 1.80 1.80(10) - 2.70 0.400 1.00(10) - 1.00 1.00(10) - 1.00 360 0.300 1145.67(3) 19.24 561.90 195.67(3) 6.48 581.20 0.325 170.75(4) 4.05 611.90 331.00(5) 2.39 914.20 0.350 161.10(10) - 100.90 129.90(10) - 135.50 0.375 3.10(10) - 2.20 3.90(10) - 4.40 0.400 1.10(10) - 1.40 1.20(10) - 1.50 390 0.300 141.00(1) 29.5498.80 650.50(2) 10.74 472.30 0.325 255.50(4) 17.15 461.80 101.25(4) 4.41 511.40 0.350 81.71(7) 2.40 372.80 29.14(7) 1.84 551.30 0.375 4.30(10) - 2.40 5.20(10) - 4.40 0.400 1.30(10) - 1.10 1.40(10) - 1.70 420 0.300 - 30.56 401.70 - 15.86 395.70 0.325 1062.50(2) 13.63 432.30 1442.33(3) 8.24 548.30 0.350 176.14(7) 12.04 285.90 116.29(7) 3.98 322.60 0.375 192.10(10) - 131.70 155.20(10) - 201.10 0.400 7.40(10) - 15.60 4.40(10) - 11.50 450 0.300 - 35.86 313.70 - 14.45 330.40 0.325 342.00(1) 14.75 360.40 124.00(1) 5.24 375.80 0.350 444.00(8) 2.40 241.70 390.89(9) 2.56 248.20 0.375 18.10(10) - 8.40 24.00(10) - 17.20 0.400 2.40(10) - 1.30 2.70(10) - 1.00 480 0.300 2065.00(1) 42.69 243.60 740.00(1) 30.20 261.10 0.325 1746.33(2) 27.53 321.40 546.33(3) 13.66 298.10 0.350 385.20(5) 10.33 288.70 218.80(5) 3.43 318.80 0.375 43.22(9) 1.20 105.30 170.90(10) - 83.40 0.400 23.90(10) - 25.90 7.30(10) - 7.00 510 0.300 2809.00(1) 49.59 199.50 943.50(2) 33.17 182.60 0.325 392.00(2) 34.39 217.40 459.00(2) 19.9244.70 0.350 47.00(3) 12.36 242.30 59.67(3) 3.70 315.70 0.375 101.29(7) 1.05 299.70 670.89(9) 0.53 563.90 0.400 6.60(10) - 4.00 7.60(10) - 4.40 (217) 17.91 (227) 9.41 table 2: results obtained on portfolio instances. 9 instance original bc improved bc name n m m- m+ m - + time %gap nodes time %gap nodes danoint 144 1456 497 903 56 289(1) - 4349 164(1) - 3951 bienst1 184 2548 1981 567 0 360(1) - 2523 2755(1) - 39710 stein45 331 10701 10701 0 0 2263(1) - 651 - 4.03 508 disctom 399 30000 30000 0 0 - 14.05 68 642(1) - 16 fc.60.20.1 414 1051 521 530 0 181(1) - 399 172(1) - 399 air05 426 30257 30257 0 0 - 33.73 94 - 30.98 95 neos17 486 117855 117370 0 485 38(1) - 1 60(1) - 1 p100x588 688 1470 625 845 0 64(1) - 71 62(1) - 71 air04 823 55592 55592 0 0 - 164.00 21 - 40.43 27 r80x800 880 2000 1026 974 0 727(1) - 223 699(1) - 223 nug08 912 13952 13952 0 0 75(1) - 1 29(1) - 1 p50x864 914 1872 895 977 0 116(1) - 53 113(1) - 53 dsbmip 1003 3733 2264 1383 86 70(1) - 1 56(1) - 1 n5-3 1012 10750 5472 5278 0 66(1) - 1 83(1) - 1 neos21 1085 37373 37373 0 0 - 274.67 24 783(1) - 3 neos23 1120 23387 22295 1092 0 109(1) - 8 29(1) - 2 n4-3 1178 15341 7670 7671 0 139(1) - 3 167(1) - 1 dano3mip 1227 46506 14948 31003 555 - 78.65 36 - 85.43 43 n8-3 1300 11656 6258 5398 0 93(1) - 1 119(1) - 1 roll3000 1300 60706 25022 31630 4054 693(1) - 13 169(1) - 2 neos20 1320 14639 10788 3851 0 524(1) - 75 106(1) - 10 p200x1188c 1388 2970 1228 1742 0 - 0.59 479 - 0.59 489 p200x1188 1388 2970 1256 1714 0 - 0.63 494 - 0.63 519 janos-us-ca--d-d-m-n-c-a-n-n 1643 11651 5491 6160 0 233(1) - 1 213(1) - 1 pioro40--d-b-m-n-c-a-n-n 1649 10243 5777 4466 0 101(1) - 1 126(1) - 1 n13-3 1661 14725 7579 7146 0 201(1) - 1 215(1) - 1 n2-3 1752 14856 7935 6921 0 234(1) - 1 259(1) - 1 qap10 1820 35200 35200 0 0 228(1) - 1 424(1) - 3 ns1688347 1866 36800 24983 10195 1622 - 18.29 138 - 20.49 129 ns25-pr3 1878 4333 1393 2940 0 112(1) - 91 11(1) - 7 ns4-pr3 1878 4333 1393 2940 0 111(1) - 91 10(1) - 7 ns60-pr3 1878 4333 1393 2940 0 111(1) - 91 11(1) - 7 nu120-pr3 1878 4333 1393 2940 0 110(1) - 91 10(1) - 7 nu25-pr3 1878 4333 1393 2940 0 110(1) - 91 11(1) - 7 nu4-pr3 1878 4333 1393 2940 0 110(1) - 91 10(1) - 7 nu60-pr3 1878 4333 1393 2940 0 110(1) - 91 11(1) - 7 germany50--u-u-m-n-c-a-n-n 2088 10560 1143 2691 6726 13(1) - 1 89(1) - 1 protfold 2112 89677 30219 58395 1063 - 53.07 3 - 53.40 4 cap6000 2174 11167 10297 0 870 111(1) - 1 110(1) - 1 n7-3 2278 24476 12220 12256 0 1431(1) - 3 1184(1) - 3 n9-3 2280 33180 16280 16900 0 - 0.09 4 1321(1) - 3 acc-1 2286 44595 30912 13683 0 - 52.77 11 - 2.86 20 n3-3 2303 38857 18602 20255 0 - 4.45 8 2821(1) - 5 zib54--d-b-e-n-c-a-n-n 2347 10025 6991 3034 0 236(1) - 1 211(1) - 1 n12-3 2358 26496 12956 13540 0 1341(1) - 1 1049(1) - 1 neos818918 2400 10130 6485 3195 450 819(1) - 17 803(1) - 17 germany50--d-b-m-n-c-a-n-n 2438 12232 6325 5907 0 278(1) - 1 260(1) - 1 acc-2 2520 60669 43842 16827 0 - 6.12 29 - 8.76 23 ta2--u-u-m-n-c-a-n-n 2578 12312 2582 1834 7896 21(1) - 1 173(1) - 1 n6-3 2686 31228 14664 16564 0 - - 1 2753(1) - 3 berlin 2704 6630 2703 3927 0 - 0.94 16 - 0.94 17 neos11 2706 47185 33685 13440 60 - 5.72 19 - 5.84 7 ta2--d-b-m-n-c-a-n-n 2837 13457 9090 4367 0 380(1) - 1 464(1) - 1 acc-6 3047 74184 55567 18571 46 - 11.09 14 - 11.09 10 acc-5 3052 74312 54569 19697 46 - 14.30 11 - 13.84 11 mkc 3127 6299 3503 2793 3 329(1) - 1 338(1) - 1 mod011 3240 8186 8186 0 0 401(1) - 1 431(1) - 1 acc-3 3249 72072 49812 22179 81 223(1) - 1 225(1) - 1 acc-4 3285 75186 52301 22804 81 242(1) - 1 241(1) - 1 brasil 3364 8265 3363 4902 0 - 0.85 9 - 0.85 9 p500x2988c 3488 7470 3650 3820 0 - 4.59 68 - 4.52 70 p500x2988 3488 7470 3064 4406 0 - 1.22 59 - 1.19 62 rentacar 4294 16669 7916 8716 37 3043(1) - 3 2380(1) - 2 neos1 4732 80870 41850 36380 2640 - 8.81 3 - 7.92 2 seymour1 4794 604007 604007 0 0 - 14.42 0 - 15.25 0 seymour 4794 604007 604007 0 0 - 14.42 0 - 15.25 0 n370a 5150 15000 15000 0 0 1320(1) - 1 1322(1) - 1 manna81 6480 72900 72900 0 0 439(1) - 1 1173(1) - 1 neos12 8317 320726 302967 17549 210 - 10.38 0 - 10.38 0 413.75(43) 11.42 154.49 518.06(48) 4.85 675.26 table 3: results obtained on the new dmern instances. 10 references [1] p. abell and m. ludwig. structural balance: a dynamic perspective. jour- nal of mathematical sociology, 33:129--155, 2009. [2] e. balas and c.s. yu. finding a maximum clique in an arbitrary graph. siam journal on computing, 14:1054--1068, 1986. [3] n. bansal, a. blum, and s. chawla. correlation clustering. in proceedings of the 43rd annual ieee symposium of foundations of computer science, pages 238--250, vancouver, canada, 2002. [4] f. barahona and a.r. mahjoub. on the cut polytope. mathematical pro- gramming, 36:157--173, 1986. [5] f. barahona and a.r. mahjoub. facets of the balanced (acyclic) induced subgraph polytope. mathematical programming, 45:21--33, 1989. [6] j.j. barthold. a good submatrix is hard to find. operations research letters, 1:190--193, 1982. [7] b. dasgupta, g. a. encisob, e. sontag, and y. zhanga. algorithmic and complexity results for decompositions of biological networks into monotone subsystems. biosystems, 90:161--178, 2007. [8] p. doreian and a. mrvar. a partitioning approach to structural balance. social networks, 18:149--168, 1996. [9] p. doreian and a. mrvar. partitioning signed social networks. social net- works, 31:1--11, 2009. [10] r. figueiredo and y. frota. the maximum balanced subgraph of a signed graph: applications and solution approaches. paper submitted, 2012. [11] r. figueiredo, m. labbe, and c.c. de souza. an exact approach to the problem of extracting an embedded network matrix. computers & opera- tions research, 38:1483--1492, 2011. [12] n. gulpinar, g. gutin, g. mitra, and a. zverovitch. extracting pure net- work submatrices in linear programs using signed graphs. discrete applied mathematics, 137:359--372, 2004. [13] f. harary and j.a. kabell. a simple algorithm to detect balance in signed graphs. mathematical social sciences, 1:131--136, 1980. [14] f. harary, m. lim, and d. c. wunsch. signed graphs for portfolio analysis in risk management. ima journal of management mathematics, 13:1--10, 2003. [15] f. huffner, n. betzler, and r. niedermeier. separator-based data reduction for signed graph balancing. journal of combinatorial optimization, 20:335-- 360, 2010. 11 [16] t. inohara. on conditions for a meeting not to reach a deadlock. applied mathematics and computation, 90:1--9, 1998. [17] k.t. macon, p.j. mucha, and m.a. porter. community structure in the united nations general assembly. physica a: statistical mechanics and its applications, 391:343--361, 2012. [18] m. padberg. on the facial structure of set packing polyhedra. mathematical programming, 5:199--215, 1973. [19] s. rebennack. encyclopedia of optimization. springer, 2008. [20] v.a. traag and j. bruggeman. community detection in networks with positive and negative links. physical review e, 80:036115, 2009. [21] b. yang, w.k. cheung, and j. liu. community mining from signed so- cial networks. ieee transactions on knowledge and data engineering, 19:1333--1348, 2007. [22] t. zaslavsky. a mathematical bibliography of signed and gain graphs and allied areas. electronic journal of combinatorics ds8, 1998. 12 </introduction>
+    <corps></corps>
+    <conclusion></conclusion>
+	<discussion>obtained with the improved version are slightly better: six more instances were
+solved to optimality and all the average gaps were reduced.
+in the second experiment, we analyze the performance of the portifolio in-
+stances. table 2 reports the obtained results. the first two columns give the
+number of vertices and a threshold value t used to generate the instances [10].
+the next three columns give the average time, the average of percentage gaps
+6
+(as defined in table 1) and the number of evaluated nodes in the original bc
+tree, respectively. the last three columns give the same data for the improved
+bc. algorithm improved bc solved 227 out of 850 instances within 1 hour of
+processing time, while the original bc managed to solve only 217 instances. the
+average gap for the original bc over the set of unsolved instances is 17.91%,
+while the same value for the improved version is 9.41%. furthermore, figure 1
+shows that the improved bc presents tighter gaps for almost the entire set of
+portifolio instances than the original one.
+in the third experiment, we investigate the behavior of the unga instances.
+we notice that these instances are extremely easy to solve. no matter the
+number of vertices or the parameters used to compose the instance, both bc
+codes were always able to solve all of them in a few seconds and in the root
+of the branch-and-bound tree. so, we could not draw any conclusion from this
+class of instance.
+in our last experiment, both methods were applied to each one of the 316 new
+dmern instances [10]. table 3 shows the results for the instances remaining
+unsolved and the instances solved to optimality in more than one minute. the
+first three columns in this table give us information about the instances: the
+netlib instance name, the number of vertices and the number of edges. the
+next three columns give the number of negative, positive and parallel edges,
+respectively. similarly to the previous table, the next set of three columns gives
+us information about the solution obtained with the original bc code: the time,
+the percentage gap, and the total number of nodes in the branch-and-bound tree.
+the last three columns give the same data for the improved bc. from this set
+of instances, we can extract 25 instances not solved to optimality by the original
+bc code with average gap of 11.42% of unsolved instances, while the improved
+bc could not solve 21 instances but with a much tighter average gap of 4.85%.
+one can notice that the implementation of new separation routines and a new
+branching rule used in the improved bc led to a better performance and a high
+number of evaluated nodes within the time limit.
+5. final remarks
+in this work, we proposed an improved branch-and-cut algorithm based on
+the integer programming formulation and the bc algorithm proposed in [11],
+together with a new branching rule based on the odd negative cycle inequalities
+and improved cutting plane routines and strategies. the instance classes re-
+ported in [10] were used to compare the performances of the improved bc and
+the original bc algorithm proposed in [11]. the results obtained by the new ap-
+proach were superior to those given by the previously existing branch-and-cut.
+the new method solved 431 out of 1445 instances within 1 hour of processing
+time, while the original algorithm managed to solve only 410 instances. more-
+over, as we saw in section 4, considering only the set of unsolved instances, the
+average gap obtained with the improved bc was smaller than the average gap
+obtained with the original bc from [11].
+7
+instances
+time
+%gap
+|v
+|
+|v
+|
+d
+|e
+-
+|/|e
++
+|
+(|e
+-
+
+e
++
+|)/|e|
+50
+100
+150
+200
+50
+100
+150
+200
+.25
+.50
+.75
+.50
+1
+2
+.25
+.50
+.75
+group
+1
+24.22(27)
+2578.00(3)
+-
+-
+0
+37.05
+104.55
+153.42
+75.48
+88.03
+82.83
+75.84
+86.01
+80.31
+-
+-
+-
+10.63(27)
+1728.33(9)
+-
+-
+0
+26.62
+92.09
+144.34
+65.26
+81.27
+76.36
+67.16
+76.48
+74.27
+-
+-
+-
+group
+2
+2.41(27)
+473.90(21)
+1277.67(9)
+-
+0
+6.17
+49.08
+111.83
+33.48
+56.28
+65.78
+-
+-
+-
+68.69
+42.22
+21.35
+2.37(27)
+323.33(21)
+910.78(9)
+-
+0
+4.84
+44.07
+104.36
+30.74
+50.92
+61.97
+-
+-
+-
+63.84
+38.71
+18.74
+table
+1:</discussion>
+	<biblio>[1] p. abell and m. ludwig. structural balance: a dynamic perspective. jour-
+nal of mathematical sociology, 33:129--155, 2009.
+[2] e. balas and c.s. yu. finding a maximum clique in an arbitrary graph.
+siam journal on computing, 14:1054--1068, 1986.
+[3] n. bansal, a. blum, and s. chawla. correlation clustering. in proceedings
+of the 43rd annual ieee symposium of foundations of computer science,
+pages 238--250, vancouver, canada, 2002.
+[4] f. barahona and a.r. mahjoub. on the cut polytope. mathematical pro-
+gramming, 36:157--173, 1986.
+[5] f. barahona and a.r. mahjoub. facets of the balanced (acyclic) induced
+subgraph polytope. mathematical programming, 45:21--33, 1989.
+[6] j.j. barthold. a good submatrix is hard to find. operations research
+letters, 1:190--193, 1982.
+[7] b. dasgupta, g. a. encisob, e. sontag, and y. zhanga. algorithmic and
+complexity results for decompositions of biological networks into monotone
+subsystems. biosystems, 90:161--178, 2007.
+[8] p. doreian and a. mrvar. a partitioning approach to structural balance.
+social networks, 18:149--168, 1996.
+[9] p. doreian and a. mrvar. partitioning signed social networks. social net-
+works, 31:1--11, 2009.
+[10] r. figueiredo and y. frota. the maximum balanced subgraph of a signed
+graph: applications and solution approaches. paper submitted, 2012.
+[11] r. figueiredo, m. labbe, and c.c. de souza. an exact approach to the
+problem of extracting an embedded network matrix. computers & opera-
+tions research, 38:1483--1492, 2011.
+[12] n. gulpinar, g. gutin, g. mitra, and a. zverovitch. extracting pure net-
+work submatrices in linear programs using signed graphs. discrete applied
+mathematics, 137:359--372, 2004.
+[13] f. harary and j.a. kabell. a simple algorithm to detect balance in signed
+graphs. mathematical social sciences, 1:131--136, 1980.
+[14] f. harary, m. lim, and d. c. wunsch. signed graphs for portfolio analysis
+in risk management. ima journal of management mathematics, 13:1--10,
+2003.
+[15] f. huffner, n. betzler, and r. niedermeier. separator-based data reduction
+for signed graph balancing. journal of combinatorial optimization, 20:335--
+360, 2010.
+11
+[16] t. inohara. on conditions for a meeting not to reach a deadlock. applied
+mathematics and computation, 90:1--9, 1998.
+[17] k.t. macon, p.j. mucha, and m.a. porter. community structure in the
+united nations general assembly. physica a: statistical mechanics and its
+applications, 391:343--361, 2012.
+[18] m. padberg. on the facial structure of set packing polyhedra. mathematical
+programming, 5:199--215, 1973.
+[19] s. rebennack. encyclopedia of optimization. springer, 2008.
+[20] v.a. traag and j. bruggeman. community detection in networks with
+positive and negative links. physical review e, 80:036115, 2009.
+[21] b. yang, w.k. cheung, and j. liu. community mining from signed so-
+cial networks. ieee transactions on knowledge and data engineering,
+19:1333--1348, 2007.
+[22] t. zaslavsky. a mathematical bibliography of signed and gain graphs and
+allied areas. electronic journal of combinatorics ds8, 1998.</biblio>
+</article>

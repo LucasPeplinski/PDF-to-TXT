@@ -1,0 +1,306 @@
+<article>
+	<preamble>Boudin-Torres-2006</preamble>
+    <titre>a scalable mmr approach to sentence scoring for multi-document update summarization</titre>
+    <auteur>Florian Boudin ; Marc El-Beze ; Juan-Manuel Torres-Moreno florian.boudin@univ-avignon.fr juan-manuel.torres@univ-avignon.fr marc.elbeze@univ-avignon.fr </auteur>
+	<abstract> we present smmr, a scalable sentence scoring method for query-oriented up- date summarization. sentences are scored thanks to a criterion combining query rele- vance and dissimilarity with already read documents (history). as the amount of data in history increases, non-redundancy is prioritized over query-relevance. we show that smmr achieves promising re- sults on the duc 2007 update corpus. </abstract>
+	<introduction> extensive experiments on query-oriented multi- document summarization have been carried out over the past few years. most of the strategies to produce summaries are based on an extrac- tion method, which identifies salient textual seg- ments, most often sentences, in documents. sen- tences containing the most salient concepts are se- lected, ordered and assembled according to their relevance to produce summaries (also called ex- tracts) (mani and maybury, 1999). recently emerged from the document under- standing conference (duc) 20071, update sum- marization attempts to enhance summarization when more information about knowledge acquired by the user is available. it asks the following ques- tion: has the user already read documents on the topic? in the case of a positive answer, producing an extract focusing on only new facts is of inter- est. in this way, an important issue is introduced: c 2008. licensed under the creative commons attribution-noncommercial-share alike 3.0 unported li- cense (http://creativecommons.org/licenses/by-nc-sa/3.0/). some rights reserved. 1 document understanding conferences are conducted since 2000 by the national institute of standards and tech- nology (nist), http://www-nlpir.nist.gov redundancy with previously read documents (his- tory) has to be removed from the extract. a natural way to go about update summarization would be extracting temporal tags (dates, elapsed times, temporal expressions...) (mani and wilson, 2000) or to automatically construct the timeline from documents (swan and allan, 2000). these temporal marks could be used to focus extracts on the most recently written facts. however, most re- cently written facts are not necessarily new facts. machine reading (mr) was used by (hickl et al., 2007) to construct knowledge representations from clusters of documents. sentences contain- ing "new" information (i.e. that could not be in- ferred by any previously considered document) are selected to generate summary. however, this highly efficient approach (best system in duc 2007 update) requires large linguistic resources. (witte et al., 2007) propose a rule-based system based on fuzzy coreference cluster graphs. again, this approach requires to manually write the sen- tence ranking scheme. several strategies remain- ing on post-processing redundancy removal tech- niques have been suggested. extracts constructed from history were used by (boudin and torres- moreno, 2007) to minimize history's redundancy. (lin et al., 2007) have proposed a modified max- imal marginal relevance (mmr) (carbonell and goldstein, 1998) re-ranker during sentence selec- tion, constructing the summary by incrementally re-ranking sentences. in this paper, we propose a scalable sentence scoring method for update summarization derived from mmr. motivated by the need for relevant novelty, candidate sentences are selected accord- ing to a combined criterion of query relevance and dissimilarity with previously read sentences. the rest of the paper is organized as follows. section 2 23 introduces our proposed sentence scoring method and section 3 presents experiments and evaluates our approach.</introduction>
+    <corps>2 Method
+The underlying idea of our method is that as the
+number of sentences in the history increases, the
+likelihood to have redundant information within
+candidate sentences also increases. We propose
+a scalable sentence scoring method derived from
+MMR that, as the size of the history increases,
+gives more importance to non-redundancy that to
+query relevance. We define H to represent the pre-
+viously read documents (history), Q to represent
+the query and s the candidate sentence. The fol-
+lowing subsections formally define the similarity
+measures and the scalable MMR scoring method.
+2.1 A query-oriented multi-document
+summarizer
+We have first started by implementing a simple
+summarizer for which the task is to produce query-
+focused summaries from clusters of documents.
+Each document is pre-processed: documents are
+segmented into sentences, sentences are filtered
+(words which do not carry meaning are removed
+such as functional words or common words) and
+normalized using a lemmas database (i.e. inflected
+forms "go", "goes", "went", "gone"... are replaced
+by "go"). An N-dimensional term-space , where
+N is the number of different terms found in the
+cluster, is constructed. Sentences are represented
+in  by vectors in which each component is the
+term frequency within the sentence. Sentence scor-
+ing can be seen as a passage retrieval task in Infor-
+mation Retrieval (IR). Each sentence s is scored by
+computing a combination of two similarity mea-
+sures between the sentence and the query. The first
+measure is the well known cosine angle (Salton et
+al., 1975) between the sentence and the query vec-
+torial representations in  (denoted respectively ~
+s
+and ~
+Q). The second similarity measure is based
+on the Jaro-Winkler distance (Winkler, 1999). The
+original Jaro-Winkler measure, denoted JW, uses
+the number of matching characters and transposi-
+tions to compute a similarity score between two
+terms, giving more favourable ratings to terms that
+match from the beginning. We have extended this
+measure to calculate the similarity between the
+sentence s and the query Q:
+JWe(s, Q) =
+1
+|Q|
+
+X
+qQ
+max
+mS0
+JW(q, m) (1)
+where S0 is the term set of s in which the terms
+m that already have maximized JW(q, m) are re-
+moved. The use of JWe smooths normalization and
+misspelling errors. Each sentence s is scored using
+the linear combination:
+Sim1(s, Q) =   cosine(~
+s, ~
+Q)
++ (1 - )  JWe(s, Q) (2)
+where  = 0.7, optimally tuned on the past DUCs
+data (2005 and 2006). The system produces a list
+of ranked sentences from which the summary is
+constructed by arranging the high scored sentences
+until the desired size is reached.
+2.2 A scalable MMR approach
+MMR re-ranking algorithm has been successfully
+used in query-oriented summarization (Ye et al.,
+2005). It strives to reduce redundancy while main-
+taining query relevance in selected sentences. The
+summary is constructed incrementally from a list
+of ranked sentences, at each iteration the sentence
+which maximizes MMR is chosen:
+MMR = arg max
+sS
+[   Sim1(s, Q)
+- (1 - )  max
+sjE
+Sim2(s, sj) ] (3)
+where S is the set of candidates sentences and E
+is the set of selected sentences.  represents an
+interpolation coefficient between sentence's rele-
+vance and non-redundancy. Sim2(s, sj) is a nor-
+malized Longest Common Substring (LCS) mea-
+sure between sentences s and sj. Detecting sen-
+tence rehearsals, LCS is well adapted for redun-
+dancy removal.
+We propose an interpretation of MMR to tackle
+the update summarization issue. Since Sim1 and
+Sim2 are ranged in [0, 1], they can be seen as prob-
+abilities even though they are not. Just as rewriting
+(3) as (NR stands for Novelty Relevance):
+NR = arg max
+sS
+[   Sim1(s, Q)
++ (1 - )  (1 - max
+shH
+Sim2(s, sh)) ] (4)
+We can understand that (4) equates to an OR com-
+bination. But as we are looking for a more intu-
+itive AND and since the similarities are indepen-
+dent, we have to use the product combination. The
+24
+scoring method defined in (2) is modified into a
+double maximization criterion in which the best
+ranked sentence will be the most relevant to the
+query AND the most different to the sentences in
+H.
+SMMR(s) = Sim1(s, Q)
+
+
+1 - max
+shH
+Sim2(s, sh)
+f(H)
+(5)
+Decreasing  in (3) with the length of the sum-
+mary was suggested by (Murray et al., 2005) and
+successfully used in the DUC 2005 by (Hachey
+et al., 2005), thereby emphasizing the relevance
+at the outset but increasingly prioritizing redun-
+dancy removal as the process continues. Sim-
+ilarly, we propose to follow this assumption in
+SMMR using a function denoted f that as the
+amount of data in history increases, prioritize non-
+redundancy (f(H)  0).
+3 Experiments
+The method described in the previous section has
+been implemented and evaluated by using the
+DUC 2007 update corpus2. The following subsec-
+tions present details of the different experiments
+we have conducted.
+3.1 The DUC 2007 update corpus
+We used for our experiments the DUC 2007 up-
+date competition data set. The corpus is composed
+of 10 topics, with 25 documents per topic. The up-
+date task goal was to produce short (100 words)
+multi-document update summaries of newswire ar-
+ticles under the assumption that the user has al-
+ready read a set of earlier articles. The purpose
+of each update summary will be to inform the
+reader of new information about a particular topic.
+Given a DUC topic and its 3 document clusters: A
+(10 documents), B (8 documents) and C (7 doc-
+uments), the task is to create from the documents
+three brief, fluent summaries that contribute to sat-
+isfying the information need expressed in the topic
+statement.
+1. A summary of documents in cluster A.
+2. An update summary of documents in B, un-
+der the assumption that the reader has already
+read documents in A.
+2
+More information about the DUC 2007 corpus is avail-
+able at http://duc.nist.gov/.
+3. An update summary of documents in C, un-
+der the assumption that the reader has already
+read documents in A and B.
+Within a topic, the document clusters must be pro-
+cessed in chronological order. Our system gener-
+ates a summary for each cluster by arranging the
+high ranked sentences until the limit of 100 words
+is reached.
+3.2 Evaluation
+Most existing automated evaluation methods work
+by comparing the generated summaries to one or
+more reference summaries (ideally, produced by
+humans). To evaluate the quality of our generated
+summaries, we choose to use the ROUGE3 (Lin,
+2004) evaluation toolkit, that has been found to be
+highly correlated with human judgments. ROUGE-
+N is a n-gram recall measure calculated between
+a candidate summary and a set of reference sum-
+maries. In our experiments ROUGE-1, ROUGE-2
+and ROUGE-SU4 will be computed.
+</corps>
+    <conclusion></conclusion>
+	<discussion>table 1 reports the results obtained on the duc
+2007 update data set for different sentence scor-
+ing methods. cosine + jwe stands for the scor-
+ing method defined in (2) and nr improves it
+with sentence re-ranking defined in equation (4).
+smmr is the combined adaptation we have pro-
+posed in (5). the function f(h) used in smmr is
+the simple rational function 1
+h , where h increases
+with the number of previous clusters (f(h) = 1
+for cluster a, 1
+2 for cluster b and 1
+3 for cluster c).
+this function allows to simply test the assumption
+that non-redundancy have to be favoured as the
+size of history grows. baseline results are obtained
+on summaries generated by taking the leading sen-
+tences of the most recent documents of the cluster,
+up to 100 words (official baseline of duc). the
+table also lists the three top performing systems at
+duc 2007 and the lowest scored human reference.
+as we can see from these results, smmr out-
+performs the other sentence scoring methods. by
+ways of comparison our system would have been
+ranked second at the duc 2007 update competi-
+tion. moreover, no post-processing was applied to
+the selected sentences leaving an important margin
+of progress. another interesting result is the high
+performance of the non-update specific method
+(cosine + jwe) that could be due to the small size
+3
+rouge is available at http://haydn.isi.edu/rouge/.
+25
+of the corpus (little redundancy between clusters).
+rouge-1 rouge-2 rouge-su4
+baseline 0.26232 0.04543 0.08247
+3rd system 0.35715 0.09622 0.13245
+2nd system 0.36965 0.09851 0.13509
+cosine + jwe 0.35905 0.10161 0.13701
+nr 0.36207 0.10042 0.13781
+smmr 0.36323 0.10223 0.13886
+1st system 0.37032 0.11189 0.14306
+worst human 0.40497 0.10511 0.14779
+table 1: rouge average recall scores computed
+on the duc 2007 update corpus.
+4 discussion and future work
+in this paper we have described smmr, a scal-
+able sentence scoring method based on mmr that
+achieves very promising results. an important as-
+pect of our sentence scoring method is that it does
+not requires re-ranking nor linguistic knowledge,
+which makes it a simple and fast approach to the
+issue of update summarization. it was pointed out
+at the duc 2007 workshop that question answer-
+ing and query-oriented summarization have been
+converging on a common task. the value added
+by summarization lies in the linguistic quality. ap-
+proaches mixing ir techniques are well suited for
+query-oriented summarization but they require in-
+tensive work for making the summary fluent and
+coherent. among the others, this is a point that we
+think is worthy of further investigation.</discussion>
+	<biblio>boudin, f. and j.m. torres-moreno. 2007. a co-
+sine maximization-minimization approach for user-
+oriented multi-document update summarization.
+in recent advances in natural language processing
+(ranlp), pages 81--87.
+carbonell, j. and j. goldstein. 1998. the use of mmr,
+diversity-based reranking for reordering documents
+and producing summaries. in 21st annual interna-
+tional acm sigir conference on research and de-
+velopment in information retrieval, pages 335--336.
+acm press new york, ny, usa.
+hachey, b., g. murray, and d. reitter. 2005. the
+embra system at duc 2005: query-oriented multi-
+document summarization with a very large latent
+semantic space. in document understanding con-
+ference (duc).
+hickl, a., k. roberts, and f. lacatusu. 2007. lcc's
+gistexter at duc 2007: machine reading for up-
+date summarization. in document understanding
+conference (duc).
+lin, z., t.s. chua, m.y. kan, w.s. lee, l. qiu, and
+s. ye. 2007. nus at duc 2007: using evolu-
+tionary models of text. in document understanding
+conference (duc).
+lin, c.y. 2004. rouge: a package for automatic
+evaluation of summaries. in workshop on text sum-
+marization branches out, pages 25--26.
+mani, i. and m.t. maybury. 1999. advances in auto-
+matic text summarization. mit press.
+mani, i. and g. wilson. 2000. robust temporal pro-
+cessing of news. in 38th annual meeting on asso-
+ciation for computational linguistics, pages 69--76.
+association for computational linguistics morris-
+town, nj, usa.
+murray, g., s. renals, and j. carletta. 2005. extractive
+summarization of meeting recordings. in ninth eu-
+ropean conference on speech communication and
+technology. isca.
+salton, g., a. wong, and c. s. yang. 1975. a vector
+space model for automatic indexing. communica-
+tions of the acm, 18(11):613--620.
+swan, r. and j. allan. 2000. automatic generation
+of overview timelines. in 23rd annual international
+acm sigir conference on research and develop-
+ment in information retrieval, pages 49--56.
+winkler, w. e. 1999. the state of record linkage and
+current research problems. in survey methods sec-
+tion, pages 73--79.
+witte, r., r. krestel, and s. bergler. 2007. generat-
+ing update summaries for duc 2007. in document
+understanding conference (duc).
+ye, s., l. qiu, t.s. chua, and m.y. kan. 2005. nus
+at duc 2005: understanding documents via con-
+cept links. in document understanding conference
+(duc).</biblio>
+</article>
